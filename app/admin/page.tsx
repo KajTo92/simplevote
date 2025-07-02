@@ -5,6 +5,8 @@ import { Plus, Eye, Calendar, Users, LogOut, User, Trash2, Power, PowerOff } fro
 import Link from 'next/link';
 import { Poll } from '@/types';
 import { useAuth } from '@/components/AuthProvider';
+import { useLanguage } from '@/components/LanguageProvider';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 export default function AdminPage() {
   const [polls, setPolls] = useState<Poll[]>([]);
@@ -15,6 +17,7 @@ export default function AdminPage() {
   const [deletingPoll, setDeletingPoll] = useState<string | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
   const { user, signOut } = useAuth();
+  const { t } = useLanguage();
 
   useEffect(() => {
     fetchPolls();
@@ -33,13 +36,13 @@ export default function AdminPage() {
         setPolls([]); // Ustaw pustą tablicę jako fallback
         // Opcjonalnie pokaż komunikat użytkownikowi
         if (data.error) {
-          alert('Błąd ładowania głosowań: ' + data.error);
+          alert(t.errors.loadingError + ': ' + data.error);
         }
       }
     } catch (error) {
       console.error('Error fetching polls:', error);
       setPolls([]); // Ustaw pustą tablicę jako fallback
-      alert('Wystąpił błąd podczas ładowania głosowań');
+      alert(t.errors.loadingError);
     }
   };
 
@@ -66,11 +69,11 @@ export default function AdminPage() {
         fetchPolls();
       } else {
         const error = await response.json();
-        alert('Błąd: ' + error.error);
+        alert(t.errors.error + ': ' + error.error);
       }
     } catch (error) {
       console.error('Error creating poll:', error);
-      alert('Wystąpił błąd podczas tworzenia głosowania');
+      alert(t.errors.creationError);
     } finally {
       setLoading(false);
     }
@@ -105,11 +108,11 @@ export default function AdminPage() {
         setShowDeleteConfirm(null);
       } else {
         const error = await response.json();
-        alert('Błąd: ' + error.error);
+        alert(t.errors.error + ': ' + error.error);
       }
     } catch (error) {
       console.error('Error deleting poll:', error);
-      alert('Wystąpił błąd podczas usuwania głosowania');
+      alert(t.errors.error);
     } finally {
       setDeletingPoll(null);
     }
@@ -132,25 +135,30 @@ export default function AdminPage() {
         ));
       } else {
         const error = await response.json();
-        alert('Błąd: ' + error.error);
+        alert(t.errors.error + ': ' + error.error);
       }
     } catch (error) {
       console.error('Error toggling poll status:', error);
-      alert('Wystąpił błąd podczas zmiany statusu głosowania');
+      alert(t.errors.error);
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+      {/* Przełącznik języków */}
+      <div className="absolute top-6 left-6">
+        <LanguageSwitcher />
+      </div>
+
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
             <Link href="/" className="text-gray-500 hover:text-gray-700 mb-2 block">
-              ← Powrót do strony głównej
+              ← {t.auth.backHome}
             </Link>
-            <h1 className="text-3xl font-bold text-gray-900">Panel Administratora</h1>
-            <p className="text-gray-600 mt-2">Zarządzaj głosowaniami i zobacz wyniki</p>
+            <h1 className="text-3xl font-bold text-gray-900">{t.admin.title}</h1>
+            <p className="text-gray-600 mt-2">{t.admin.subtitle}</p>
           </div>
           
           <div className="flex items-center gap-4">
@@ -166,7 +174,7 @@ export default function AdminPage() {
               className="flex items-center gap-2 text-gray-600 hover:text-gray-900 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
             >
               <LogOut className="w-4 h-4" />
-              <span className="text-sm">Wyloguj</span>
+              <span className="text-sm">{t.auth.logout}</span>
             </button>
             
             {/* Create Poll Button */}
@@ -175,7 +183,7 @@ export default function AdminPage() {
               className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
             >
               <Plus className="w-5 h-5" />
-              Nowe Głosowanie
+              {t.admin.newPoll}
             </button>
           </div>
         </div>
@@ -184,26 +192,26 @@ export default function AdminPage() {
         {showCreateForm && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-2xl p-6 w-full max-w-md">
-              <h2 className="text-2xl font-bold mb-4">Nowe Głosowanie</h2>
+              <h2 className="text-2xl font-bold mb-4">{t.admin.newPoll}</h2>
               
               <form onSubmit={createPoll} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Tytuł głosowania
+                    {t.admin.pollTitle}
                   </label>
                   <input
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Np. Która opcja jest najlepsza?"
+                    placeholder={t.admin.pollTitlePlaceholder}
                     required
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Opcje do wyboru
+                    {t.admin.options}
                   </label>
                   <div className="space-y-2">
                     {options.map((option, index) => (
@@ -213,7 +221,7 @@ export default function AdminPage() {
                           value={option}
                           onChange={(e) => updateOption(index, e.target.value)}
                           className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          placeholder={`Opcja ${index + 1}`}
+                          placeholder={`${t.admin.optionPlaceholder} ${index + 1}`}
                           required
                         />
                         {options.length > 2 && (
@@ -235,7 +243,7 @@ export default function AdminPage() {
                       onClick={addOption}
                       className="mt-2 text-blue-600 hover:text-blue-700"
                     >
-                      + Dodaj opcję
+                      + {t.admin.addOption}
                     </button>
                   )}
                 </div>
@@ -246,14 +254,14 @@ export default function AdminPage() {
                     onClick={() => setShowCreateForm(false)}
                     className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
                   >
-                    Anuluj
+                    {t.admin.cancel}
                   </button>
                   <button
                     type="submit"
                     disabled={loading}
                     className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
                   >
-                    {loading ? 'Tworzenie...' : 'Utwórz Głosowanie'}
+                    {loading ? t.admin.creating : t.admin.createPoll}
                   </button>
                 </div>
               </form>
@@ -270,7 +278,7 @@ export default function AdminPage() {
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                   poll.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
                 }`}>
-                  {poll.isActive ? 'Aktywne' : 'Nieaktywne'}
+                  {poll.isActive ? t.admin.active : t.admin.inactive}
                 </span>
               </div>
 
@@ -283,7 +291,7 @@ export default function AdminPage() {
                     <div key={option.id} className="text-sm">
                       <div className="flex justify-between mb-1">
                         <span className="text-gray-700">{option.text}</span>
-                        <span className="text-gray-900 font-medium">{option.votes} głosów</span>
+                        <span className="text-gray-900 font-medium">{option.votes} {t.admin.votes}</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div
@@ -302,7 +310,7 @@ export default function AdminPage() {
               <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
                 <div className="flex items-center gap-1">
                   <Users className="w-4 h-4" />
-                  <span>{poll.options.reduce((sum, opt) => sum + opt.votes, 0)} głosów</span>
+                  <span>{poll.options.reduce((sum, opt) => sum + opt.votes, 0)} {t.admin.votes}</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Calendar className="w-4 h-4" />
@@ -316,7 +324,7 @@ export default function AdminPage() {
                   className="flex items-center justify-center gap-2 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   <Eye className="w-4 h-4" />
-                  Zobacz Głosowanie
+                  {t.admin.view}
                 </Link>
                 
                 <div className="flex gap-2">
@@ -331,12 +339,12 @@ export default function AdminPage() {
                     {poll.isActive ? (
                       <>
                         <PowerOff className="w-4 h-4" />
-                        Dezaktywuj
+                        {t.admin.deactivate}
                       </>
                     ) : (
                       <>
                         <Power className="w-4 h-4" />
-                        Aktywuj
+                        {t.admin.activate}
                       </>
                     )}
                   </button>
@@ -359,10 +367,9 @@ export default function AdminPage() {
             <div className="bg-white rounded-2xl p-6 w-full max-w-md">
               <div className="text-center">
                 <Trash2 className="w-16 h-16 text-red-500 mx-auto mb-4" />
-                <h2 className="text-xl font-bold text-gray-900 mb-2">Usuń głosowanie</h2>
+                <h2 className="text-xl font-bold text-gray-900 mb-2">{t.admin.delete}</h2>
                 <p className="text-gray-600 mb-6">
-                  Czy na pewno chcesz usunąć to głosowanie? Ta akcja jest nieodwracalna.
-                  Wszystkie głosy i dane zostaną trwale utracone.
+                  {t.admin.confirmDelete} {t.admin.deleteWarning}
                 </p>
                 
                 <div className="flex gap-3">
@@ -370,7 +377,7 @@ export default function AdminPage() {
                     onClick={() => setShowDeleteConfirm(null)}
                     className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
                   >
-                    Anuluj
+                    {t.admin.cancel}
                   </button>
                   <button
                     onClick={() => deletePoll(showDeleteConfirm)}
@@ -380,10 +387,10 @@ export default function AdminPage() {
                     {deletingPoll === showDeleteConfirm ? (
                       <div className="flex items-center justify-center gap-2">
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                        Usuwanie...
+                        {t.admin.deleting}
                       </div>
                     ) : (
-                      'Usuń na zawsze'
+                      t.admin.delete
                     )}
                   </button>
                 </div>
@@ -395,14 +402,14 @@ export default function AdminPage() {
         {polls.length === 0 && (
           <div className="text-center py-12">
             <div className="text-gray-400 text-6xl mb-4">📊</div>
-            <h3 className="text-xl font-medium text-gray-900 mb-2">Brak głosowań</h3>
-            <p className="text-gray-600 mb-6">Utwórz swoje pierwsze głosowanie, aby rozpocząć</p>
+            <h3 className="text-xl font-medium text-gray-900 mb-2">{t.display.waitingForVotes}</h3>
+            <p className="text-gray-600 mb-6">{t.admin.subtitle}</p>
             <button
               onClick={() => setShowCreateForm(true)}
               className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
             >
               <Plus className="w-5 h-5" />
-              Utwórz Głosowanie
+              {t.admin.createPoll}
             </button>
           </div>
         )}

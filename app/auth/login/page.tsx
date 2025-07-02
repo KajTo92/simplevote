@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/components/AuthProvider'
+import { useLanguage } from '@/components/LanguageProvider'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { Eye, EyeOff, Mail, Lock, ArrowLeft } from 'lucide-react'
 
 export default function LoginPage() {
@@ -14,6 +16,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
   
   const { signIn, user, loading } = useAuth()
+  const { t } = useLanguage()
   const router = useRouter()
 
   useEffect(() => {
@@ -30,7 +33,7 @@ export default function LoginPage() {
     const { error } = await signIn(email, password)
 
     if (error) {
-      setError('Nieprawidłowy email lub hasło')
+      setError(t.auth.invalidCredentials)
     } else {
       router.push('/admin')
     }
@@ -48,6 +51,11 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      {/* Przełącznik języków */}
+      <div className="absolute top-6 left-6">
+        <LanguageSwitcher />
+      </div>
+
       <div className="max-w-md w-full">
         {/* Header */}
         <div className="text-center mb-8">
@@ -56,11 +64,11 @@ export default function LoginPage() {
             className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors mb-6"
           >
             <ArrowLeft className="w-4 h-4" />
-            Powrót do strony głównej
+            {t.auth.backHome}
           </Link>
           
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Panel Administratora</h1>
-          <p className="text-gray-600">Zaloguj się aby zarządzać głosowaniami</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">{t.auth.adminPanel}</h1>
+          <p className="text-gray-600">{t.auth.loginSubtitle}</p>
         </div>
 
         {/* Login Form */}
@@ -69,7 +77,7 @@ export default function LoginPage() {
             {/* Email Field */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email
+                {t.auth.email}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -81,7 +89,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="twoj@email.com"
+                  placeholder="your@email.com"
                   required
                 />
               </div>
@@ -90,7 +98,7 @@ export default function LoginPage() {
             {/* Password Field */}
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                Hasło
+                {t.auth.password}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -102,7 +110,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Wprowadź hasło"
+                  placeholder="••••••••"
                   required
                 />
                 <button
@@ -135,10 +143,10 @@ export default function LoginPage() {
               {isLoading ? (
                 <div className="flex items-center justify-center gap-2">
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                  Logowanie...
+                  {t.auth.loggingIn}
                 </div>
               ) : (
-                'Zaloguj się'
+                t.auth.login
               )}
             </button>
           </form>
@@ -146,9 +154,9 @@ export default function LoginPage() {
           {/* Sign Up Link */}
           <div className="mt-6 text-center">
             <p className="text-gray-600">
-              Nie masz konta?{' '}
+              {t.auth.noAccount}{' '}
               <Link href="/auth/register" className="text-blue-600 hover:text-blue-700 font-medium">
-                Zarejestruj się
+                {t.auth.register}
               </Link>
             </p>
           </div>

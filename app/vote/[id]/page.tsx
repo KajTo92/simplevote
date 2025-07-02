@@ -4,10 +4,13 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { Poll } from '@/types';
 import { CheckCircle, AlertCircle, Vote } from 'lucide-react';
+import { useLanguage } from '@/components/LanguageProvider';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 export default function VotePage() {
   const params = useParams();
   const pollId = params.id as string;
+  const { t } = useLanguage();
   const [poll, setPoll] = useState<Poll | null>(null);
   const [selectedOption, setSelectedOption] = useState<string>('');
   const [loading, setLoading] = useState(true);
@@ -43,7 +46,7 @@ export default function VotePage() {
     setError('');
     setShowResetOption(false);
     
-    alert('Możesz teraz zagłosować ponownie!');
+    alert(t.voting.canVoteAgain);
   };
 
   const generateVoterFingerprint = () => {
@@ -117,11 +120,11 @@ export default function VotePage() {
         const data = await response.json();
         setPoll(data);
       } else {
-        setError('Głosowanie nie zostało znalezione');
+        setError(t.errors.notFound);
       }
     } catch (error) {
       console.error('Error fetching poll:', error);
-      setError('Wystąpił błąd podczas ładowania głosowania');
+      setError(t.errors.loadingError);
     } finally {
       setLoading(false);
     }
@@ -152,15 +155,15 @@ export default function VotePage() {
         setPoll(result.poll);
       } else {
         if (response.status === 409) {
-          setError('Już zagłosowałeś w tym głosowaniu');
+          setError(t.voting.alreadyVoted);
           setVoted(true);
         } else {
-          setError(result.error || 'Wystąpił błąd podczas głosowania');
+          setError(result.error || t.errors.votingError);
         }
       }
     } catch (error) {
       console.error('Error voting:', error);
-      setError('Wystąpił błąd podczas głosowania');
+      setError(t.errors.votingError);
     } finally {
       setVoting(false);
     }
@@ -169,9 +172,14 @@ export default function VotePage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+        {/* Przełącznik języków */}
+        <div className="absolute top-6 left-6">
+          <LanguageSwitcher />
+        </div>
+        
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Ładowanie głosowania...</p>
+          <p className="text-gray-600">{t.errors.loading}</p>
         </div>
       </div>
     );
@@ -180,9 +188,14 @@ export default function VotePage() {
   if (error || !poll) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+        {/* Przełącznik języków */}
+        <div className="absolute top-6 left-6">
+          <LanguageSwitcher />
+        </div>
+        
         <div className="text-center max-w-md">
           <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Błąd</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">{t.errors.error}</h2>
           <p className="text-gray-600">{error}</p>
         </div>
       </div>
@@ -195,14 +208,19 @@ export default function VotePage() {
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-100 flex items-center justify-center p-4">
+        {/* Przełącznik języków */}
+        <div className="absolute top-6 left-6">
+          <LanguageSwitcher />
+        </div>
+        
         <div className="max-w-md w-full">
           <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
             <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Dziękujemy za głos!</h2>
-            <p className="text-gray-600 mb-6">Twój głos został zaliczony</p>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">{t.voting.thankYou}</h2>
+            <p className="text-gray-600 mb-6">{t.voting.voteRecorded}</p>
             
             <div className="text-left space-y-4">
-              <h3 className="font-semibold text-gray-900 text-center mb-4">Aktualne wyniki:</h3>
+              <h3 className="font-semibold text-gray-900 text-center mb-4">{t.voting.currentResults}</h3>
               {poll.options.map((option) => {
                 const percentage = totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
                 const isWinning = option.votes === maxVotes && maxVotes > 0;
@@ -232,7 +250,7 @@ export default function VotePage() {
             </div>
             
             <p className="text-sm text-gray-500 mt-6">
-              Łącznie głosów: {totalVotes}
+              {t.voting.totalVotes} {totalVotes}
             </p>
             
             {/* Opcja resetu (ukryta domyślnie) */}
@@ -242,26 +260,26 @@ export default function VotePage() {
                   onClick={() => setShowResetOption(true)}
                   className="text-xs text-gray-400 hover:text-gray-600"
                 >
-                  ⚙️ Opcje deweloperskie
+                  ⚙️ {t.voting.devOptions}
                 </button>
               ) : (
                 <div className="text-center">
                   <p className="text-xs text-gray-500 mb-2">
-                    Tylko do testów! Pozwala zagłosować ponownie z tego urządzenia.
+                    {t.voting.testingOnly}
                   </p>
                   <div className="space-y-2">
                     <button
                       onClick={resetVotingAbility}
                       className="text-xs bg-gray-100 text-gray-700 px-3 py-1 rounded hover:bg-gray-200"
                     >
-                      Resetuj możliwość głosowania
+                      {t.voting.resetVoting}
                     </button>
                     <br />
                     <button
                       onClick={() => setShowResetOption(false)}
                       className="text-xs text-gray-400 hover:text-gray-600"
                     >
-                      Anuluj
+                      {t.common.cancel}
                     </button>
                   </div>
                 </div>
@@ -275,12 +293,17 @@ export default function VotePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      {/* Przełącznik języków */}
+      <div className="absolute top-6 left-6">
+        <LanguageSwitcher />
+      </div>
+      
       <div className="max-w-md w-full">
         <div className="bg-white rounded-2xl shadow-lg p-8">
           <div className="text-center mb-8">
             <Vote className="w-12 h-12 text-blue-600 mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-gray-900 mb-2">{poll.title}</h1>
-            <p className="text-gray-600">Wybierz jedną opcję</p>
+            <p className="text-gray-600">{t.voting.chooseOption}</p>
           </div>
 
           <div className="space-y-3">
@@ -320,7 +343,7 @@ export default function VotePage() {
             <div className="text-center mt-6">
               <div className="inline-flex items-center gap-2 text-blue-600">
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-                <span>Zapisywanie głosu...</span>
+                <span>{t.common.loading}</span>
               </div>
             </div>
           )}
