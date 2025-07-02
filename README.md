@@ -173,10 +173,15 @@ Aplikacja jest standardową aplikacją Next.js i może być wdrożona na:
 
 ## 🔒 Bezpieczeństwo
 
-- **Fingerprinting**: Każdy użytkownik może głosować tylko raz
+- **Stabilny Fingerprinting**: Każde urządzenie/przeglądarka może głosować tylko raz
+  - Wykorzystuje cechy urządzenia (rozdzielczość, przeglądarka, język, etc.)
+  - Persistentny w localStorage - pamiętane między sesjami
+  - Obsługuje wiele urządzeń na jednym głosowaniu
+  - Fallback dla trybu incognito/prywatnego
 - **Walidacja**: Wszystkie dane wejściowe są walidowane
 - **Sanityzacja**: Zapobieganie atakom XSS
 - **Rate limiting**: Można dodać ograniczenia żądań
+- **Opcje deweloperskie**: Reset możliwości głosowania dla testów
 
 ## 📞 Wsparcie
 
