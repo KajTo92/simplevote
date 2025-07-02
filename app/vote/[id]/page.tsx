@@ -15,6 +15,7 @@ export default function VotePage() {
   const [voted, setVoted] = useState(false);
   const [error, setError] = useState<string>('');
   const [voterFingerprint, setVoterFingerprint] = useState<string>('');
+  const [showResetOption, setShowResetOption] = useState(false);
 
   useEffect(() => {
     // Generuj fingerprint użytkownika
@@ -25,10 +26,88 @@ export default function VotePage() {
     }
   }, [pollId]);
 
+  const resetVotingAbility = () => {
+    try {
+      // Usuń fingerprint z localStorage
+      localStorage.removeItem('voterFingerprint');
+      localStorage.removeItem('deviceId');
+    } catch (error) {
+      // Ignoruj błędy localStorage
+    }
+    
+    // Wygeneruj nowy fingerprint
+    generateVoterFingerprint();
+    
+    // Resetuj stan
+    setVoted(false);
+    setError('');
+    setShowResetOption(false);
+    
+    alert('Możesz teraz zagłosować ponownie!');
+  };
+
   const generateVoterFingerprint = () => {
-    const fingerprint = `${navigator.userAgent}_${screen.width}x${screen.height}_${Date.now()}_${Math.random()}`;
-    const hash = btoa(fingerprint).substring(0, 16);
-    setVoterFingerprint(hash);
+    try {
+      // Sprawdź czy już mamy fingerprint w localStorage
+      const existingFingerprint = localStorage.getItem('voterFingerprint');
+      
+      if (existingFingerprint) {
+        setVoterFingerprint(existingFingerprint);
+        return;
+      }
+    } catch (error) {
+      // localStorage może być niedostępny (incognito, stara przeglądarka)
+      console.warn('localStorage not available, using session-only fingerprint');
+    }
+    
+    // Utwórz stabilny fingerprint oparty na cechach urządzenia
+    const components = [
+      navigator.userAgent,
+      navigator.language,
+      screen.width,
+      screen.height,
+      screen.colorDepth,
+      new Date().getTimezoneOffset(),
+      navigator.platform,
+      navigator.cookieEnabled ? '1' : '0',
+      typeof navigator.onLine !== 'undefined' ? (navigator.onLine ? '1' : '0') : '0'
+    ];
+    
+    // Dodaj losowy komponent tylko dla unikalności, ale STAŁY dla tego urządzenia
+    let deviceId;
+    try {
+      deviceId = localStorage.getItem('deviceId');
+      if (!deviceId) {
+        deviceId = Math.random().toString(36).substring(2, 15);
+        localStorage.setItem('deviceId', deviceId);
+      }
+    } catch (error) {
+      // Fallback jeśli localStorage nie działa
+      deviceId = 'session_' + Math.random().toString(36).substring(2, 15);
+    }
+    
+    components.push(deviceId);
+    
+    const fingerprint = components.join('|');
+    
+    // Utwórz hash z fingerprint
+    let hash = 0;
+    for (let i = 0; i < fingerprint.length; i++) {
+      const char = fingerprint.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32-bit integer
+    }
+    
+    const finalFingerprint = Math.abs(hash).toString(36).substring(0, 16);
+    
+    // Zapisz fingerprint w localStorage (jeśli dostępny)
+    try {
+      localStorage.setItem('voterFingerprint', finalFingerprint);
+    } catch (error) {
+      // Ignoruj błędy localStorage
+    }
+    
+    setVoterFingerprint(finalFingerprint);
   };
 
   const fetchPoll = async () => {
@@ -155,6 +234,39 @@ export default function VotePage() {
             <p className="text-sm text-gray-500 mt-6">
               Łącznie głosów: {totalVotes}
             </p>
+            
+            {/* Opcja resetu (ukryta domyślnie) */}
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              {!showResetOption ? (
+                <button
+                  onClick={() => setShowResetOption(true)}
+                  className="text-xs text-gray-400 hover:text-gray-600"
+                >
+                  ⚙️ Opcje deweloperskie
+                </button>
+              ) : (
+                <div className="text-center">
+                  <p className="text-xs text-gray-500 mb-2">
+                    Tylko do testów! Pozwala zagłosować ponownie z tego urządzenia.
+                  </p>
+                  <div className="space-y-2">
+                    <button
+                      onClick={resetVotingAbility}
+                      className="text-xs bg-gray-100 text-gray-700 px-3 py-1 rounded hover:bg-gray-200"
+                    >
+                      Resetuj możliwość głosowania
+                    </button>
+                    <br />
+                    <button
+                      onClick={() => setShowResetOption(false)}
+                      className="text-xs text-gray-400 hover:text-gray-600"
+                    >
+                      Anuluj
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
