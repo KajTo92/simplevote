@@ -173,7 +173,7 @@ export default function VotePage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
         {/* Przełącznik języków */}
-        <div className="absolute top-6 left-6">
+        <div className="absolute top-6 right-6">
           <LanguageSwitcher />
         </div>
         
@@ -189,7 +189,7 @@ export default function VotePage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
         {/* Przełącznik języków */}
-        <div className="absolute top-6 left-6">
+        <div className="absolute top-6 right-6">
           <LanguageSwitcher />
         </div>
         
@@ -209,7 +209,7 @@ export default function VotePage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-100 flex items-center justify-center p-4">
         {/* Przełącznik języków */}
-        <div className="absolute top-6 left-6">
+        <div className="absolute top-6 right-6">
           <LanguageSwitcher />
         </div>
         
@@ -294,7 +294,7 @@ export default function VotePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       {/* Przełącznik języków */}
-      <div className="absolute top-6 left-6">
+      <div className="absolute top-6 right-6">
         <LanguageSwitcher />
       </div>
       

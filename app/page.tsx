@@ -10,19 +10,17 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center relative">
-      {/* Przełącznik języków w lewym górnym rogu */}
-      <div className="absolute top-6 left-6">
+      {/* Ikona administratora i przełącznik języków w prawym górnym rogu */}
+      <div className="absolute top-6 right-6 flex items-center gap-3">
         <LanguageSwitcher />
+        <Link 
+          href="/auth/login" 
+          className="p-3 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-200 group"
+          title={t.auth.adminPanel}
+        >
+          <Settings className="w-6 h-6 text-gray-700 group-hover:text-gray-900 group-hover:rotate-90 transition-all duration-200" />
+        </Link>
       </div>
-
-      {/* Ikona administratora w rogu */}
-      <Link 
-        href="/auth/login" 
-        className="absolute top-6 right-6 p-3 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-200 group"
-        title={t.auth.adminPanel}
-      >
-        <Settings className="w-6 h-6 text-gray-700 group-hover:text-gray-900 group-hover:rotate-90 transition-all duration-200" />
-      </Link>
 
       {/* Główny content */}
       <div className="text-center space-y-8 max-w-2xl mx-auto px-6">

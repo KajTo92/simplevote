@@ -145,11 +145,6 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
-      {/* Przełącznik języków */}
-      <div className="absolute top-6 left-6">
-        <LanguageSwitcher />
-      </div>
-
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -162,6 +157,9 @@ export default function AdminPage() {
           </div>
           
           <div className="flex items-center gap-4">
+            {/* Language Switcher */}
+            <LanguageSwitcher />
+            
             {/* User Info */}
             <div className="flex items-center gap-2 text-gray-600">
               <User className="w-4 h-4" />
