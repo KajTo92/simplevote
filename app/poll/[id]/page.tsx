@@ -6,10 +6,13 @@ import Link from 'next/link';
 import QRCode from 'qrcode';
 import { Poll } from '@/types';
 import { ArrowLeft, QrCode, Users, RotateCcw } from 'lucide-react';
+import { useLanguage } from '@/components/LanguageProvider';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 export default function PollDisplayPage() {
   const params = useParams();
   const pollId = params.id as string;
+  const { t } = useLanguage();
   const [poll, setPoll] = useState<Poll | null>(null);
   const [qrCodeUrl, setQrCodeUrl] = useState<string>('');
   const [loading, setLoading] = useState(true);
@@ -33,11 +36,11 @@ export default function PollDisplayPage() {
         const data = await response.json();
         setPoll(data);
       } else {
-        setError('Głosowanie nie zostało znalezione');
+        setError(t.errors.notFound);
       }
     } catch (error) {
       console.error('Error fetching poll:', error);
-      setError('Wystąpił błąd podczas ładowania głosowania');
+      setError(t.errors.loadingError);
     } finally {
       setLoading(false);
     }
@@ -65,9 +68,14 @@ export default function PollDisplayPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        {/* Przełącznik języków */}
+        <div className="absolute top-6 right-6">
+          <LanguageSwitcher />
+        </div>
+        
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Ładowanie głosowania...</p>
+          <p className="text-gray-600">{t.errors.loading}</p>
         </div>
       </div>
     );
@@ -76,16 +84,21 @@ export default function PollDisplayPage() {
   if (error || !poll) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        {/* Przełącznik języków */}
+        <div className="absolute top-6 right-6">
+          <LanguageSwitcher />
+        </div>
+        
         <div className="text-center">
           <div className="text-red-500 text-6xl mb-4">❌</div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Błąd</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">{t.errors.error}</h2>
           <p className="text-gray-600 mb-6">{error}</p>
           <Link
             href="/admin"
             className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800"
           >
             <ArrowLeft className="w-4 h-4" />
-            Powrót do panelu administratora
+            {t.display.backToAdmin}
           </Link>
         </div>
       </div>
@@ -106,17 +119,18 @@ export default function PollDisplayPage() {
               className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
-              Panel Administratora
+              {t.display.backToAdmin}
             </Link>
             
             <div className="flex items-center gap-4 text-sm text-gray-600">
+              <LanguageSwitcher />
               <div className="flex items-center gap-1">
                 <Users className="w-4 h-4" />
-                <span>{totalVotes} głosów</span>
+                <span>{totalVotes} {t.admin.votes}</span>
               </div>
               <div className="flex items-center gap-1">
                 <RotateCcw className="w-4 h-4 animate-spin" />
-                <span>Na żywo</span>
+                <span>{t.display.live}</span>
               </div>
             </div>
           </div>
@@ -193,7 +207,7 @@ export default function PollDisplayPage() {
               {totalVotes === 0 && (
                 <div className="text-center py-12 text-gray-500">
                   <div className="text-6xl mb-4">🗳️</div>
-                  <p className="text-xl">Czekamy na pierwsze głosy...</p>
+                  <p className="text-xl">{t.display.waitingForVotes}</p>
                 </div>
               )}
             </div>
@@ -204,7 +218,7 @@ export default function PollDisplayPage() {
             <div className="bg-white rounded-2xl shadow-sm p-8 text-center">
               <div className="flex items-center justify-center gap-2 mb-6">
                 <QrCode className="w-6 h-6 text-blue-600" />
-                <h2 className="text-2xl font-bold text-gray-900">Dołącz do głosowania</h2>
+                <h2 className="text-2xl font-bold text-gray-900">{t.display.joinVoting}</h2>
               </div>
               
               {qrCodeUrl && (
@@ -223,8 +237,8 @@ export default function PollDisplayPage() {
                     1
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900">Zeskanuj kod QR</h4>
-                    <p className="text-gray-600 text-sm">Użyj aparatu w telefonie lub aplikacji do skanowania kodów QR</p>
+                    <h4 className="font-semibold text-gray-900">{t.display.scanQR}</h4>
+                    <p className="text-gray-600 text-sm">{t.display.instructions.step1}</p>
                   </div>
                 </div>
                 
@@ -233,8 +247,8 @@ export default function PollDisplayPage() {
                     2
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900">Wybierz opcję</h4>
-                    <p className="text-gray-600 text-sm">Kliknij na swoją preferowaną odpowiedź</p>
+                    <h4 className="font-semibold text-gray-900">{t.display.instructions.step2}</h4>
+                    <p className="text-gray-600 text-sm">{t.display.instructions.step3}</p>
                   </div>
                 </div>
                 
@@ -243,8 +257,8 @@ export default function PollDisplayPage() {
                     3
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900">Zobacz wyniki</h4>
-                    <p className="text-gray-600 text-sm">Wyniki aktualizują się automatycznie na tym ekranie</p>
+                    <h4 className="font-semibold text-gray-900">{t.voting.currentResults}</h4>
+                    <p className="text-gray-600 text-sm">{t.features.live.description}</p>
                   </div>
                 </div>
               </div>
@@ -252,7 +266,7 @@ export default function PollDisplayPage() {
 
             {/* Link do głosowania */}
             <div className="bg-white rounded-2xl shadow-sm p-6">
-              <h3 className="font-semibold text-gray-900 mb-3">Link do głosowania</h3>
+              <h3 className="font-semibold text-gray-900 mb-3">{t.display.joinVoting}</h3>
               <div className="bg-gray-50 rounded-lg p-3 text-sm text-gray-600 break-all">
                 {typeof window !== 'undefined' && `${window.location.origin}/vote/${pollId}`}
               </div>
