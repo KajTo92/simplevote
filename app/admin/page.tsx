@@ -24,9 +24,22 @@ export default function AdminPage() {
     try {
       const response = await fetch('/api/polls');
       const data = await response.json();
-      setPolls(data);
+      
+      // Sprawdź czy API zwróciło sukces i czy data jest tablicą
+      if (response.ok && Array.isArray(data)) {
+        setPolls(data);
+      } else {
+        console.error('API error:', data);
+        setPolls([]); // Ustaw pustą tablicę jako fallback
+        // Opcjonalnie pokaż komunikat użytkownikowi
+        if (data.error) {
+          alert('Błąd ładowania głosowań: ' + data.error);
+        }
+      }
     } catch (error) {
       console.error('Error fetching polls:', error);
+      setPolls([]); // Ustaw pustą tablicę jako fallback
+      alert('Wystąpił błąd podczas ładowania głosowań');
     }
   };
 

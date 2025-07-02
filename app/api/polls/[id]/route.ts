@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getPoll, deletePoll, togglePollStatus } from '@/lib/database';
+import { getPoll, deletePoll, togglePollStatus } from '@/lib/supabase-database';
 
 export async function GET(
   request: NextRequest,

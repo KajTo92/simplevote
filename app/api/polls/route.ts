@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createPoll, getAllPolls } from '@/lib/database';
+import { createPoll, getAllPolls } from '@/lib/supabase-database';
 import { CreatePollRequest } from '@/types';
 
 export async function GET() {
