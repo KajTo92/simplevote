@@ -138,115 +138,119 @@ export default function PollDisplayPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="max-w-7xl mx-auto px-4 py-6">
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
           
           {/* Wyniki głosowania */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-2xl shadow-sm p-8">
-              <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center">
+          <div className="xl:col-span-3">
+            <div className="bg-white rounded-2xl shadow-sm p-6 h-[calc(100vh-200px)] flex flex-col">
+              <h1 className="text-3xl xl:text-4xl font-bold text-gray-900 mb-6 text-center flex-shrink-0">
                 {poll.title}
               </h1>
 
               {/* Wyświetl odpowiedni typ wykresu */}
-              {(() => {
-                const chartType = poll.displaySettings?.chartType || 'horizontal';
-                const showPercentages = poll.displaySettings?.showPercentages ?? true;
-                const showVoteCounts = poll.displaySettings?.showVoteCounts ?? true;
-                const blurOptions = poll.displaySettings?.blurOptions ?? false;
-                
-                switch (chartType) {
-                  case 'vertical':
+              <div className="flex-1 overflow-hidden">
+                {(() => {
+                  const chartType = poll.displaySettings?.chartType || 'horizontal';
+                  const showPercentages = poll.displaySettings?.showPercentages ?? true;
+                  const showVoteCounts = poll.displaySettings?.showVoteCounts ?? true;
+                  const blurOptions = poll.displaySettings?.blurOptions ?? false;
+                  
+                  if (totalVotes === 0) {
                     return (
-                      <VerticalChart 
-                        options={poll.options}
-                        showPercentages={showPercentages}
-                        showVoteCounts={showVoteCounts}
-                        blurOptions={blurOptions}
-                      />
+                      <div className="flex items-center justify-center h-full text-gray-500">
+                        <div className="text-center">
+                          <div className="text-6xl mb-4">🗳️</div>
+                          <p className="text-xl">{t.display.waitingForVotes}</p>
+                        </div>
+                      </div>
                     );
-                  case 'pie':
-                    return (
-                      <PieChart 
-                        options={poll.options}
-                        showPercentages={showPercentages}
-                        showVoteCounts={showVoteCounts}
-                        blurOptions={blurOptions}
-                      />
-                    );
-                  default:
-                    return (
-                      <HorizontalChart 
-                        options={poll.options}
-                        showPercentages={showPercentages}
-                        showVoteCounts={showVoteCounts}
-                        blurOptions={blurOptions}
-                      />
-                    );
-                }
-              })()}
-
-              {totalVotes === 0 && (
-                <div className="text-center py-12 text-gray-500">
-                  <div className="text-6xl mb-4">🗳️</div>
-                  <p className="text-xl">{t.display.waitingForVotes}</p>
-                </div>
-              )}
+                  }
+                  
+                  switch (chartType) {
+                    case 'vertical':
+                      return (
+                        <VerticalChart 
+                          options={poll.options}
+                          showPercentages={showPercentages}
+                          showVoteCounts={showVoteCounts}
+                          blurOptions={blurOptions}
+                        />
+                      );
+                    case 'pie':
+                      return (
+                        <PieChart 
+                          options={poll.options}
+                          showPercentages={showPercentages}
+                          showVoteCounts={showVoteCounts}
+                          blurOptions={blurOptions}
+                        />
+                      );
+                    default:
+                      return (
+                        <HorizontalChart 
+                          options={poll.options}
+                          showPercentages={showPercentages}
+                          showVoteCounts={showVoteCounts}
+                          blurOptions={blurOptions}
+                        />
+                      );
+                  }
+                })()}
+              </div>
             </div>
           </div>
 
           {/* QR Code i instrukcje */}
-          <div className="space-y-6">
-            <div className="bg-white rounded-2xl shadow-sm p-8 text-center">
+          <div className="xl:col-span-1">
+            <div className="bg-white rounded-2xl shadow-sm p-6 h-[calc(100vh-200px)] flex flex-col">
               <div className="flex items-center justify-center gap-2 mb-6">
-                <QrCode className="w-6 h-6 text-blue-600" />
-                <h2 className="text-2xl font-bold text-gray-900">{t.display.joinVoting}</h2>
+                <QrCode className="w-5 h-5 text-blue-600" />
+                <h2 className="text-lg font-bold text-gray-900 text-center">{t.display.joinVoting}</h2>
               </div>
               
               {qrCodeUrl && (
-                <div className="mb-6">
+                <div className="mb-6 flex-shrink-0">
                   <img 
                     src={qrCodeUrl} 
                     alt="QR Code" 
-                    className="mx-auto rounded-lg shadow-sm"
+                    className="mx-auto rounded-lg shadow-sm w-full max-w-48"
                   />
                 </div>
               )}
               
-              <div className="space-y-4 text-left">
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
+              <div className="space-y-3 text-left flex-1 overflow-y-auto">
+                <div className="flex items-start gap-2">
+                  <div className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">
                     1
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900">{t.display.scanQR}</h4>
-                    <p className="text-gray-600 text-sm">{t.display.instructions.step1}</p>
+                    <h4 className="font-semibold text-gray-900 text-sm">{t.display.scanQR}</h4>
+                    <p className="text-gray-600 text-xs">{t.display.instructions.step1}</p>
                   </div>
                 </div>
                 
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
+                <div className="flex items-start gap-2">
+                  <div className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">
                     2
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900">{t.display.instructions.step2}</h4>
-                    <p className="text-gray-600 text-sm">{t.display.instructions.step3}</p>
+                    <h4 className="font-semibold text-gray-900 text-sm">{t.display.instructions.step2}</h4>
+                    <p className="text-gray-600 text-xs">{t.display.instructions.step3}</p>
                   </div>
                 </div>
                 
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
+                <div className="flex items-start gap-2">
+                  <div className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">
                     3
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900">{t.voting.currentResults}</h4>
-                    <p className="text-gray-600 text-sm">{t.features.live.description}</p>
+                    <h4 className="font-semibold text-gray-900 text-sm">{t.voting.currentResults}</h4>
+                    <p className="text-gray-600 text-xs">{t.features.live.description}</p>
                   </div>
                 </div>
               </div>
             </div>
-
-
           </div>
         </div>
       </div>

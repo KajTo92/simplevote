@@ -17,22 +17,29 @@ export const HorizontalChart: React.FC<ChartProps> = ({
 }) => {
   const totalVotes = options.reduce((sum, option) => sum + option.votes, 0);
   const maxVotes = Math.max(...options.map(option => option.votes));
+  
+  // Dynamiczne skalowanie w zależności od liczby opcji
+  const optionCount = options.length;
+  const spacing = optionCount <= 4 ? 'space-y-6' : optionCount <= 8 ? 'space-y-4' : 'space-y-3';
+  const barHeight = optionCount <= 4 ? 'h-12' : optionCount <= 8 ? 'h-10' : 'h-8';
+  const titleSize = optionCount <= 4 ? 'text-xl' : optionCount <= 8 ? 'text-lg' : 'text-base';
+  const voteSize = optionCount <= 4 ? 'text-2xl' : optionCount <= 8 ? 'text-xl' : 'text-lg';
 
   return (
-    <div className="space-y-6">
+    <div className={`${spacing} max-h-[70vh] overflow-y-auto`}>
       {options.map((option) => {
         const percentage = totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
         const isWinning = option.votes === maxVotes && maxVotes > 0;
         
         return (
           <div key={option.id} className="relative">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className={`text-xl font-semibold ${isWinning ? 'text-yellow-700' : 'text-gray-900'} ${blurOptions ? 'blur-sm select-none' : ''}`}>
+            <div className="flex items-center justify-between mb-2">
+              <h3 className={`${titleSize} font-semibold line-clamp-2 flex-1 pr-4 ${isWinning ? 'text-yellow-700' : 'text-gray-900'} ${blurOptions ? 'blur-sm select-none' : ''}`}>
                 {isWinning && '👑 '}{blurOptions ? '••••••••' : option.text}
               </h3>
-              <div className="text-right">
+              <div className="text-right flex-shrink-0">
                 {showVoteCounts && (
-                  <div className={`text-2xl font-bold ${isWinning ? 'text-yellow-700' : 'text-gray-900'}`}>
+                  <div className={`${voteSize} font-bold ${isWinning ? 'text-yellow-700' : 'text-gray-900'}`}>
                     {option.votes}
                   </div>
                 )}
@@ -44,7 +51,7 @@ export const HorizontalChart: React.FC<ChartProps> = ({
               </div>
             </div>
             
-            <div className="relative h-12 bg-gray-100 rounded-full overflow-hidden">
+            <div className={`relative ${barHeight} bg-gray-100 rounded-full overflow-hidden`}>
               <div
                 className={`h-full rounded-full transition-all duration-1000 ease-out ${
                   isWinning ? 'shadow-lg scale-y-110' : ''
@@ -59,7 +66,7 @@ export const HorizontalChart: React.FC<ChartProps> = ({
               {/* Animated particles for winning option */}
               {isWinning && option.votes > 0 && (
                 <div className="absolute inset-0 overflow-hidden">
-                  {[...Array(3)].map((_, i) => (
+                  {[...Array(Math.min(3, Math.floor(percentage / 20)))].map((_, i) => (
                     <div
                       key={i}
                       className="absolute top-1/2 animate-ping"
@@ -90,32 +97,41 @@ export const VerticalChart: React.FC<ChartProps> = ({
 }) => {
   const totalVotes = options.reduce((sum, option) => sum + option.votes, 0);
   const maxVotes = Math.max(...options.map(option => option.votes));
+  
+  // Dynamiczne skalowanie w zależności od liczby opcji
+  const optionCount = options.length;
+  const gap = optionCount <= 4 ? 'gap-6' : optionCount <= 8 ? 'gap-4' : optionCount <= 12 ? 'gap-2' : 'gap-1';
+  const maxWidth = optionCount <= 4 ? 'max-w-32' : optionCount <= 8 ? 'max-w-24' : optionCount <= 12 ? 'max-w-16' : 'max-w-12';
+  const chartHeight = optionCount <= 6 ? 'h-80' : optionCount <= 10 ? 'h-72' : 'h-64';
+  const barHeight = optionCount <= 6 ? '240px' : optionCount <= 10 ? '200px' : '160px';
+  const textSize = optionCount <= 6 ? 'text-lg' : optionCount <= 10 ? 'text-base' : 'text-sm';
+  const labelSize = optionCount <= 6 ? 'text-sm' : optionCount <= 10 ? 'text-xs' : 'text-xs';
 
   return (
-    <div className="flex items-end justify-center gap-4 h-80 px-4">
+    <div className={`flex items-end justify-center ${gap} ${chartHeight} px-2 overflow-x-auto`}>
       {options.map((option) => {
         const percentage = totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
         const height = maxVotes > 0 ? (option.votes / maxVotes) * 100 : 0;
         const isWinning = option.votes === maxVotes && maxVotes > 0;
         
         return (
-          <div key={option.id} className="flex flex-col items-center flex-1 max-w-24">
+          <div key={option.id} className={`flex flex-col items-center flex-1 ${maxWidth} min-w-8`}>
             {/* Wartości nad słupkiem */}
-            <div className="mb-2 text-center min-h-12 flex flex-col justify-end">
+            <div className="mb-1 text-center min-h-8 flex flex-col justify-end">
               {showVoteCounts && (
-                <div className={`text-lg font-bold ${isWinning ? 'text-yellow-700' : 'text-gray-900'}`}>
+                <div className={`${textSize} font-bold ${isWinning ? 'text-yellow-700' : 'text-gray-900'}`}>
                   {isWinning && '👑'} {option.votes}
                 </div>
               )}
               {showPercentages && (
                 <div className="text-xs text-gray-500">
-                  {percentage.toFixed(1)}%
+                  {percentage.toFixed(optionCount > 10 ? 0 : 1)}%
                 </div>
               )}
             </div>
             
             {/* Słupek */}
-            <div className="relative w-full bg-gray-100 rounded-t-lg overflow-hidden" style={{ height: '240px' }}>
+            <div className="relative w-full bg-gray-100 rounded-t-lg overflow-hidden" style={{ height: barHeight }}>
               <div
                 className={`absolute bottom-0 w-full rounded-t-lg transition-all duration-1000 ease-out ${
                   isWinning ? 'shadow-lg' : ''
@@ -128,7 +144,7 @@ export const VerticalChart: React.FC<ChartProps> = ({
               />
               
               {/* Animated particles for winning option */}
-              {isWinning && option.votes > 0 && (
+              {isWinning && option.votes > 0 && optionCount <= 8 && (
                 <div className="absolute inset-0 overflow-hidden">
                   {[...Array(2)].map((_, i) => (
                     <div
@@ -148,8 +164,8 @@ export const VerticalChart: React.FC<ChartProps> = ({
             </div>
             
             {/* Etykieta opcji */}
-            <div className="mt-3 text-center">
-              <div className={`text-sm font-medium ${isWinning ? 'text-yellow-700' : 'text-gray-900'} ${blurOptions ? 'blur-sm select-none' : ''}`}>
+            <div className="mt-2 text-center w-full">
+              <div className={`${labelSize} font-medium leading-tight ${isWinning ? 'text-yellow-700' : 'text-gray-900'} ${blurOptions ? 'blur-sm select-none' : ''} ${optionCount > 8 ? 'line-clamp-2' : ''}`}>
                 {blurOptions ? '••••••••' : option.text}
               </div>
             </div>
@@ -170,11 +186,21 @@ export const PieChart: React.FC<ChartProps> = ({
   const totalVotes = options.reduce((sum, option) => sum + option.votes, 0);
   const maxVotes = Math.max(...options.map(option => option.votes));
   
+  // Dynamiczne skalowanie w zależności od liczby opcji
+  const optionCount = options.length;
+  const chartSize = optionCount <= 6 ? 240 : optionCount <= 10 ? 200 : 180;
+  const radius = optionCount <= 6 ? 96 : optionCount <= 10 ? 80 : 72;
+  const center = chartSize / 2;
+  const legendSpacing = optionCount <= 6 ? 'space-y-3' : optionCount <= 10 ? 'space-y-2' : 'space-y-1';
+  const legendTextSize = optionCount <= 6 ? 'font-medium' : optionCount <= 10 ? 'text-sm font-medium' : 'text-xs font-medium';
+  const legendSubTextSize = optionCount <= 6 ? 'text-sm' : optionCount <= 10 ? 'text-xs' : 'text-xs';
+  const crownSize = optionCount <= 6 ? 'text-4xl' : optionCount <= 10 ? 'text-3xl' : 'text-2xl';
+  
   if (totalVotes === 0) {
     return (
       <div className="flex items-center justify-center h-80">
         <div className="text-center text-gray-500">
-          <div className="w-48 h-48 mx-auto mb-4 border-4 border-gray-200 rounded-full flex items-center justify-center">
+          <div className={`w-${Math.floor(chartSize/12)*3} h-${Math.floor(chartSize/12)*3} mx-auto mb-4 border-4 border-gray-200 rounded-full flex items-center justify-center`}>
             <span className="text-6xl">🗳️</span>
           </div>
           <p className="text-lg">{t.display.waitingForVotes}</p>
@@ -184,14 +210,12 @@ export const PieChart: React.FC<ChartProps> = ({
   }
 
   let currentAngle = 0;
-  const radius = 96; // 24rem/4 = 96px
-  const center = 120; // radius + padding
 
   return (
-    <div className="flex flex-col lg:flex-row items-center gap-8">
+    <div className={`flex ${optionCount > 8 ? 'flex-col' : 'flex-col lg:flex-row'} items-center gap-6 max-h-[70vh] overflow-y-auto`}>
       {/* Wykres kołowy */}
-      <div className="relative">
-        <svg width="240" height="240" className="transform -rotate-90">
+      <div className="relative flex-shrink-0">
+        <svg width={chartSize} height={chartSize} className="transform -rotate-90">
           {options.map((option) => {
             const percentage = (option.votes / totalVotes) * 100;
             const angle = (option.votes / totalVotes) * 360;
@@ -230,7 +254,7 @@ export const PieChart: React.FC<ChartProps> = ({
                   }}
                 />
                 {/* Efekt animacji dla wygrywającej opcji */}
-                {isWinning && (
+                {isWinning && optionCount <= 8 && (
                   <path
                     d={pathData}
                     fill="none"
@@ -247,32 +271,32 @@ export const PieChart: React.FC<ChartProps> = ({
         {/* Wygrywająca ikona w centrum */}
         {maxVotes > 0 && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-4xl animate-bounce">👑</div>
+            <div className={`${crownSize} animate-bounce`}>👑</div>
           </div>
         )}
       </div>
       
       {/* Legenda */}
-      <div className="space-y-3">
+      <div className={`${legendSpacing} ${optionCount > 8 ? 'max-h-64 overflow-y-auto w-full' : ''} ${optionCount > 12 ? 'grid grid-cols-2 gap-x-4' : ''}`}>
         {options.map((option) => {
           const percentage = totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
           const isWinning = option.votes === maxVotes && maxVotes > 0;
           
           return (
-            <div key={option.id} className="flex items-center gap-3">
+            <div key={option.id} className="flex items-center gap-2">
               <div
-                className="w-4 h-4 rounded-full"
+                className={`${optionCount <= 10 ? 'w-4 h-4' : 'w-3 h-3'} rounded-full flex-shrink-0`}
                 style={{ backgroundColor: option.color }}
               />
-              <div className="flex-1">
-                <div className={`font-medium ${isWinning ? 'text-yellow-700' : 'text-gray-900'} ${blurOptions ? 'blur-sm select-none' : ''}`}>
+              <div className="flex-1 min-w-0">
+                <div className={`${legendTextSize} leading-tight ${isWinning ? 'text-yellow-700' : 'text-gray-900'} ${blurOptions ? 'blur-sm select-none' : ''} ${optionCount > 8 ? 'line-clamp-1' : ''}`}>
                   {isWinning && '👑 '}{blurOptions ? '••••••••' : option.text}
                 </div>
-                <div className="text-sm text-gray-500">
+                <div className={`${legendSubTextSize} text-gray-500`}>
                   {showVoteCounts && showPercentages && `${option.votes} ${t.admin.votes} • `}
                   {showVoteCounts && !showPercentages && `${option.votes} ${t.admin.votes}`}
-                  {!showVoteCounts && showPercentages && `${percentage.toFixed(1)}%`}
-                  {showVoteCounts && showPercentages && `${percentage.toFixed(1)}%`}
+                  {!showVoteCounts && showPercentages && `${percentage.toFixed(optionCount > 10 ? 0 : 1)}%`}
+                  {showVoteCounts && showPercentages && `${percentage.toFixed(optionCount > 10 ? 0 : 1)}%`}
                 </div>
               </div>
             </div>
