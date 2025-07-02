@@ -154,14 +154,16 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Demo Info */}
-        <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h3 className="font-medium text-blue-900 mb-2">ℹ️ Informacja</h3>
-          <p className="text-blue-700 text-sm">
-            Musisz skonfigurować Supabase w pliku <code className="bg-blue-200 px-1 rounded">.env.local</code> 
-            {' '}aby funkcja logowania działała poprawnie.
-          </p>
-        </div>
+        {/* Configuration Info - tylko gdy brak konfiguracji */}
+        {(!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) && (
+          <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <h3 className="font-medium text-blue-900 mb-2">ℹ️ Informacja</h3>
+            <p className="text-blue-700 text-sm">
+              Musisz skonfigurować Supabase w pliku <code className="bg-blue-200 px-1 rounded">.env.local</code> 
+              {' '}aby funkcja logowania działała poprawnie.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   )
