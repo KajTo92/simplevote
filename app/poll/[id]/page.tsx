@@ -264,13 +264,7 @@ export default function PollDisplayPage() {
               </div>
             </div>
 
-            {/* Link do głosowania */}
-            <div className="bg-white rounded-2xl shadow-sm p-6">
-              <h3 className="font-semibold text-gray-900 mb-3">{t.display.joinVoting}</h3>
-              <div className="bg-gray-50 rounded-lg p-3 text-sm text-gray-600 break-all">
-                {typeof window !== 'undefined' && `${window.location.origin}/vote/${pollId}`}
-              </div>
-            </div>
+
           </div>
         </div>
       </div>
