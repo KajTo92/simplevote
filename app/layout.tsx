@@ -14,7 +14,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="pl">
+    <html lang="en">
       <body className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
         <LanguageProvider>
           <AuthProvider>

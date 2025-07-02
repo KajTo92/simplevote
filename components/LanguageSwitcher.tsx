@@ -11,27 +11,27 @@ export function LanguageSwitcher({ className = '' }: LanguageSwitcherProps) {
   const { language, setLanguage } = useLanguage();
 
   const languages: { code: Language; flag: string; name: string }[] = [
-    { code: 'pl', flag: '🇵🇱', name: 'Polski' },
-    { code: 'en', flag: '🇬🇧', name: 'English' }
+    { code: 'en', flag: '🇬🇧', name: 'English' },
+    { code: 'pl', flag: '🇵🇱', name: 'Polski' }
   ];
 
   return (
-    <div className={`flex gap-2 ${className}`}>
+    <div className={`flex gap-1 ${className}`}>
       {languages.map((lang) => (
         <button
           key={lang.code}
           onClick={() => setLanguage(lang.code)}
           className={`
-            flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200
+            flex items-center gap-1.5 px-2 py-1.5 rounded-md transition-all duration-200 text-xs
             ${language === lang.code 
-              ? 'bg-blue-100 text-blue-700 border-2 border-blue-300' 
-              : 'bg-white/20 text-gray-700 border-2 border-transparent hover:bg-white/30'
+              ? 'bg-white/40 text-gray-800 shadow-sm border border-white/30' 
+              : 'bg-white/10 text-gray-600 border border-transparent hover:bg-white/20 hover:text-gray-800'
             }
           `}
           title={lang.name}
         >
-          <span className="text-lg">{lang.flag}</span>
-          <span className="text-sm font-medium hidden sm:inline">{lang.name}</span>
+          <span className="text-sm">{lang.flag}</span>
+          <span className="font-medium hidden sm:inline">{lang.code.toUpperCase()}</span>
         </button>
       ))}
     </div>
