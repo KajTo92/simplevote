@@ -136,7 +136,7 @@ export async function getPoll(id: string): Promise<Poll | null> {
       chartType: 'horizontal',
       showPercentages: true,
       showVoteCounts: true,
-      blurOptions: false
+      hideBars: false
     }
   }
 }
@@ -204,7 +204,7 @@ export async function getAllPolls(): Promise<Poll[]> {
         chartType: 'horizontal',
         showPercentages: true,
         showVoteCounts: true,
-        blurOptions: false
+        hideBars: false
       }
     })
   }

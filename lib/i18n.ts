@@ -76,7 +76,7 @@ export const translations = {
       displayOptions: 'Opcje wyświetlania',
       showPercentages: 'Pokaż procenty',
       showVoteCounts: 'Pokaż liczby głosów',
-      blurOptions: 'Ukryj nazwy opcji',
+      hideBars: 'Ukryj słupki (animacja)',
       saving: 'Zapisywanie...'
     },
     
@@ -205,7 +205,7 @@ export const translations = {
       displayOptions: 'Display Options',
       showPercentages: 'Show Percentages',
       showVoteCounts: 'Show Vote Counts',
-      blurOptions: 'Hide Option Names',
+      hideBars: 'Hide Bars (animation)',
       saving: 'Saving...'
     },
     

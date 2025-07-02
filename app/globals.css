@@ -58,4 +58,99 @@
   .h-6 {
     height: 1.5rem;
   }
+}
+
+/* Animacje dla ukrywania słupków */
+@keyframes irregularBounce {
+  0% {
+    width: 30%;
+    transform: scaleX(1);
+  }
+  10% {
+    width: 35%;
+    transform: scaleX(1.01);
+  }
+  20% {
+    width: 45%;
+    transform: scaleX(1.015);
+  }
+  30% {
+    width: 40%;
+    transform: scaleX(0.99);
+  }
+  40% {
+    width: 50%;
+    transform: scaleX(1.02);
+  }
+  50% {
+    width: 35%;
+    transform: scaleX(0.985);
+  }
+  60% {
+    width: 55%;
+    transform: scaleX(1.01);
+  }
+  70% {
+    width: 38%;
+    transform: scaleX(0.995);
+  }
+  80% {
+    width: 48%;
+    transform: scaleX(1.005);
+  }
+  90% {
+    width: 42%;
+    transform: scaleX(1.01);
+  }
+  100% {
+    width: 45%;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes irregularVerticalBounce {
+  0% {
+    height: 35%;
+    transform: scaleY(1);
+  }
+  10% {
+    height: 40%;
+    transform: scaleY(1.01);
+  }
+  20% {
+    height: 55%;
+    transform: scaleY(1.015);
+  }
+  30% {
+    height: 45%;
+    transform: scaleY(0.99);
+  }
+  40% {
+    height: 60%;
+    transform: scaleY(1.02);
+  }
+  50% {
+    height: 40%;
+    transform: scaleY(0.985);
+  }
+  60% {
+    height: 65%;
+    transform: scaleY(1.01);
+  }
+  70% {
+    height: 42%;
+    transform: scaleY(0.995);
+  }
+  80% {
+    height: 58%;
+    transform: scaleY(1.005);
+  }
+  90% {
+    height: 48%;
+    transform: scaleY(1.01);
+  }
+  100% {
+    height: 50%;
+    transform: scaleY(1);
+  }
 } 

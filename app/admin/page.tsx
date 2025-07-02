@@ -21,7 +21,7 @@ export default function AdminPage() {
   const [chartType, setChartType] = useState<'horizontal' | 'vertical' | 'pie'>('horizontal');
   const [showPercentages, setShowPercentages] = useState(true);
   const [showVoteCounts, setShowVoteCounts] = useState(true);
-  const [blurOptions, setBlurOptions] = useState(false);
+  const [hideBars, setHideBars] = useState(false);
   const { user, signOut } = useAuth();
   const { t } = useLanguage();
 
@@ -37,7 +37,7 @@ export default function AdminPage() {
         setChartType(poll.displaySettings?.chartType || 'horizontal');
         setShowPercentages(poll.displaySettings?.showPercentages ?? true);
         setShowVoteCounts(poll.displaySettings?.showVoteCounts ?? true);
-        setBlurOptions(poll.displaySettings?.blurOptions ?? false);
+        setHideBars(poll.displaySettings?.hideBars ?? false);
       }
     }
   }, [showDisplaySettings, polls]);
@@ -179,7 +179,7 @@ export default function AdminPage() {
             chartType,
             showPercentages,
             showVoteCounts,
-            blurOptions
+            hideBars
           }
         }),
       });
@@ -572,11 +572,11 @@ export default function AdminPage() {
                         <label className="flex items-center">
                           <input
                             type="checkbox"
-                            checked={blurOptions}
-                            onChange={(e) => setBlurOptions(e.target.checked)}
+                            checked={hideBars}
+                            onChange={(e) => setHideBars(e.target.checked)}
                             className="mr-2"
                           />
-                          <span className="text-sm">{t.admin.blurOptions}</span>
+                          <span className="text-sm">{t.admin.hideBars}</span>
                         </label>
                     </div>
                   </div>

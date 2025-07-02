@@ -6,14 +6,14 @@ interface ChartProps {
   options: PollOption[];
   showPercentages?: boolean;
   showVoteCounts?: boolean;
-  blurOptions?: boolean;
+  hideBars?: boolean;
 }
 
 export const HorizontalChart: React.FC<ChartProps> = ({ 
   options, 
   showPercentages = true, 
   showVoteCounts = true,
-  blurOptions = false
+  hideBars = false
 }) => {
   const totalVotes = options.reduce((sum, option) => sum + option.votes, 0);
   const maxVotes = Math.max(...options.map(option => option.votes));
@@ -35,16 +35,16 @@ export const HorizontalChart: React.FC<ChartProps> = ({
         return (
           <div key={option.id} className="relative">
             <div className={`flex items-center justify-between ${marginBottom}`}>
-              <h3 className={`${titleSize} font-semibold line-clamp-1 flex-1 pr-2 ${isWinning ? 'text-yellow-700' : 'text-gray-900'} ${blurOptions ? 'blur-sm select-none' : ''}`}>
-                {isWinning && '👑 '}{blurOptions ? '••••••••' : option.text}
+              <h3 className={`${titleSize} font-semibold line-clamp-1 flex-1 pr-2 ${isWinning ? 'text-yellow-700' : 'text-gray-900'}`}>
+                {isWinning && '👑 '}{option.text}
               </h3>
               <div className="text-right flex-shrink-0">
-                {showVoteCounts && (
+                {showVoteCounts && !hideBars && (
                   <div className={`${voteSize} font-bold ${isWinning ? 'text-yellow-700' : 'text-gray-900'}`}>
                     {option.votes}
                   </div>
                 )}
-                {showPercentages && (
+                {showPercentages && !hideBars && (
                   <div className={`${optionCount > 12 ? 'text-xs' : 'text-sm'} text-gray-500`}>
                     {percentage.toFixed(optionCount > 16 ? 0 : 1)}%
                   </div>
@@ -56,11 +56,13 @@ export const HorizontalChart: React.FC<ChartProps> = ({
               <div
                 className={`h-full rounded-full transition-all duration-1000 ease-out ${
                   isWinning ? 'shadow-lg scale-y-110' : ''
-                }`}
+                } ${hideBars ? 'animate-pulse' : ''}`}
                 style={{ 
-                  width: `${percentage}%`,
+                  width: hideBars ? `${Math.random() * 80 + 10}%` : `${percentage}%`,
                   backgroundColor: option.color,
-                  boxShadow: isWinning ? `0 0 20px ${option.color}40` : 'none'
+                  boxShadow: isWinning ? `0 0 20px ${option.color}40` : 'none',
+                  animation: hideBars ? `irregularBounce ${8 + Math.random() * 6}s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite` : undefined,
+                  animationFillMode: hideBars ? 'both' : undefined
                 }}
               />
               
@@ -94,7 +96,7 @@ export const VerticalChart: React.FC<ChartProps> = ({
   options, 
   showPercentages = true, 
   showVoteCounts = true,
-  blurOptions = false
+  hideBars = false
 }) => {
   const totalVotes = options.reduce((sum, option) => sum + option.votes, 0);
   const maxVotes = Math.max(...options.map(option => option.votes));
@@ -104,50 +106,49 @@ export const VerticalChart: React.FC<ChartProps> = ({
   const gap = optionCount <= 4 ? 'gap-6' : optionCount <= 8 ? 'gap-3' : optionCount <= 12 ? 'gap-2' : optionCount <= 16 ? 'gap-1' : 'gap-0.5';
   const maxWidth = optionCount <= 4 ? 'max-w-32' : optionCount <= 8 ? 'max-w-20' : optionCount <= 12 ? 'max-w-14' : optionCount <= 16 ? 'max-w-10' : 'max-w-8';
   const minWidth = optionCount <= 12 ? 'min-w-8' : optionCount <= 16 ? 'min-w-6' : 'min-w-4';
-  const chartHeight = 'h-full';
-  const barHeight = optionCount <= 6 ? '65%' : optionCount <= 10 ? '60%' : optionCount <= 16 ? '55%' : '50%';
   const textSize = optionCount <= 6 ? 'text-lg' : optionCount <= 10 ? 'text-base' : optionCount <= 16 ? 'text-sm' : 'text-xs';
   const labelSize = optionCount <= 6 ? 'text-sm' : optionCount <= 10 ? 'text-xs' : optionCount <= 16 ? 'text-xs' : 'text-xs';
-  const topSpacing = optionCount <= 8 ? 'mb-1' : 'mb-0.5';
 
   return (
-    <div className={`flex items-end justify-center ${gap} ${chartHeight} px-1`}>
+    <div className={`flex items-end justify-center ${gap} h-full px-1`}>
       {options.map((option) => {
         const percentage = totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
         const height = maxVotes > 0 ? (option.votes / maxVotes) * 100 : 0;
         const isWinning = option.votes === maxVotes && maxVotes > 0;
         
         return (
-          <div key={option.id} className={`flex flex-col items-center flex-1 ${maxWidth} ${minWidth}`}>
-            {/* Wartości nad słupkiem */}
-            <div className={`${topSpacing} text-center flex flex-col justify-end`} style={{ height: '20%' }}>
-              {showVoteCounts && (
+          <div key={option.id} className={`flex flex-col items-center flex-1 ${maxWidth} ${minWidth} h-full`}>
+            {/* Wartości nad słupkiem - stała wysokość */}
+            <div className="text-center mb-2 flex-shrink-0">
+              {showVoteCounts && !hideBars && (
                 <div className={`${textSize} font-bold ${isWinning ? 'text-yellow-700' : 'text-gray-900'}`}>
                   {isWinning && '👑'} {option.votes}
                 </div>
               )}
-              {showPercentages && (
+              {showPercentages && !hideBars && (
                 <div className={`${optionCount > 12 ? 'text-xs' : 'text-xs'} text-gray-500`}>
                   {percentage.toFixed(optionCount > 16 ? 0 : 1)}%
                 </div>
               )}
             </div>
             
-            {/* Słupek */}
-            <div className="relative w-full bg-gray-100 rounded-t-lg overflow-hidden flex-1" style={{ height: barHeight }}>
+            {/* Słupek - flex-grow zajmuje dostępną przestrzeń */}
+            <div className="relative w-full bg-gray-100 rounded-t-lg overflow-hidden flex-grow">
               <div
                 className={`absolute bottom-0 w-full rounded-t-lg transition-all duration-1000 ease-out ${
                   isWinning ? 'shadow-lg' : ''
-                }`}
+                } ${hideBars ? 'animate-pulse' : ''}`}
                 style={{ 
-                  height: `${height}%`,
+                  height: hideBars ? `${Math.random() * 60 + 20}%` : `${height}%`,
                   backgroundColor: option.color,
-                  boxShadow: isWinning ? `0 0 20px ${option.color}40` : 'none'
+                  boxShadow: isWinning ? `0 0 20px ${option.color}40` : 'none',
+                  animation: hideBars ? `irregularVerticalBounce ${10 + Math.random() * 8}s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite` : undefined,
+                  animationFillMode: hideBars ? 'both' : undefined
                 }}
               />
               
               {/* Animated particles for winning option */}
-              {isWinning && option.votes > 0 && optionCount <= 8 && (
+              {isWinning && option.votes > 0 && optionCount <= 8 && !hideBars && (
                 <div className="absolute inset-0 overflow-hidden">
                   {[...Array(2)].map((_, i) => (
                     <div
@@ -166,10 +167,10 @@ export const VerticalChart: React.FC<ChartProps> = ({
               )}
             </div>
             
-            {/* Etykieta opcji */}
-            <div className="text-center w-full" style={{ height: '15%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <div className={`${labelSize} font-medium leading-tight ${isWinning ? 'text-yellow-700' : 'text-gray-900'} ${blurOptions ? 'blur-sm select-none' : ''} line-clamp-2`}>
-                {blurOptions ? '••••••••' : option.text}
+            {/* Etykieta opcji - stała wysokość */}
+            <div className="text-center mt-2 flex-shrink-0 max-h-12 overflow-hidden">
+              <div className={`${labelSize} font-medium leading-tight ${isWinning ? 'text-yellow-700' : 'text-gray-900'} line-clamp-2`}>
+                {option.text}
               </div>
             </div>
           </div>
@@ -183,7 +184,7 @@ export const PieChart: React.FC<ChartProps> = ({
   options, 
   showPercentages = true, 
   showVoteCounts = true,
-  blurOptions = false
+  hideBars = false
 }) => {
   const { t } = useLanguage();
   const totalVotes = options.reduce((sum, option) => sum + option.votes, 0);
@@ -294,14 +295,14 @@ export const PieChart: React.FC<ChartProps> = ({
                 style={{ backgroundColor: option.color }}
               />
               <div className="flex-1 min-w-0">
-                <div className={`${legendTextSize} leading-tight ${isWinning ? 'text-yellow-700' : 'text-gray-900'} ${blurOptions ? 'blur-sm select-none' : ''} line-clamp-1`}>
-                  {isWinning && '👑 '}{blurOptions ? '••••••••' : option.text}
+                <div className={`${legendTextSize} leading-tight ${isWinning ? 'text-yellow-700' : 'text-gray-900'} line-clamp-1`}>
+                  {isWinning && '👑 '}{option.text}
                 </div>
                 <div className={`${legendSubTextSize} text-gray-500`}>
-                  {showVoteCounts && showPercentages && `${option.votes} ${t.admin.votes} • `}
-                  {showVoteCounts && !showPercentages && `${option.votes} ${t.admin.votes}`}
-                  {!showVoteCounts && showPercentages && `${percentage.toFixed(optionCount > 16 ? 0 : 1)}%`}
-                  {showVoteCounts && showPercentages && `${percentage.toFixed(optionCount > 16 ? 0 : 1)}%`}
+                  {showVoteCounts && showPercentages && !hideBars && `${option.votes} ${t.admin.votes} • `}
+                  {showVoteCounts && !showPercentages && !hideBars && `${option.votes} ${t.admin.votes}`}
+                  {!showVoteCounts && showPercentages && !hideBars && `${percentage.toFixed(optionCount > 16 ? 0 : 1)}%`}
+                  {showVoteCounts && showPercentages && !hideBars && `${percentage.toFixed(optionCount > 16 ? 0 : 1)}%`}
                 </div>
               </div>
             </div>

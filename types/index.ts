@@ -12,7 +12,7 @@ export interface DisplaySettings {
   chartType: 'horizontal' | 'vertical' | 'pie';
   showPercentages: boolean;
   showVoteCounts: boolean;
-  blurOptions: boolean;
+  hideBars: boolean;
 }
 
 export interface PollOption {
