@@ -6,9 +6,18 @@ export async function updateSession(request: NextRequest) {
     request,
   })
 
+  // Sprawdź czy zmienne środowiskowe są dostępne
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.error('Missing Supabase environment variables in middleware')
+    return supabaseResponse
+  }
+
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseAnonKey,
     {
       cookies: {
         getAll() {
@@ -27,14 +36,22 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  // Odśwież sesję jeśli wygasła - wymagane aby zachować sesję dla Server Components
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  try {
+    // Odśwież sesję jeśli wygasła - wymagane aby zachować sesję dla Server Components
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
 
-  // Chroń routes administratora
-  if (request.nextUrl.pathname.startsWith('/admin') && !user) {
-    return NextResponse.redirect(new URL('/auth/login', request.url))
+    // Chroń routes administratora
+    if (request.nextUrl.pathname.startsWith('/admin') && !user) {
+      return NextResponse.redirect(new URL('/auth/login', request.url))
+    }
+  } catch (error) {
+    console.error('Error in middleware:', error)
+    // W przypadku błędu, przekieruj do logowania jeśli próbuje dostać się do /admin
+    if (request.nextUrl.pathname.startsWith('/admin')) {
+      return NextResponse.redirect(new URL('/auth/login', request.url))
+    }
   }
 
   return supabaseResponse
