@@ -18,23 +18,24 @@ export const HorizontalChart: React.FC<ChartProps> = ({
   const totalVotes = options.reduce((sum, option) => sum + option.votes, 0);
   const maxVotes = Math.max(...options.map(option => option.votes));
   
-  // Dynamiczne skalowanie w zależności od liczby opcji
+  // Agresywne skalowanie w zależności od liczby opcji - wszystko musi się zmieścić
   const optionCount = options.length;
-  const spacing = optionCount <= 4 ? 'space-y-6' : optionCount <= 8 ? 'space-y-4' : 'space-y-3';
-  const barHeight = optionCount <= 4 ? 'h-12' : optionCount <= 8 ? 'h-10' : 'h-8';
-  const titleSize = optionCount <= 4 ? 'text-xl' : optionCount <= 8 ? 'text-lg' : 'text-base';
-  const voteSize = optionCount <= 4 ? 'text-2xl' : optionCount <= 8 ? 'text-xl' : 'text-lg';
+  const spacing = optionCount <= 4 ? 'space-y-6' : optionCount <= 8 ? 'space-y-3' : optionCount <= 12 ? 'space-y-2' : optionCount <= 16 ? 'space-y-1' : 'space-y-0.5';
+  const barHeight = optionCount <= 4 ? 'h-12' : optionCount <= 8 ? 'h-8' : optionCount <= 12 ? 'h-6' : optionCount <= 16 ? 'h-5' : 'h-4';
+  const titleSize = optionCount <= 4 ? 'text-xl' : optionCount <= 8 ? 'text-lg' : optionCount <= 12 ? 'text-base' : optionCount <= 16 ? 'text-sm' : 'text-xs';
+  const voteSize = optionCount <= 4 ? 'text-2xl' : optionCount <= 8 ? 'text-xl' : optionCount <= 12 ? 'text-lg' : optionCount <= 16 ? 'text-base' : 'text-sm';
+  const marginBottom = optionCount <= 8 ? 'mb-2' : optionCount <= 12 ? 'mb-1' : 'mb-0.5';
 
   return (
-    <div className={`${spacing} max-h-[70vh] overflow-y-auto`}>
+    <div className={`${spacing} h-full flex flex-col justify-center`}>
       {options.map((option) => {
         const percentage = totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
         const isWinning = option.votes === maxVotes && maxVotes > 0;
         
         return (
           <div key={option.id} className="relative">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className={`${titleSize} font-semibold line-clamp-2 flex-1 pr-4 ${isWinning ? 'text-yellow-700' : 'text-gray-900'} ${blurOptions ? 'blur-sm select-none' : ''}`}>
+            <div className={`flex items-center justify-between ${marginBottom}`}>
+              <h3 className={`${titleSize} font-semibold line-clamp-1 flex-1 pr-2 ${isWinning ? 'text-yellow-700' : 'text-gray-900'} ${blurOptions ? 'blur-sm select-none' : ''}`}>
                 {isWinning && '👑 '}{blurOptions ? '••••••••' : option.text}
               </h3>
               <div className="text-right flex-shrink-0">
@@ -44,8 +45,8 @@ export const HorizontalChart: React.FC<ChartProps> = ({
                   </div>
                 )}
                 {showPercentages && (
-                  <div className="text-sm text-gray-500">
-                    {percentage.toFixed(1)}%
+                  <div className={`${optionCount > 12 ? 'text-xs' : 'text-sm'} text-gray-500`}>
+                    {percentage.toFixed(optionCount > 16 ? 0 : 1)}%
                   </div>
                 )}
               </div>
@@ -98,40 +99,42 @@ export const VerticalChart: React.FC<ChartProps> = ({
   const totalVotes = options.reduce((sum, option) => sum + option.votes, 0);
   const maxVotes = Math.max(...options.map(option => option.votes));
   
-  // Dynamiczne skalowanie w zależności od liczby opcji
+  // Agresywne skalowanie w zależności od liczby opcji - wszystko musi się zmieścić
   const optionCount = options.length;
-  const gap = optionCount <= 4 ? 'gap-6' : optionCount <= 8 ? 'gap-4' : optionCount <= 12 ? 'gap-2' : 'gap-1';
-  const maxWidth = optionCount <= 4 ? 'max-w-32' : optionCount <= 8 ? 'max-w-24' : optionCount <= 12 ? 'max-w-16' : 'max-w-12';
-  const chartHeight = optionCount <= 6 ? 'h-80' : optionCount <= 10 ? 'h-72' : 'h-64';
-  const barHeight = optionCount <= 6 ? '240px' : optionCount <= 10 ? '200px' : '160px';
-  const textSize = optionCount <= 6 ? 'text-lg' : optionCount <= 10 ? 'text-base' : 'text-sm';
-  const labelSize = optionCount <= 6 ? 'text-sm' : optionCount <= 10 ? 'text-xs' : 'text-xs';
+  const gap = optionCount <= 4 ? 'gap-6' : optionCount <= 8 ? 'gap-3' : optionCount <= 12 ? 'gap-2' : optionCount <= 16 ? 'gap-1' : 'gap-0.5';
+  const maxWidth = optionCount <= 4 ? 'max-w-32' : optionCount <= 8 ? 'max-w-20' : optionCount <= 12 ? 'max-w-14' : optionCount <= 16 ? 'max-w-10' : 'max-w-8';
+  const minWidth = optionCount <= 12 ? 'min-w-8' : optionCount <= 16 ? 'min-w-6' : 'min-w-4';
+  const chartHeight = 'h-full';
+  const barHeight = optionCount <= 6 ? '65%' : optionCount <= 10 ? '60%' : optionCount <= 16 ? '55%' : '50%';
+  const textSize = optionCount <= 6 ? 'text-lg' : optionCount <= 10 ? 'text-base' : optionCount <= 16 ? 'text-sm' : 'text-xs';
+  const labelSize = optionCount <= 6 ? 'text-sm' : optionCount <= 10 ? 'text-xs' : optionCount <= 16 ? 'text-xs' : 'text-xs';
+  const topSpacing = optionCount <= 8 ? 'mb-1' : 'mb-0.5';
 
   return (
-    <div className={`flex items-end justify-center ${gap} ${chartHeight} px-2 overflow-x-auto`}>
+    <div className={`flex items-end justify-center ${gap} ${chartHeight} px-1`}>
       {options.map((option) => {
         const percentage = totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
         const height = maxVotes > 0 ? (option.votes / maxVotes) * 100 : 0;
         const isWinning = option.votes === maxVotes && maxVotes > 0;
         
         return (
-          <div key={option.id} className={`flex flex-col items-center flex-1 ${maxWidth} min-w-8`}>
+          <div key={option.id} className={`flex flex-col items-center flex-1 ${maxWidth} ${minWidth}`}>
             {/* Wartości nad słupkiem */}
-            <div className="mb-1 text-center min-h-8 flex flex-col justify-end">
+            <div className={`${topSpacing} text-center flex flex-col justify-end`} style={{ height: '20%' }}>
               {showVoteCounts && (
                 <div className={`${textSize} font-bold ${isWinning ? 'text-yellow-700' : 'text-gray-900'}`}>
                   {isWinning && '👑'} {option.votes}
                 </div>
               )}
               {showPercentages && (
-                <div className="text-xs text-gray-500">
-                  {percentage.toFixed(optionCount > 10 ? 0 : 1)}%
+                <div className={`${optionCount > 12 ? 'text-xs' : 'text-xs'} text-gray-500`}>
+                  {percentage.toFixed(optionCount > 16 ? 0 : 1)}%
                 </div>
               )}
             </div>
             
             {/* Słupek */}
-            <div className="relative w-full bg-gray-100 rounded-t-lg overflow-hidden" style={{ height: barHeight }}>
+            <div className="relative w-full bg-gray-100 rounded-t-lg overflow-hidden flex-1" style={{ height: barHeight }}>
               <div
                 className={`absolute bottom-0 w-full rounded-t-lg transition-all duration-1000 ease-out ${
                   isWinning ? 'shadow-lg' : ''
@@ -164,8 +167,8 @@ export const VerticalChart: React.FC<ChartProps> = ({
             </div>
             
             {/* Etykieta opcji */}
-            <div className="mt-2 text-center w-full">
-              <div className={`${labelSize} font-medium leading-tight ${isWinning ? 'text-yellow-700' : 'text-gray-900'} ${blurOptions ? 'blur-sm select-none' : ''} ${optionCount > 8 ? 'line-clamp-2' : ''}`}>
+            <div className="text-center w-full" style={{ height: '15%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div className={`${labelSize} font-medium leading-tight ${isWinning ? 'text-yellow-700' : 'text-gray-900'} ${blurOptions ? 'blur-sm select-none' : ''} line-clamp-2`}>
                 {blurOptions ? '••••••••' : option.text}
               </div>
             </div>
@@ -186,21 +189,23 @@ export const PieChart: React.FC<ChartProps> = ({
   const totalVotes = options.reduce((sum, option) => sum + option.votes, 0);
   const maxVotes = Math.max(...options.map(option => option.votes));
   
-  // Dynamiczne skalowanie w zależności od liczby opcji
+  // Agresywne skalowanie w zależności od liczby opcji - wszystko musi się zmieścić
   const optionCount = options.length;
-  const chartSize = optionCount <= 6 ? 240 : optionCount <= 10 ? 200 : 180;
-  const radius = optionCount <= 6 ? 96 : optionCount <= 10 ? 80 : 72;
+  const chartSize = optionCount <= 6 ? 280 : optionCount <= 10 ? 220 : optionCount <= 16 ? 180 : 150;
+  const radius = chartSize * 0.35;
   const center = chartSize / 2;
-  const legendSpacing = optionCount <= 6 ? 'space-y-3' : optionCount <= 10 ? 'space-y-2' : 'space-y-1';
-  const legendTextSize = optionCount <= 6 ? 'font-medium' : optionCount <= 10 ? 'text-sm font-medium' : 'text-xs font-medium';
-  const legendSubTextSize = optionCount <= 6 ? 'text-sm' : optionCount <= 10 ? 'text-xs' : 'text-xs';
-  const crownSize = optionCount <= 6 ? 'text-4xl' : optionCount <= 10 ? 'text-3xl' : 'text-2xl';
+  const legendSpacing = optionCount <= 6 ? 'space-y-2' : optionCount <= 12 ? 'space-y-1' : optionCount <= 16 ? 'space-y-0.5' : 'space-y-0';
+  const legendTextSize = optionCount <= 6 ? 'text-sm font-medium' : optionCount <= 12 ? 'text-xs font-medium' : 'text-xs font-medium';
+  const legendSubTextSize = optionCount <= 8 ? 'text-xs' : 'text-xs';
+  const crownSize = optionCount <= 6 ? 'text-3xl' : optionCount <= 12 ? 'text-2xl' : 'text-xl';
+  const layout = optionCount > 12 ? 'flex-col' : optionCount > 8 ? 'flex-col' : 'flex-col lg:flex-row';
+  const gap = optionCount > 12 ? 'gap-2' : optionCount > 8 ? 'gap-3' : 'gap-4';
   
   if (totalVotes === 0) {
     return (
-      <div className="flex items-center justify-center h-80">
+      <div className="flex items-center justify-center h-full">
         <div className="text-center text-gray-500">
-          <div className={`w-${Math.floor(chartSize/12)*3} h-${Math.floor(chartSize/12)*3} mx-auto mb-4 border-4 border-gray-200 rounded-full flex items-center justify-center`}>
+          <div className="w-48 h-48 mx-auto mb-4 border-4 border-gray-200 rounded-full flex items-center justify-center">
             <span className="text-6xl">🗳️</span>
           </div>
           <p className="text-lg">{t.display.waitingForVotes}</p>
@@ -212,7 +217,7 @@ export const PieChart: React.FC<ChartProps> = ({
   let currentAngle = 0;
 
   return (
-    <div className={`flex ${optionCount > 8 ? 'flex-col' : 'flex-col lg:flex-row'} items-center gap-6 max-h-[70vh] overflow-y-auto`}>
+    <div className={`flex ${layout} items-center ${gap} h-full`}>
       {/* Wykres kołowy */}
       <div className="relative flex-shrink-0">
         <svg width={chartSize} height={chartSize} className="transform -rotate-90">
@@ -277,26 +282,26 @@ export const PieChart: React.FC<ChartProps> = ({
       </div>
       
       {/* Legenda */}
-      <div className={`${legendSpacing} ${optionCount > 8 ? 'max-h-64 overflow-y-auto w-full' : ''} ${optionCount > 12 ? 'grid grid-cols-2 gap-x-4' : ''}`}>
+      <div className={`${legendSpacing} flex-1 ${optionCount > 16 ? 'grid grid-cols-2 gap-x-2' : ''} ${optionCount > 12 ? 'min-h-0' : ''}`}>
         {options.map((option) => {
           const percentage = totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
           const isWinning = option.votes === maxVotes && maxVotes > 0;
           
           return (
-            <div key={option.id} className="flex items-center gap-2">
+            <div key={option.id} className="flex items-center gap-1">
               <div
-                className={`${optionCount <= 10 ? 'w-4 h-4' : 'w-3 h-3'} rounded-full flex-shrink-0`}
+                className={`${optionCount <= 10 ? 'w-3 h-3' : 'w-2 h-2'} rounded-full flex-shrink-0`}
                 style={{ backgroundColor: option.color }}
               />
               <div className="flex-1 min-w-0">
-                <div className={`${legendTextSize} leading-tight ${isWinning ? 'text-yellow-700' : 'text-gray-900'} ${blurOptions ? 'blur-sm select-none' : ''} ${optionCount > 8 ? 'line-clamp-1' : ''}`}>
+                <div className={`${legendTextSize} leading-tight ${isWinning ? 'text-yellow-700' : 'text-gray-900'} ${blurOptions ? 'blur-sm select-none' : ''} line-clamp-1`}>
                   {isWinning && '👑 '}{blurOptions ? '••••••••' : option.text}
                 </div>
                 <div className={`${legendSubTextSize} text-gray-500`}>
                   {showVoteCounts && showPercentages && `${option.votes} ${t.admin.votes} • `}
                   {showVoteCounts && !showPercentages && `${option.votes} ${t.admin.votes}`}
-                  {!showVoteCounts && showPercentages && `${percentage.toFixed(optionCount > 10 ? 0 : 1)}%`}
-                  {showVoteCounts && showPercentages && `${percentage.toFixed(optionCount > 10 ? 0 : 1)}%`}
+                  {!showVoteCounts && showPercentages && `${percentage.toFixed(optionCount > 16 ? 0 : 1)}%`}
+                  {showVoteCounts && showPercentages && `${percentage.toFixed(optionCount > 16 ? 0 : 1)}%`}
                 </div>
               </div>
             </div>
