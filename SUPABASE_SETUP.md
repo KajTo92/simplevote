@@ -45,10 +45,12 @@ SUPABASE_SERVICE_ROLE_KEY=twoj-service-role-key
    http://localhost:3000/auth/callback
    ```
 
-### Dla produkcji (po deployment)
-Dodaj również URLs Twojej produkcyjnej domeny:
-- Site URL: `https://twoja-domena.com`
-- Redirect URL: `https://twoja-domena.com/auth/callback`
+### Dla produkcji Vercel
+Dodaj również URLs Twojej domeny Vercel:
+- Site URL: `https://simplevote-ten.vercel.app`
+- Redirect URL: `https://simplevote-ten.vercel.app/auth/callback`
+
+**WAŻNE**: Po każdym deployment na Vercel sprawdź czy te URL są aktualne!
 
 ## 📧 Krok 5: Skonfiguruj email (opcjonalne)
 
@@ -113,10 +115,14 @@ FOR SELECT USING (is_active = true);
 
 1. Pushuj kod do GitHuba
 2. Połącz repozytorium z Vercel
-3. Dodaj zmienne środowiskowe w ustawieniach Vercel:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-4. Zaktualizuj URLs w ustawieniach Supabase
+3. Dodaj zmienne środowiskowe w ustawieniach Vercel (WSZYSTKIE dla Production, Preview, Development):
+   - `NEXT_PUBLIC_SUPABASE_URL` = `https://rcuwkchwbvdgaahzqbnr.supabase.co`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` = `twój-anon-key`
+   - `NEXT_PUBLIC_APP_URL` = `https://simplevote-ten.vercel.app`
+4. Zaktualizuj URLs w Supabase Dashboard → Authentication → Settings:
+   - Site URL: `https://simplevote-ten.vercel.app`
+   - Redirect URLs: `https://simplevote-ten.vercel.app/auth/callback`
+5. Zrób redeploy w Vercel
 
 ## 💡 Wskazówki
 
