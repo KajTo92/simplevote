@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, Eye, Calendar, Users, LogOut, User, Trash2, Power, PowerOff } from 'lucide-react';
+import { Plus, Eye, Calendar, Users, LogOut, User, Trash2, Power, PowerOff, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { Poll } from '@/types';
 import { useAuth } from '@/components/AuthProvider';
@@ -16,12 +16,31 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(false);
   const [deletingPoll, setDeletingPoll] = useState<string | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
+  const [showDisplaySettings, setShowDisplaySettings] = useState<string | null>(null);
+  const [displaySettingsLoading, setDisplaySettingsLoading] = useState(false);
+  const [chartType, setChartType] = useState<'horizontal' | 'vertical' | 'pie'>('horizontal');
+  const [showPercentages, setShowPercentages] = useState(true);
+  const [showVoteCounts, setShowVoteCounts] = useState(true);
+  const [blurOptions, setBlurOptions] = useState(false);
   const { user, signOut } = useAuth();
   const { t } = useLanguage();
 
   useEffect(() => {
     fetchPolls();
   }, []);
+
+  // Aktualizuj stan formularza gdy otwieramy modal
+  useEffect(() => {
+    if (showDisplaySettings) {
+      const poll = polls.find(p => p.id === showDisplaySettings);
+      if (poll) {
+        setChartType(poll.displaySettings?.chartType || 'horizontal');
+        setShowPercentages(poll.displaySettings?.showPercentages ?? true);
+        setShowVoteCounts(poll.displaySettings?.showVoteCounts ?? true);
+        setBlurOptions(poll.displaySettings?.blurOptions ?? false);
+      }
+    }
+  }, [showDisplaySettings, polls]);
 
   const fetchPolls = async () => {
     try {
@@ -140,6 +159,46 @@ export default function AdminPage() {
     } catch (error) {
       console.error('Error toggling poll status:', error);
       alert(t.errors.error);
+    }
+  };
+
+  const updateDisplaySettings = async () => {
+    if (!showDisplaySettings) return;
+    
+    setDisplaySettingsLoading(true);
+    
+    try {
+      const response = await fetch(`/api/polls/${showDisplaySettings}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          action: 'update-display-settings', 
+          displaySettings: {
+            chartType,
+            showPercentages,
+            showVoteCounts,
+            blurOptions
+          }
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setPolls(polls.map(poll => 
+          poll.id === showDisplaySettings ? result.poll : poll
+        ));
+        setShowDisplaySettings(null);
+      } else {
+        const error = await response.json();
+        alert(t.errors.error + ': ' + error.error);
+      }
+    } catch (error) {
+      console.error('Error updating display settings:', error);
+      alert(t.errors.error);
+    } finally {
+      setDisplaySettingsLoading(false);
     }
   };
 
@@ -327,6 +386,14 @@ export default function AdminPage() {
                 
                 <div className="flex gap-2">
                   <button
+                    onClick={() => setShowDisplaySettings(poll.id)}
+                    className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                    title={t.admin.displaySettings}
+                  >
+                    <Settings className="w-4 h-4" />
+                  </button>
+                  
+                  <button
                     onClick={() => togglePollStatus(poll.id)}
                     className={`flex items-center justify-center gap-2 flex-1 py-2 rounded-lg transition-colors ${
                       poll.isActive 
@@ -396,6 +463,151 @@ export default function AdminPage() {
             </div>
           </div>
         )}
+
+        {/* Display Settings Modal */}
+        {showDisplaySettings && (() => {
+          const poll = polls.find(p => p.id === showDisplaySettings);
+          if (!poll) return null;
+          
+          return (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+              <div className="bg-white rounded-2xl p-6 w-full max-w-md">
+                <div className="flex items-center gap-2 mb-4">
+                  <Settings className="w-6 h-6 text-gray-600" />
+                  <h2 className="text-xl font-bold text-gray-900">{t.admin.displaySettings}</h2>
+                </div>
+                
+                <div className="space-y-4">
+                  {/* Chart Type */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      {t.admin.chartType}
+                    </label>
+                    <div className="space-y-2">
+                                              <label className="flex items-center">
+                          <input
+                            type="radio"
+                            name="chartType"
+                            value="horizontal"
+                            checked={chartType === 'horizontal'}
+                            onChange={(e) => setChartType(e.target.value as any)}
+                            className="mr-2"
+                          />
+                          <div className="flex items-center gap-2">
+                            {/* Horizontal Bar Icon */}
+                            <div className="flex flex-col gap-1">
+                              <div className="w-8 h-1.5 bg-blue-400 rounded-full"></div>
+                              <div className="w-6 h-1.5 bg-blue-300 rounded-full"></div>
+                              <div className="w-10 h-1.5 bg-blue-500 rounded-full"></div>
+                            </div>
+                            <span className="text-sm">{t.admin.horizontalChart}</span>
+                          </div>
+                        </label>
+                        <label className="flex items-center">
+                          <input
+                            type="radio"
+                            name="chartType"
+                            value="vertical"
+                            checked={chartType === 'vertical'}
+                            onChange={(e) => setChartType(e.target.value as any)}
+                            className="mr-2"
+                          />
+                          <div className="flex items-center gap-2">
+                            {/* Vertical Bar Icon */}
+                            <div className="flex items-end gap-0.5 h-6">
+                              <div className="w-1.5 h-4 bg-green-400 rounded-t"></div>
+                              <div className="w-1.5 h-3 bg-green-300 rounded-t"></div>
+                              <div className="w-1.5 h-5 bg-green-500 rounded-t"></div>
+                              <div className="w-1.5 h-2 bg-green-300 rounded-t"></div>
+                            </div>
+                            <span className="text-sm">{t.admin.verticalChart}</span>
+                          </div>
+                        </label>
+                        <label className="flex items-center">
+                          <input
+                            type="radio"
+                            name="chartType"
+                            value="pie"
+                            checked={chartType === 'pie'}
+                            onChange={(e) => setChartType(e.target.value as any)}
+                            className="mr-2"
+                          />
+                          <div className="flex items-center gap-2">
+                            {/* Pie Chart Icon */}
+                            <div className="relative w-6 h-6">
+                              <div className="w-6 h-6 rounded-full border-2 border-purple-300"></div>
+                              <div className="absolute top-0 left-0 w-6 h-6 rounded-full border-t-2 border-r-2 border-purple-500 transform rotate-45"></div>
+                              <div className="absolute top-0 left-0 w-6 h-6 rounded-full border-t-2 border-purple-400"></div>
+                            </div>
+                            <span className="text-sm">{t.admin.pieChart}</span>
+                          </div>
+                        </label>
+                    </div>
+                  </div>
+                  
+                  {/* Display Options */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      {t.admin.displayOptions}
+                    </label>
+                    <div className="space-y-2">
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={showPercentages}
+                          onChange={(e) => setShowPercentages(e.target.checked)}
+                          className="mr-2"
+                        />
+                        <span className="text-sm">{t.admin.showPercentages}</span>
+                      </label>
+                                              <label className="flex items-center">
+                          <input
+                            type="checkbox"
+                            checked={showVoteCounts}
+                            onChange={(e) => setShowVoteCounts(e.target.checked)}
+                            className="mr-2"
+                          />
+                          <span className="text-sm">{t.admin.showVoteCounts}</span>
+                        </label>
+                        <label className="flex items-center">
+                          <input
+                            type="checkbox"
+                            checked={blurOptions}
+                            onChange={(e) => setBlurOptions(e.target.checked)}
+                            className="mr-2"
+                          />
+                          <span className="text-sm">{t.admin.blurOptions}</span>
+                        </label>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex gap-3 pt-6">
+                  <button
+                    onClick={() => setShowDisplaySettings(null)}
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                  >
+                    {t.admin.cancel}
+                  </button>
+                  <button
+                    onClick={updateDisplaySettings}
+                    disabled={displaySettingsLoading}
+                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                  >
+                    {displaySettingsLoading ? (
+                      <div className="flex items-center justify-center gap-2">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        {t.admin.saving}
+                      </div>
+                    ) : (
+                      t.common.save
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
 
         {polls.length === 0 && (
           <div className="text-center py-12">

@@ -5,6 +5,14 @@ export interface Poll {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
+  displaySettings?: DisplaySettings;
+}
+
+export interface DisplaySettings {
+  chartType: 'horizontal' | 'vertical' | 'pie';
+  showPercentages: boolean;
+  showVoteCounts: boolean;
+  blurOptions: boolean;
 }
 
 export interface PollOption {

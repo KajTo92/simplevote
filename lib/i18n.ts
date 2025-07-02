@@ -67,7 +67,17 @@ export const translations = {
       inactive: 'Nieaktywne',
       votes: 'głosów',
       creating: 'Tworzenie...',
-      deleting: 'Usuwanie...'
+      deleting: 'Usuwanie...',
+      displaySettings: 'Ustawienia wyświetlania',
+      chartType: 'Typ wykresu',
+      horizontalChart: 'Poziomy pasek',
+      verticalChart: 'Pionowy pasek',
+      pieChart: 'Wykres kołowy',
+      displayOptions: 'Opcje wyświetlania',
+      showPercentages: 'Pokaż procenty',
+      showVoteCounts: 'Pokaż liczby głosów',
+      blurOptions: 'Ukryj nazwy opcji',
+      saving: 'Zapisywanie...'
     },
     
     // Głosowanie
@@ -115,7 +125,8 @@ export const translations = {
       cancel: 'Anuluj',
       confirm: 'Potwierdź',
       yes: 'Tak',
-      no: 'Nie'
+      no: 'Nie',
+      createFirstPoll: 'Utwórz swoje pierwsze głosowanie!'
     }
   },
   
@@ -185,7 +196,17 @@ export const translations = {
       inactive: 'Inactive',
       votes: 'votes',
       creating: 'Creating...',
-      deleting: 'Deleting...'
+      deleting: 'Deleting...',
+      displaySettings: 'Display Settings',
+      chartType: 'Chart Type',
+      horizontalChart: 'Horizontal Bar',
+      verticalChart: 'Vertical Bar',
+      pieChart: 'Pie Chart',
+      displayOptions: 'Display Options',
+      showPercentages: 'Show Percentages',
+      showVoteCounts: 'Show Vote Counts',
+      blurOptions: 'Hide Option Names',
+      saving: 'Saving...'
     },
     
     // Voting
@@ -233,7 +254,8 @@ export const translations = {
       cancel: 'Cancel',
       confirm: 'Confirm',
       yes: 'Yes',
-      no: 'No'
+      no: 'No',
+      createFirstPoll: 'Create your first poll now!'
     }
   }
 } as const;

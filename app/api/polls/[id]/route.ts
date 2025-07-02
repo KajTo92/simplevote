@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getPoll, deletePoll, togglePollStatus } from '@/lib/supabase-database';
+import { getPoll, deletePoll, togglePollStatus, updateDisplaySettings } from '@/lib/supabase-database';
 
 export async function GET(
   request: NextRequest,
@@ -47,6 +47,23 @@ export async function PATCH(
     
     if (action === 'toggle-status') {
       const success = await togglePollStatus(params.id);
+      
+      if (!success) {
+        return NextResponse.json({ error: 'Poll not found or could not be updated' }, { status: 404 });
+      }
+
+      const updatedPoll = await getPoll(params.id);
+      return NextResponse.json({ success: true, poll: updatedPoll });
+    }
+    
+    if (action === 'update-display-settings') {
+      const { displaySettings } = body;
+      
+      if (!displaySettings) {
+        return NextResponse.json({ error: 'Display settings are required' }, { status: 400 });
+      }
+      
+      const success = await updateDisplaySettings(params.id, displaySettings);
       
       if (!success) {
         return NextResponse.json({ error: 'Poll not found or could not be updated' }, { status: 404 });

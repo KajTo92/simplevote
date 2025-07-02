@@ -8,6 +8,7 @@ import { Poll } from '@/types';
 import { ArrowLeft, QrCode, Users, RotateCcw } from 'lucide-react';
 import { useLanguage } from '@/components/LanguageProvider';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { HorizontalChart, VerticalChart, PieChart } from '@/components/Charts';
 
 export default function PollDisplayPage() {
   const params = useParams();
@@ -147,62 +148,43 @@ export default function PollDisplayPage() {
                 {poll.title}
               </h1>
 
-              <div className="space-y-6">
-                {poll.options.map((option) => {
-                  const percentage = totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
-                  const isWinning = option.votes === maxVotes && maxVotes > 0;
-                  
-                  return (
-                    <div key={option.id} className="relative">
-                      <div className="flex items-center justify-between mb-3">
-                        <h3 className={`text-xl font-semibold ${isWinning ? 'text-yellow-700' : 'text-gray-900'}`}>
-                          {isWinning && '👑 '}{option.text}
-                        </h3>
-                        <div className="text-right">
-                          <div className={`text-2xl font-bold ${isWinning ? 'text-yellow-700' : 'text-gray-900'}`}>
-                            {option.votes}
-                          </div>
-                          <div className="text-sm text-gray-500">
-                            {percentage.toFixed(1)}%
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="relative h-12 bg-gray-100 rounded-full overflow-hidden">
-                        <div
-                          className={`h-full rounded-full transition-all duration-1000 ease-out ${
-                            isWinning ? 'shadow-lg scale-y-110' : ''
-                          }`}
-                          style={{ 
-                            width: `${percentage}%`,
-                            backgroundColor: option.color,
-                            boxShadow: isWinning ? `0 0 20px ${option.color}40` : 'none'
-                          }}
-                        />
-                        
-                        {/* Animated particles for winning option */}
-                        {isWinning && option.votes > 0 && (
-                          <div className="absolute inset-0 overflow-hidden">
-                            {[...Array(3)].map((_, i) => (
-                              <div
-                                key={i}
-                                className="absolute top-1/2 animate-ping"
-                                style={{
-                                  left: `${Math.random() * percentage}%`,
-                                  animationDelay: `${i * 0.5}s`,
-                                  transform: 'translateY(-50%)'
-                                }}
-                              >
-                                ✨
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+              {/* Wyświetl odpowiedni typ wykresu */}
+              {(() => {
+                const chartType = poll.displaySettings?.chartType || 'horizontal';
+                const showPercentages = poll.displaySettings?.showPercentages ?? true;
+                const showVoteCounts = poll.displaySettings?.showVoteCounts ?? true;
+                const blurOptions = poll.displaySettings?.blurOptions ?? false;
+                
+                switch (chartType) {
+                  case 'vertical':
+                    return (
+                      <VerticalChart 
+                        options={poll.options}
+                        showPercentages={showPercentages}
+                        showVoteCounts={showVoteCounts}
+                        blurOptions={blurOptions}
+                      />
+                    );
+                  case 'pie':
+                    return (
+                      <PieChart 
+                        options={poll.options}
+                        showPercentages={showPercentages}
+                        showVoteCounts={showVoteCounts}
+                        blurOptions={blurOptions}
+                      />
+                    );
+                  default:
+                    return (
+                      <HorizontalChart 
+                        options={poll.options}
+                        showPercentages={showPercentages}
+                        showVoteCounts={showVoteCounts}
+                        blurOptions={blurOptions}
+                      />
+                    );
+                }
+              })()}
 
               {totalVotes === 0 && (
                 <div className="text-center py-12 text-gray-500">

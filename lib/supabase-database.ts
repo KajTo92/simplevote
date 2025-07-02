@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import { Poll, PollOption, CreatePollRequest } from '@/types'
+import { Poll, PollOption, CreatePollRequest, DisplaySettings } from '@/types'
 import { v4 as uuidv4 } from 'uuid'
 
 const colors = [
@@ -110,6 +110,16 @@ export async function getPoll(id: string): Promise<Poll | null> {
     })
   }
   
+  // Parsuj ustawienia wyświetlania
+  let displaySettings: DisplaySettings | undefined
+  if (poll.display_settings) {
+    try {
+      displaySettings = JSON.parse(poll.display_settings)
+    } catch (e) {
+      displaySettings = undefined
+    }
+  }
+
   return {
     id: poll.id,
     title: poll.title,
@@ -121,7 +131,13 @@ export async function getPoll(id: string): Promise<Poll | null> {
     })),
     isActive: poll.is_active,
     createdAt: new Date(poll.created_at),
-    updatedAt: new Date(poll.updated_at)
+    updatedAt: new Date(poll.updated_at),
+    displaySettings: displaySettings || {
+      chartType: 'horizontal',
+      showPercentages: true,
+      showVoteCounts: true,
+      blurOptions: false
+    }
   }
 }
 
@@ -162,6 +178,16 @@ export async function getAllPolls(): Promise<Poll[]> {
       })
     }
     
+    // Parsuj ustawienia wyświetlania
+    let displaySettings: DisplaySettings | undefined
+    if (poll.display_settings) {
+      try {
+        displaySettings = JSON.parse(poll.display_settings)
+      } catch (e) {
+        displaySettings = undefined
+      }
+    }
+
     result.push({
       id: poll.id,
       title: poll.title,
@@ -173,7 +199,13 @@ export async function getAllPolls(): Promise<Poll[]> {
       })),
       isActive: poll.is_active,
       createdAt: new Date(poll.created_at),
-      updatedAt: new Date(poll.updated_at)
+      updatedAt: new Date(poll.updated_at),
+      displaySettings: displaySettings || {
+        chartType: 'horizontal',
+        showPercentages: true,
+        showVoteCounts: true,
+        blurOptions: false
+      }
     })
   }
   
@@ -230,6 +262,20 @@ export async function togglePollStatus(id: string): Promise<boolean> {
     .from('polls')
     .update({ 
       is_active: !poll.is_active,
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', id)
+  
+  return !error
+}
+
+export async function updateDisplaySettings(id: string, settings: DisplaySettings): Promise<boolean> {
+  const supabase = createClient()
+  
+  const { error } = await supabase
+    .from('polls')
+    .update({ 
+      display_settings: JSON.stringify(settings),
       updated_at: new Date().toISOString()
     })
     .eq('id', id)

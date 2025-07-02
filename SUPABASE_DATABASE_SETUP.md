@@ -31,6 +31,7 @@ CREATE TABLE polls (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title TEXT NOT NULL,
     is_active BOOLEAN DEFAULT true,
+    display_settings JSONB,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );

@@ -37,30 +37,41 @@ export default function HomePage() {
         </div>
 
         {/* Features */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-          <div className="glass-effect rounded-2xl p-6 text-center">
-            <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-white text-xl">📱</span>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+          <div className="glass-effect rounded-2xl p-8 text-center transform hover:scale-105 transition-all duration-300">
+            <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+              <span className="text-white text-2xl">📱</span>
             </div>
-            <h3 className="font-semibold text-gray-900 mb-2">{t.features.qr.title}</h3>
-            <p className="text-gray-600 text-sm">{t.features.qr.description}</p>
+            <h3 className="font-bold text-gray-900 mb-3 text-lg">{t.features.qr.title}</h3>
+            <p className="text-gray-600 text-base">{t.features.qr.description}</p>
           </div>
 
-          <div className="glass-effect rounded-2xl p-6 text-center">
-            <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-white text-xl">⚡</span>
+          <div className="glass-effect rounded-2xl p-8 text-center transform hover:scale-105 transition-all duration-300">
+            <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+              <span className="text-white text-2xl">⚡</span>
             </div>
-            <h3 className="font-semibold text-gray-900 mb-2">{t.features.live.title}</h3>
-            <p className="text-gray-600 text-sm">{t.features.live.description}</p>
+            <h3 className="font-bold text-gray-900 mb-3 text-lg">{t.features.live.title}</h3>
+            <p className="text-gray-600 text-base">{t.features.live.description}</p>
           </div>
 
-          <div className="glass-effect rounded-2xl p-6 text-center">
-            <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-white text-xl">📊</span>
+          <div className="glass-effect rounded-2xl p-8 text-center transform hover:scale-105 transition-all duration-300">
+            <div className="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+              <span className="text-white text-2xl">📊</span>
             </div>
-            <h3 className="font-semibold text-gray-900 mb-2">{t.features.clear.title}</h3>
-            <p className="text-gray-600 text-sm">{t.features.clear.description}</p>
+            <h3 className="font-bold text-gray-900 mb-3 text-lg">{t.features.clear.title}</h3>
+            <p className="text-gray-600 text-base">{t.features.clear.description}</p>
           </div>
+        </div>
+
+        {/* Call to Action Button */}
+        <div className="mt-16">
+          <Link 
+            href="/auth/login"
+            className="inline-flex items-center px-12 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold text-lg rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 group"
+          >
+            <span className="mr-3">{t.common.createFirstPoll}</span>
+            <span className="text-xl group-hover:translate-x-1 transition-transform duration-300">🚀</span>
+          </Link>
         </div>
       </div>
     </div>
