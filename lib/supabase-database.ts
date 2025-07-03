@@ -281,4 +281,64 @@ export async function updateDisplaySettings(id: string, settings: DisplaySetting
     .eq('id', id)
   
   return !error
+}
+
+export async function adjustVoteCount(optionId: string, adjustment: number): Promise<boolean> {
+  const supabase = createClient()
+  
+  try {
+    if (adjustment > 0) {
+      // Dodaj głosy
+      const votesToAdd = []
+      for (let i = 0; i < adjustment; i++) {
+        votesToAdd.push({
+          id: uuidv4(),
+          poll_id: '', // Będzie wypełnione przez trigger lub możemy pobrać z poll_options
+          option_id: optionId,
+          voter_fingerprint: `admin_manual_${Date.now()}_${i}`,
+          created_at: new Date().toISOString()
+        })
+      }
+      
+      // Pobierz poll_id z option
+      const { data: option, error: optionError } = await supabase
+        .from('poll_options')
+        .select('poll_id')
+        .eq('id', optionId)
+        .single()
+      
+      if (optionError || !option) return false
+      
+      // Uzupełnij poll_id
+      votesToAdd.forEach(vote => vote.poll_id = option.poll_id)
+      
+      const { error } = await supabase
+        .from('votes')
+        .insert(votesToAdd)
+      
+      return !error
+    } else if (adjustment < 0) {
+      // Usuń głosy
+      const { data: votes, error: fetchError } = await supabase
+        .from('votes')
+        .select('id')
+        .eq('option_id', optionId)
+        .limit(Math.abs(adjustment))
+      
+      if (fetchError || !votes || votes.length === 0) return false
+      
+      const voteIds = votes.map(vote => vote.id)
+      const { error } = await supabase
+        .from('votes')
+        .delete()
+        .in('id', voteIds)
+      
+      return !error
+    }
+    
+    return true // adjustment === 0
+  } catch (error) {
+    console.error('Error adjusting vote count:', error)
+    return false
+  }
 } 

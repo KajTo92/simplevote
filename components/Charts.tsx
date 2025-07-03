@@ -192,26 +192,25 @@ export const PieChart: React.FC<ChartProps> = ({
   const totalVotes = options.reduce((sum, option) => sum + option.votes, 0);
   const maxVotes = Math.max(...options.map(option => option.votes));
   
-  // Agresywne skalowanie w zależności od liczby opcji - wszystko musi się zmieścić
+  // Powiększone skalowanie dla pie chart - większe koło i lepsze napisy
   const optionCount = options.length;
-  const chartSize = optionCount <= 6 ? 280 : optionCount <= 10 ? 220 : optionCount <= 16 ? 180 : 150;
-  const radius = chartSize * 0.35;
+  const chartSize = optionCount <= 6 ? 380 : optionCount <= 10 ? 340 : optionCount <= 16 ? 300 : 260;
+  const radius = chartSize * 0.42;
   const center = chartSize / 2;
-  const legendSpacing = optionCount <= 6 ? 'space-y-2' : optionCount <= 12 ? 'space-y-1' : optionCount <= 16 ? 'space-y-0.5' : 'space-y-0';
-  const legendTextSize = optionCount <= 6 ? 'text-sm font-medium' : optionCount <= 12 ? 'text-xs font-medium' : 'text-xs font-medium';
-  const legendSubTextSize = optionCount <= 8 ? 'text-xs' : 'text-xs';
-  const crownSize = optionCount <= 6 ? 'text-3xl' : optionCount <= 12 ? 'text-2xl' : 'text-xl';
+  const legendSpacing = optionCount <= 6 ? 'space-y-3' : optionCount <= 12 ? 'space-y-2' : optionCount <= 16 ? 'space-y-1' : 'space-y-0.5';
+  const legendTextSize = optionCount <= 6 ? 'text-lg font-medium' : optionCount <= 12 ? 'text-base font-medium' : 'text-sm font-medium';
+  const legendSubTextSize = optionCount <= 8 ? 'text-sm' : 'text-xs';
   const layout = optionCount > 12 ? 'flex-col' : optionCount > 8 ? 'flex-col' : 'flex-col lg:flex-row';
-  const gap = optionCount > 12 ? 'gap-2' : optionCount > 8 ? 'gap-3' : 'gap-4';
+  const gap = optionCount > 12 ? 'gap-3' : optionCount > 8 ? 'gap-4' : 'gap-6';
   
   if (totalVotes === 0) {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="text-center text-gray-500">
-          <div className="w-48 h-48 mx-auto mb-4 border-4 border-gray-200 rounded-full flex items-center justify-center">
-            <span className="text-6xl">🗳️</span>
+          <div className="w-80 h-80 mx-auto mb-4 border-4 border-gray-200 rounded-full flex items-center justify-center">
+            <span className="text-8xl">🗳️</span>
           </div>
-          <p className="text-lg">{t.display.waitingForVotes}</p>
+          <p className="text-xl">{t.display.waitingForVotes}</p>
         </div>
       </div>
     );
@@ -275,25 +274,18 @@ export const PieChart: React.FC<ChartProps> = ({
             );
           })}
         </svg>
-        
-        {/* Wygrywająca ikona w centrum */}
-        {maxVotes > 0 && !hideBars && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className={`${crownSize} animate-bounce`}>👑</div>
-          </div>
-        )}
       </div>
       
       {/* Legenda */}
-      <div className={`${legendSpacing} flex-1 ${optionCount > 16 ? 'grid grid-cols-2 gap-x-2' : ''} ${optionCount > 12 ? 'min-h-0' : ''}`}>
+      <div className={`${legendSpacing} flex-1 ${optionCount > 16 ? 'grid grid-cols-2 gap-x-4' : ''} ${optionCount > 12 ? 'min-h-0' : ''}`}>
         {options.map((option) => {
           const percentage = totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
           const isWinning = option.votes === maxVotes && maxVotes > 0;
           
           return (
-            <div key={option.id} className="flex items-center gap-1">
+            <div key={option.id} className="flex items-center gap-2">
               <div
-                className={`${optionCount <= 10 ? 'w-3 h-3' : 'w-2 h-2'} rounded-full flex-shrink-0`}
+                className={`${optionCount <= 6 ? 'w-5 h-5' : optionCount <= 10 ? 'w-4 h-4' : 'w-3.5 h-3.5'} rounded-full flex-shrink-0`}
                 style={{ backgroundColor: option.color }}
               />
               <div className="flex-1 min-w-0">

@@ -202,6 +202,35 @@ export default function AdminPage() {
     }
   };
 
+  const adjustVotes = async (pollId: string, optionId: string, adjustment: number) => {
+    try {
+      const response = await fetch(`/api/polls/${pollId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          action: 'adjust-votes', 
+          optionId,
+          adjustment
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setPolls(polls.map(poll => 
+          poll.id === pollId ? result.poll : poll
+        ));
+      } else {
+        const error = await response.json();
+        alert(t.errors.error + ': ' + error.error);
+      }
+    } catch (error) {
+      console.error('Error adjusting votes:', error);
+      alert(t.errors.error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-6xl mx-auto">
@@ -346,9 +375,30 @@ export default function AdminPage() {
                   
                   return (
                     <div key={option.id} className="text-sm">
-                      <div className="flex justify-between mb-1">
+                      <div className="flex justify-between items-center mb-1">
                         <span className="text-gray-700">{option.text}</span>
-                        <span className="text-gray-900 font-medium">{option.votes} {t.admin.votes}</span>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <button
+                              onClick={() => adjustVotes(poll.id, option.id, -1)}
+                              className="w-5 h-5 flex items-center justify-center text-xs text-gray-500 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                              title="Usuń głos"
+                              disabled={option.votes === 0}
+                            >
+                              −
+                            </button>
+                            <span className="text-gray-900 font-medium min-w-[3rem] text-center">
+                              {option.votes} {t.admin.votes}
+                            </span>
+                            <button
+                              onClick={() => adjustVotes(poll.id, option.id, 1)}
+                              className="w-5 h-5 flex items-center justify-center text-xs text-gray-500 hover:text-green-600 hover:bg-green-50 rounded transition-colors"
+                              title="Dodaj głos"
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div

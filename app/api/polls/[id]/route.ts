@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getPoll, deletePoll, togglePollStatus, updateDisplaySettings } from '@/lib/supabase-database';
+import { getPoll, deletePoll, togglePollStatus, updateDisplaySettings, adjustVoteCount } from '@/lib/supabase-database';
 
 export async function GET(
   request: NextRequest,
@@ -67,6 +67,23 @@ export async function PATCH(
       
       if (!success) {
         return NextResponse.json({ error: 'Poll not found or could not be updated' }, { status: 404 });
+      }
+
+      const updatedPoll = await getPoll(params.id);
+      return NextResponse.json({ success: true, poll: updatedPoll });
+    }
+    
+    if (action === 'adjust-votes') {
+      const { optionId, adjustment } = body;
+      
+      if (!optionId || typeof adjustment !== 'number') {
+        return NextResponse.json({ error: 'Option ID and adjustment are required' }, { status: 400 });
+      }
+      
+      const success = await adjustVoteCount(optionId, adjustment);
+      
+      if (!success) {
+        return NextResponse.json({ error: 'Failed to adjust vote count' }, { status: 400 });
       }
 
       const updatedPoll = await getPoll(params.id);
