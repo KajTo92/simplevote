@@ -3,7 +3,7 @@ export type Language = 'pl' | 'en';
 export const translations = {
   pl: {
     // Strona główna
-    title: 'Proste Głosowanie',
+    title: 'Team Vote',
     subtitle: 'Głosowanie w czasie rzeczywistym dla spotkań firmowych, eventów i warsztatów',
     features: {
       qr: {
@@ -132,7 +132,7 @@ export const translations = {
   
   en: {
     // Homepage
-    title: 'Simple Voting',
+    title: 'Team Vote',
     subtitle: 'Real-time voting for corporate meetings, events and workshops',
     features: {
       qr: {

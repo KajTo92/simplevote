@@ -25,7 +25,7 @@ export default function HomePage() {
       {/* Główny content */}
       <div className="text-center space-y-8 max-w-2xl mx-auto px-6">
         <div className="space-y-4">
-          <h1 className="text-6xl font-bold text-gray-900 mb-4">
+          <h1 className="text-6xl font-bold text-gray-900 mb-8">
             {t.title.split(' ')[0]}
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
               {t.title.split(' ').slice(1).join(' ')}

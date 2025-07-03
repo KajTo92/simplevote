@@ -35,12 +35,12 @@ export const HorizontalChart: React.FC<ChartProps> = ({
         return (
           <div key={option.id} className="relative">
             <div className={`flex items-center justify-between ${marginBottom}`}>
-              <h3 className={`${titleSize} font-semibold line-clamp-1 flex-1 pr-2 ${isWinning ? 'text-yellow-700' : 'text-gray-900'}`}>
-                {isWinning && '👑 '}{option.text}
+              <h3 className={`${titleSize} font-semibold line-clamp-1 flex-1 pr-2 ${isWinning && !hideBars ? 'text-yellow-700' : 'text-gray-900'}`}>
+                {isWinning && !hideBars && '👑 '}{option.text}
               </h3>
               <div className="text-right flex-shrink-0">
                 {showVoteCounts && !hideBars && (
-                  <div className={`${voteSize} font-bold ${isWinning ? 'text-yellow-700' : 'text-gray-900'}`}>
+                  <div className={`${voteSize} font-bold ${isWinning && !hideBars ? 'text-yellow-700' : 'text-gray-900'}`}>
                     {option.votes}
                   </div>
                 )}
@@ -55,26 +55,27 @@ export const HorizontalChart: React.FC<ChartProps> = ({
             <div className={`relative ${barHeight} bg-gray-100 rounded-full overflow-hidden`}>
               <div
                 className={`h-full rounded-full transition-all duration-1000 ease-out ${
-                  isWinning ? 'shadow-lg scale-y-110' : ''
-                } ${hideBars ? 'animate-pulse' : ''}`}
+                  isWinning && !hideBars ? 'shadow-lg scale-y-110' : ''
+                }`}
                 style={{ 
-                  width: hideBars ? `${Math.random() * 80 + 10}%` : `${percentage}%`,
+                  width: hideBars ? '45%' : `${percentage}%`,
                   backgroundColor: option.color,
-                  boxShadow: isWinning ? `0 0 20px ${option.color}40` : 'none',
-                  animation: hideBars ? `irregularBounce ${8 + Math.random() * 6}s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite` : undefined,
-                  animationFillMode: hideBars ? 'both' : undefined
+                  boxShadow: isWinning && !hideBars ? `0 0 20px ${option.color}40` : 'none',
+                  animation: hideBars ? `irregularBounce ${10 + (parseInt(option.id, 10) || 0) % 5}s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite` : undefined,
+                  animationFillMode: hideBars ? 'both' : undefined,
+                  transformOrigin: hideBars ? 'left center' : undefined
                 }}
               />
               
               {/* Animated particles for winning option */}
-              {isWinning && option.votes > 0 && (
+              {isWinning && option.votes > 0 && !hideBars && (
                 <div className="absolute inset-0 overflow-hidden">
                   {[...Array(Math.min(3, Math.floor(percentage / 20)))].map((_, i) => (
                     <div
                       key={i}
                       className="absolute top-1/2 animate-ping"
                       style={{
-                        left: `${Math.random() * percentage}%`,
+                        left: `${((parseInt(option.id) + i) % 7) * 10 + 20}%`,
                         animationDelay: `${i * 0.5}s`,
                         transform: 'translateY(-50%)'
                       }}
@@ -121,8 +122,8 @@ export const VerticalChart: React.FC<ChartProps> = ({
             {/* Wartości nad słupkiem - stała wysokość */}
             <div className="text-center mb-2 flex-shrink-0">
               {showVoteCounts && !hideBars && (
-                <div className={`${textSize} font-bold ${isWinning ? 'text-yellow-700' : 'text-gray-900'}`}>
-                  {isWinning && '👑'} {option.votes}
+                <div className={`${textSize} font-bold ${isWinning && !hideBars ? 'text-yellow-700' : 'text-gray-900'}`}>
+                  {isWinning && !hideBars && '👑'} {option.votes}
                 </div>
               )}
               {showPercentages && !hideBars && (
@@ -136,14 +137,15 @@ export const VerticalChart: React.FC<ChartProps> = ({
             <div className="relative w-full bg-gray-100 rounded-t-lg overflow-hidden flex-grow">
               <div
                 className={`absolute bottom-0 w-full rounded-t-lg transition-all duration-1000 ease-out ${
-                  isWinning ? 'shadow-lg' : ''
-                } ${hideBars ? 'animate-pulse' : ''}`}
+                  isWinning && !hideBars ? 'shadow-lg' : ''
+                }`}
                 style={{ 
-                  height: hideBars ? `${Math.random() * 60 + 20}%` : `${height}%`,
+                  height: hideBars ? '50%' : `${height}%`,
                   backgroundColor: option.color,
-                  boxShadow: isWinning ? `0 0 20px ${option.color}40` : 'none',
-                  animation: hideBars ? `irregularVerticalBounce ${10 + Math.random() * 8}s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite` : undefined,
-                  animationFillMode: hideBars ? 'both' : undefined
+                  boxShadow: isWinning && !hideBars ? `0 0 20px ${option.color}40` : 'none',
+                  animation: hideBars ? `irregularVerticalBounce ${12 + (parseInt(option.id, 10) || 0) % 6}s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite` : undefined,
+                  animationFillMode: hideBars ? 'both' : undefined,
+                  transformOrigin: hideBars ? 'center bottom' : undefined
                 }}
               />
               
@@ -155,7 +157,7 @@ export const VerticalChart: React.FC<ChartProps> = ({
                       key={i}
                       className="absolute left-1/2 animate-ping"
                       style={{
-                        bottom: `${Math.random() * height}%`,
+                        bottom: `${((parseInt(option.id) + i) % 5) * 15 + 25}%`,
                         animationDelay: `${i * 0.7}s`,
                         transform: 'translateX(-50%)'
                       }}
@@ -169,7 +171,7 @@ export const VerticalChart: React.FC<ChartProps> = ({
             
             {/* Etykieta opcji - stała wysokość */}
             <div className="text-center mt-2 flex-shrink-0 max-h-12 overflow-hidden">
-              <div className={`${labelSize} font-medium leading-tight ${isWinning ? 'text-yellow-700' : 'text-gray-900'} line-clamp-2`}>
+              <div className={`${labelSize} font-medium leading-tight ${isWinning && !hideBars ? 'text-yellow-700' : 'text-gray-900'} line-clamp-2`}>
                 {option.text}
               </div>
             </div>
@@ -254,13 +256,13 @@ export const PieChart: React.FC<ChartProps> = ({
                 <path
                   d={pathData}
                   fill={option.color}
-                  className={`transition-all duration-500 ${isWinning ? 'drop-shadow-lg' : ''}`}
+                  className={`transition-all duration-500 ${isWinning && !hideBars ? 'drop-shadow-lg' : ''}`}
                   style={{
-                    filter: isWinning ? `drop-shadow(0 0 10px ${option.color}40)` : 'none'
+                    filter: isWinning && !hideBars ? `drop-shadow(0 0 10px ${option.color}40)` : 'none'
                   }}
                 />
                 {/* Efekt animacji dla wygrywającej opcji */}
-                {isWinning && optionCount <= 8 && (
+                {isWinning && optionCount <= 8 && !hideBars && (
                   <path
                     d={pathData}
                     fill="none"
@@ -275,7 +277,7 @@ export const PieChart: React.FC<ChartProps> = ({
         </svg>
         
         {/* Wygrywająca ikona w centrum */}
-        {maxVotes > 0 && (
+        {maxVotes > 0 && !hideBars && (
           <div className="absolute inset-0 flex items-center justify-center">
             <div className={`${crownSize} animate-bounce`}>👑</div>
           </div>
@@ -295,8 +297,8 @@ export const PieChart: React.FC<ChartProps> = ({
                 style={{ backgroundColor: option.color }}
               />
               <div className="flex-1 min-w-0">
-                <div className={`${legendTextSize} leading-tight ${isWinning ? 'text-yellow-700' : 'text-gray-900'} line-clamp-1`}>
-                  {isWinning && '👑 '}{option.text}
+                <div className={`${legendTextSize} leading-tight ${isWinning && !hideBars ? 'text-yellow-700' : 'text-gray-900'} line-clamp-1`}>
+                  {isWinning && !hideBars && '👑 '}{option.text}
                 </div>
                 <div className={`${legendSubTextSize} text-gray-500`}>
                   {showVoteCounts && showPercentages && !hideBars && `${option.votes} ${t.admin.votes} • `}
