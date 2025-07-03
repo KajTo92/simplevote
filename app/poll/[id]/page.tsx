@@ -96,10 +96,9 @@ export default function PollDisplayPage() {
           <p className="text-gray-600 mb-6">{error}</p>
           <Link
             href="/admin"
-            className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800"
+            className="inline-flex items-center text-blue-600 hover:text-blue-800"
           >
             <ArrowLeft className="w-4 h-4" />
-            {t.display.backToAdmin}
           </Link>
         </div>
       </div>
@@ -115,13 +114,20 @@ export default function PollDisplayPage() {
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <Link
-              href="/admin"
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              {t.display.backToAdmin}
-            </Link>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/admin"
+                className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                <ArrowLeft className="w-4 h-4" />
+              </Link>
+              <h1 className="text-2xl font-bold text-gray-900">
+                {t.title.split(' ')[0]}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+                  {' '}{t.title.split(' ').slice(1).join(' ')}
+                </span>
+              </h1>
+            </div>
             
             <div className="flex items-center gap-4 text-sm text-gray-600">
               <LanguageSwitcher />

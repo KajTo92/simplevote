@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, Eye, Calendar, Users, LogOut, User, Trash2, Power, PowerOff, Settings } from 'lucide-react';
+import { Plus, Eye, Calendar, Users, LogOut, User, Trash2, Power, PowerOff, Settings, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { Poll } from '@/types';
 import { useAuth } from '@/components/AuthProvider';
@@ -237,9 +237,17 @@ export default function AdminPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <Link href="/" className="text-gray-500 hover:text-gray-700 mb-2 block">
-              ← {t.auth.backHome}
-            </Link>
+            <div className="flex items-center gap-3 mb-2">
+              <Link href="/" className="text-gray-500 hover:text-gray-700">
+                <ArrowLeft className="w-4 h-4" />
+              </Link>
+              <h1 className="text-2xl font-bold text-gray-900">
+                {t.title.split(' ')[0]}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+                  {' '}{t.title.split(' ').slice(1).join(' ')}
+                </span>
+              </h1>
+            </div>
             <h1 className="text-3xl font-bold text-gray-900">{t.admin.title}</h1>
             <p className="text-gray-600 mt-2">{t.admin.subtitle}</p>
           </div>

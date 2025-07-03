@@ -27,8 +27,8 @@ export default function HomePage() {
         <div className="space-y-4">
           <h1 className="text-6xl font-bold text-gray-900 mb-8">
             {t.title.split(' ')[0]}
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-              {t.title.split(' ').slice(1).join(' ')}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+              {' '}{t.title.split(' ').slice(1).join(' ')}
             </span>
           </h1>
           <p className="text-xl text-gray-600 max-w-lg mx-auto leading-relaxed">
