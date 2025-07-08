@@ -6,6 +6,7 @@
   NEXT_PUBLIC_SUPABASE_URL = "https://rcuwkchwbvdgaahzqbnr.supabase.co"
   NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJjdXdrY2h3YnZkZ2FhaHpxYm5y
 Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE0MjgxOTMsImV4cCI6MjA2NzAwNDE5M30.lwLpGnIWYhuPF2xYc-1ZVzVCYLLL7q4m0_kB_hjVwl0"
+  NODE_VERSION = "18"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
