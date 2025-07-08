@@ -468,67 +468,62 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* Company Settings Section */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">{t.admin.companySettings}</h2>
-          
-          <div className="space-y-6">
-            {/* Company Logo */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
-                {t.admin.companyLogo}
-              </label>
-              
-              {companySettings?.companyLogoUrl ? (
-                <div className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
-                  <img 
-                    src={companySettings.companyLogoUrl} 
-                    alt="Company Logo" 
-                    className="w-16 h-16 object-contain rounded border"
-                  />
-                  <div className="flex-1">
-                    <p className="text-sm text-gray-600">{t.admin.logoDescription}</p>
-                  </div>
-                  <button
-                    onClick={removeCompanyLogo}
-                    className="px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                  >
-                    {t.admin.removeLogo}
-                  </button>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  <input
-                    type="file"
-                    accept=".png"
-                    onChange={(e) => setSelectedCompanyLogo(e.target.files?.[0] || null)}
-                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                  />
-                  <p className="text-xs text-gray-500">{t.admin.logoDescription}</p>
-                  {selectedCompanyLogo && (
+        {/* Company Settings and Polls List */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Company Settings Section */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Your Company Logo</h2>
+            
+            <div className="space-y-6">
+              {/* Company Logo */}
+              <div>
+                {companySettings?.companyLogoUrl ? (
+                  <div className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                    <img 
+                      src={companySettings.companyLogoUrl} 
+                      alt="Company Logo" 
+                      className="w-16 h-16 object-contain rounded border"
+                    />
+                    <div className="flex-1">
+                      <p className="text-sm text-gray-600">{t.admin.logoDescription}</p>
+                    </div>
                     <button
-                      onClick={uploadCompanyLogo}
-                      disabled={companyLogoUploading}
-                      className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors"
+                      onClick={removeCompanyLogo}
+                      className="px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                     >
-                      {companyLogoUploading ? (
-                        <div className="flex items-center gap-2">
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                          {t.admin.saving}
-                        </div>
-                      ) : (
-                        t.admin.uploadLogo
-                      )}
+                      {t.admin.removeLogo}
                     </button>
-                  )}
-                </div>
-              )}
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <input
+                      type="file"
+                      accept=".png"
+                      onChange={(e) => setSelectedCompanyLogo(e.target.files?.[0] || null)}
+                      className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                    />
+                    <p className="text-xs text-gray-500">{t.admin.logoDescription}</p>
+                    {selectedCompanyLogo && (
+                      <button
+                        onClick={uploadCompanyLogo}
+                        disabled={companyLogoUploading}
+                        className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors"
+                      >
+                        {companyLogoUploading ? (
+                          <div className="flex items-center gap-2">
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                            {t.admin.saving}
+                          </div>
+                        ) : (
+                          t.admin.uploadLogo
+                        )}
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-
-        {/* Polls List */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {polls.map((poll) => (
             <div key={poll.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
               <div className="flex items-start justify-between mb-4">
