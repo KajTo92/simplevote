@@ -24,6 +24,16 @@ export async function POST(request: NextRequest) {
     // Initialize Supabase client
     const supabase = createClient();
     
+    // Check if user is authenticated
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    
+    if (authError || !user) {
+      console.error('Authentication error:', authError);
+      return NextResponse.json({ error: 'User not authenticated' }, { status: 401 });
+    }
+    
+    console.log('Authenticated user:', user.id);
+    
     // Debug: List buckets to see what's available
     const { data: buckets, error: listError } = await supabase.storage.listBuckets();
     
