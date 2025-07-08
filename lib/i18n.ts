@@ -123,6 +123,10 @@ export const translations = {
     howItWorks: {
       title: 'Jak to działa?',
       subtitle: 'Dowiedz się, jak łatwo stworzyć głosowanie i zarządzać nim w czasie rzeczywistym',
+      videoSection: {
+        question: 'Chcesz otrzymać feedback od współpracowników bezpośrednio z ekranu telewizora?',
+        solution: 'Mamy rozwiązanie.'
+      },
       step1: {
         title: 'Stwórz głosowanie',
         description: 'Zaloguj się do panelu administratora i utwórz nowe głosowanie z opcjami do wyboru',
@@ -165,12 +169,66 @@ export const translations = {
         optionB: 'Opcja B', 
         optionC: 'Opcja C',
         scanWithPhone: 'Skanuj telefonem',
+        scanning: 'Skanowanie...',
         horizontal: 'Poziomy',
         vertical: 'Pionowy',
         pie: 'Kołowy',
         showPercentages: 'Pokaż procenty',
         showVoteCounts: 'Pokaż liczby głosów',
         live: 'Na żywo'
+      }
+    },
+
+    // Cennik
+    pricing: {
+      title: 'Cennik',
+      subtitle: 'Wybierz plan idealny dla Twojego zespołu',
+      monthly: 'miesięcznie',
+      free: {
+        name: 'Darmowa',
+        price: 'Darmowa',
+        description: 'Idealna dla małych zespołów i testów',
+        features: [
+          'Do 5 głosujących użytkowników',
+          'Nielimitowane głosowania',
+          'Podstawowe typy wykresów',
+          'Wyniki w czasie rzeczywistym',
+          'Kod QR do dołączania'
+        ] as readonly string[],
+        button: 'Zacznij za darmo'
+      },
+      pro: {
+        name: 'Pro',
+        price: '$19',
+        description: 'Dla rozwijających się zespołów i firm',
+        features: [
+          'Do 100 głosujących użytkowników',
+          'Nielimitowane głosowania',
+          'Wszystkie typy wykresów',
+          'Wyniki w czasie rzeczywistym',
+          'Kod QR do dołączania',
+          'Zaawansowane opcje wyświetlania',
+          'Wsparcie email'
+        ],
+        button: 'Wybierz Pro',
+        popular: 'Najpopularniejszy'
+      },
+      enterprise: {
+        name: 'Enterprise',
+        price: '$49',
+        description: 'Dla dużych organizacji i eventów',
+        features: [
+          'Nielimitowani użytkownicy',
+          'Nielimitowane głosowania',
+          'Wszystkie typy wykresów',
+          'Wyniki w czasie rzeczywistym',
+          'Kod QR do dołączania',
+          'Zaawansowane opcje wyświetlania',
+          'Priorytetowe wsparcie',
+          'Dedykowany manager konta',
+          'Custom branding'
+        ],
+        button: 'Skontaktuj się'
       }
     },
 
@@ -184,7 +242,8 @@ export const translations = {
       no: 'Nie',
       createFirstPoll: 'Utwórz swoje pierwsze głosowanie!',
       backToHome: 'Strona główna',
-      howItWorks: 'Jak to działa?'
+      howItWorks: 'Jak to działa?',
+      pricing: 'Cennik'
     }
   },
   
@@ -310,6 +369,10 @@ export const translations = {
     howItWorks: {
       title: 'How It Works',
       subtitle: 'Learn how to easily create and manage real-time voting',
+      videoSection: {
+        question: 'Would you like to get feedback from your co-workers directly from a TV screen?',
+        solution: 'We have a solution.'
+      },
       step1: {
         title: 'Create a Poll',
         description: 'Log into the admin panel and create a new poll with voting options',
@@ -352,12 +415,66 @@ export const translations = {
         optionB: 'Option B', 
         optionC: 'Option C',
         scanWithPhone: 'Scan with phone',
+        scanning: 'Scanning...',
         horizontal: 'Horizontal',
         vertical: 'Vertical',
         pie: 'Pie',
         showPercentages: 'Show percentages',
         showVoteCounts: 'Show vote counts',
         live: 'Live'
+      }
+    },
+
+    // Pricing
+    pricing: {
+      title: 'Pricing',
+      subtitle: 'Choose the perfect plan for your team',
+      monthly: 'per month',
+      free: {
+        name: 'Free',
+        price: 'Free',
+        description: 'Perfect for small teams and testing',
+        features: [
+          'Up to 5 voting users',
+          'Unlimited polls',
+          'Basic chart types',
+          'Real-time results',
+          'QR code joining'
+        ],
+        button: 'Start for free'
+      },
+      pro: {
+        name: 'Pro',
+        price: '$19',
+        description: 'For growing teams and companies',
+        features: [
+          'Up to 100 voting users',
+          'Unlimited polls',
+          'All chart types',
+          'Real-time results',
+          'QR code joining',
+          'Advanced display options',
+          'Email support'
+        ],
+        button: 'Choose Pro',
+        popular: 'Most Popular'
+      },
+      enterprise: {
+        name: 'Enterprise',
+        price: '$49',
+        description: 'For large organizations and events',
+        features: [
+          'Unlimited users',
+          'Unlimited polls',
+          'All chart types',
+          'Real-time results',
+          'QR code joining',
+          'Advanced display options',
+          'Priority support',
+          'Dedicated account manager',
+          'Custom branding'
+        ],
+        button: 'Contact us'
       }
     },
 
@@ -371,7 +488,8 @@ export const translations = {
       no: 'No',
       createFirstPoll: 'Create your first poll now!',
       backToHome: 'Home',
-      howItWorks: 'How It Works'
+      howItWorks: 'How It Works',
+      pricing: 'Pricing'
     }
   }
 } as const;

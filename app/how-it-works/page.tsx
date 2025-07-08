@@ -21,6 +21,12 @@ export default function HowItWorksPage() {
         </Link>
 
         <div className="flex items-center gap-3">
+          <Link 
+            href="/pricing" 
+            className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-200 group"
+          >
+            <span className="text-gray-700 group-hover:text-gray-900 font-medium">{t.common.pricing}</span>
+          </Link>
           <LanguageSwitcher />
           <Link 
             href="/auth/login" 
@@ -45,6 +51,33 @@ export default function HowItWorksPage() {
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             {t.howItWorks.subtitle}
           </p>
+        </div>
+
+        {/* Video Section */}
+        <div className="mb-24 text-center">
+          <div className="mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              {t.howItWorks.videoSection.question}
+            </h2>
+            <p className="text-xl text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 font-semibold">
+              {t.howItWorks.videoSection.solution}
+            </p>
+          </div>
+          
+          <div className="glass-effect rounded-2xl p-8 max-w-4xl mx-auto">
+            <div className="relative overflow-hidden rounded-xl shadow-2xl">
+              <video 
+                autoPlay
+                loop
+                muted
+                className="w-full h-auto"
+                preload="metadata"
+              >
+                <source src="/media/Pokaz.mp4" type="video/mp4" />
+                Twoja przeglądarka nie obsługuje odtwarzania wideo.
+              </video>
+            </div>
+          </div>
         </div>
 
         {/* Steps */}
@@ -83,14 +116,51 @@ export default function HowItWorksPage() {
           {/* Step 2 */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <div className="glass-effect rounded-2xl p-8 text-center transform hover:scale-105 transition-all duration-300">
-                <div className="bg-gray-900 rounded-xl p-6 inline-block mb-4">
-                  <QrCode className="w-24 h-24 text-white" />
+              <div className="glass-effect rounded-2xl p-8 transform hover:scale-105 transition-all duration-300">
+                <div className="relative">
+                  {/* TV Screen */}
+                  <div className="bg-gray-900 rounded-2xl p-8 mb-6 relative">
+                    <div className="bg-gray-800 rounded-xl p-6 relative">
+                      <div className="text-white text-center mb-4">
+                        <h3 className="text-lg font-semibold mb-2">{t.howItWorks.mockups.exampleQuestion}</h3>
+                        <div className="text-sm text-gray-300">{t.howItWorks.mockups.scanWithPhone}</div>
+                      </div>
+                      <div className="bg-white rounded-lg p-4 flex items-center justify-center">
+                        <QrCode className="w-16 h-16 text-gray-900" />
+                      </div>
+                    </div>
+                    {/* TV Stand */}
+                    <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-4 bg-gray-800 rounded-b-lg"></div>
+                  </div>
+                  
+                  {/* Phone scanning */}
+                  <div className="absolute -bottom-4 -right-4 transform rotate-12">
+                    <div className="bg-gray-800 rounded-2xl p-2 shadow-lg">
+                      <div className="bg-blue-500 rounded-xl p-3 text-white text-center">
+                        <div className="text-xs mb-1">📱 {t.howItWorks.mockups.scanning}</div>
+                        <div className="w-8 h-8 border-2 border-white rounded mx-auto animate-pulse"></div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Connection lines */}
+                  <div className="absolute top-1/2 right-8 transform -translate-y-1/2">
+                    <div className="flex items-center gap-1">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full animate-ping"></div>
+                      <div className="w-2 h-2 bg-blue-500 rounded-full animate-ping" style={{animationDelay: '0.2s'}}></div>
+                      <div className="w-2 h-2 bg-blue-500 rounded-full animate-ping" style={{animationDelay: '0.4s'}}></div>
+                    </div>
+                  </div>
                 </div>
-                <div className="text-gray-600 text-sm">{t.howItWorks.mockups.scanWithPhone}</div>
-                <div className="mt-4 flex items-center justify-center gap-2">
-                  <Smartphone className="w-5 h-5 text-blue-500" />
-                  <span className="text-sm text-gray-500">vote.example.com/v/abc123</span>
+                
+                <div className="text-center mt-6">
+                  <div className="text-gray-600 text-sm mb-2">{t.howItWorks.mockups.scanWithPhone}</div>
+                  <div className="flex items-center justify-center gap-2">
+                    <Monitor className="w-5 h-5 text-gray-500" />
+                    <span className="text-xs text-gray-400">→</span>
+                    <Smartphone className="w-5 h-5 text-blue-500" />
+                    <span className="text-sm text-gray-500">vote.example.com/v/abc123</span>
+                  </div>
                 </div>
               </div>
             </div>
