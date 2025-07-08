@@ -4,8 +4,8 @@ import { AuthProvider } from '@/components/AuthProvider'
 import { LanguageProvider } from '@/components/LanguageProvider'
 
 export const metadata: Metadata = {
-  title: 'Simple Voting / Proste Głosowanie',
-  description: 'Real-time voting for meetings, events and workshops / Głosowanie w czasie rzeczywistym dla spotkań, eventów i warsztatów',
+  title: 'TeamVote – Live Office Polling App for Teams | QR Voting, Bar Charts, Employee Engagement',
+  description: 'TeamVote: Real-time office polling app for team meetings and employee engagement. QR code voting, live bar charts, instant results. Perfect for corporate events and workshops.',
 }
 
 export default function RootLayout({
