@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server';
+import { v4 as uuidv4 } from 'uuid';
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,8 +12,8 @@ export async function POST(request: NextRequest) {
     }
     
     // Sprawdź typ pliku
-    if (!file.type.startsWith('image/png')) {
-      return NextResponse.json({ error: 'Only PNG files are allowed' }, { status: 400 });
+    if (!file.type.startsWith('image/')) {
+      return NextResponse.json({ error: 'Only image files are allowed' }, { status: 400 });
     }
     
     // Sprawdź rozmiar pliku (max 2MB)
@@ -19,12 +21,57 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'File size must be less than 2MB' }, { status: 400 });
     }
     
-    // Tymczasowe rozwiązanie - Netlify nie obsługuje fs/promises
-    // TODO: Zaimplementować Supabase Storage
-    return NextResponse.json({ 
-      success: false, 
-      error: 'Upload temporarily disabled on Netlify. Please use Supabase Storage.'
-    }, { status: 501 });
+    // Initialize Supabase client
+    const supabase = createClient();
+    
+    // Check if bucket exists, create if not
+    const { data: buckets } = await supabase.storage.listBuckets();
+    const bucketExists = buckets?.some(bucket => bucket.name === 'company-logos');
+    
+    if (!bucketExists) {
+      const { error: createBucketError } = await supabase.storage.createBucket('company-logos', {
+        public: true,
+        allowedMimeTypes: ['image/*'],
+        fileSizeLimit: 2097152 // 2MB
+      });
+      
+      if (createBucketError) {
+        console.error('Error creating bucket:', createBucketError);
+        return NextResponse.json({ error: 'Failed to create storage bucket' }, { status: 500 });
+      }
+    }
+    
+    // Generate unique filename
+    const fileExtension = file.name.split('.').pop();
+    const fileName = `logo_${uuidv4()}.${fileExtension}`;
+    
+    // Convert file to buffer
+    const fileBuffer = await file.arrayBuffer();
+    
+    // Upload to Supabase Storage
+    const { data, error } = await supabase.storage
+      .from('company-logos')
+      .upload(fileName, fileBuffer, {
+        contentType: file.type,
+        cacheControl: '3600',
+        upsert: false
+      });
+    
+    if (error) {
+      console.error('Supabase upload error:', error);
+      return NextResponse.json({ error: 'Failed to upload file to storage' }, { status: 500 });
+    }
+    
+    // Get public URL
+    const { data: publicUrlData } = supabase.storage
+      .from('company-logos')
+      .getPublicUrl(fileName);
+    
+    return NextResponse.json({
+      success: true,
+      filename: fileName,
+      url: publicUrlData.publicUrl
+    });
     
   } catch (error) {
     console.error('Error uploading file:', error);
