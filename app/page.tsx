@@ -12,6 +12,12 @@ export default function HomePage() {
     <div className="min-h-screen flex flex-col items-center justify-center relative">
       {/* Ikona administratora i przełącznik języków w prawym górnym rogu */}
       <div className="absolute top-6 right-6 flex items-center gap-3">
+        <Link 
+          href="/how-it-works" 
+          className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-200 group"
+        >
+          <span className="text-gray-700 group-hover:text-gray-900 font-medium">{t.common.howItWorks}</span>
+        </Link>
         <LanguageSwitcher />
         <Link 
           href="/auth/login" 

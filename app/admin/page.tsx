@@ -376,7 +376,7 @@ export default function AdminPage() {
           {polls.map((poll) => (
             <div key={poll.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
               <div className="flex items-start justify-between mb-4">
-                <h3 className="font-bold text-gray-900 text-lg line-clamp-2">{poll.title}</h3>
+                <h3 className="font-bold text-gray-900 text-lg break-words">{poll.title}</h3>
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                   poll.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
                 }`}>

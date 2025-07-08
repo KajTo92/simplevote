@@ -119,6 +119,46 @@ export const translations = {
       error: 'Błąd'
     },
     
+    // Jak to działa
+    howItWorks: {
+      title: 'Jak to działa?',
+      subtitle: 'Dowiedz się, jak łatwo stworzyć głosowanie i zarządzać nim w czasie rzeczywistym',
+      step1: {
+        title: 'Stwórz głosowanie',
+        description: 'Zaloguj się do panelu administratora i utwórz nowe głosowanie z opcjami do wyboru',
+        details: 'Wystarczy podać tytuł i dodać opcje (maksymalnie 6). System automatycznie przydzieli kolory.'
+      },
+      step2: {
+        title: 'Udostępnij kod QR',
+        description: 'Uczestnicy skanują kod QR, aby dołączyć do głosowania ze swoich telefonów',
+        details: 'Kod QR pojawia się automatycznie na ekranie wyników. Każdy może zagłosować raz.'
+      },
+      step3: {
+        title: 'Dostosuj wyświetlanie',
+        description: 'Wybierz typ wykresu i opcje wyświetlania dopasowane do Twojego wydarzenia',
+        details: 'Poziomy pasek, pionowy pasek lub wykres kołowy. Pokaż procenty, liczby głosów lub ukryj słupki.'
+      },
+      step4: {
+        title: 'Oglądaj wyniki na żywo',
+        description: 'Wyniki aktualizują się w czasie rzeczywistym podczas głosowania uczestników',
+        details: 'Przejrzyste wykresy pokazują aktualny stan głosowania z animacjami dla zwycięskiej opcji.'
+      },
+      features: {
+        title: 'Kluczowe funkcje',
+        realtime: 'Aktualizacje w czasie rzeczywistym',
+        qrcode: 'Łatwe dołączanie przez QR kod',
+        responsive: 'Responsywny design',
+        charts: 'Różne typy wykresów',
+        multilang: 'Obsługa wielu języków',
+        secure: 'Bezpieczne głosowanie'
+      },
+      cta: {
+        title: 'Gotowy, aby zacząć?',
+        description: 'Stwórz swoje pierwsze głosowanie już dziś',
+        button: 'Rozpocznij teraz'
+      }
+    },
+
     // Ogólne
     common: {
       loading: 'Ładowanie...',
@@ -127,7 +167,9 @@ export const translations = {
       confirm: 'Potwierdź',
       yes: 'Tak',
       no: 'Nie',
-      createFirstPoll: 'Utwórz swoje pierwsze głosowanie!'
+      createFirstPoll: 'Utwórz swoje pierwsze głosowanie!',
+      backToHome: 'Strona główna',
+      howItWorks: 'Jak to działa?'
     }
   },
   
@@ -249,6 +291,46 @@ export const translations = {
       error: 'Error'
     },
     
+    // How it works
+    howItWorks: {
+      title: 'How It Works',
+      subtitle: 'Learn how to easily create and manage real-time voting',
+      step1: {
+        title: 'Create a Poll',
+        description: 'Log into the admin panel and create a new poll with voting options',
+        details: 'Just provide a title and add options (maximum 6). The system automatically assigns colors.'
+      },
+      step2: {
+        title: 'Share QR Code',
+        description: 'Participants scan the QR code to join voting from their phones',
+        details: 'QR code appears automatically on the results screen. Everyone can vote once.'
+      },
+      step3: {
+        title: 'Customize Display',
+        description: 'Choose chart type and display options tailored to your event',
+        details: 'Horizontal bar, vertical bar or pie chart. Show percentages, vote counts or hide bars.'
+      },
+      step4: {
+        title: 'Watch Live Results',
+        description: 'Results update in real-time as participants vote',
+        details: 'Clear charts show current voting status with animations for the winning option.'
+      },
+      features: {
+        title: 'Key Features',
+        realtime: 'Real-time updates',
+        qrcode: 'Easy joining via QR code',
+        responsive: 'Responsive design',
+        charts: 'Multiple chart types',
+        multilang: 'Multi-language support',
+        secure: 'Secure voting'
+      },
+      cta: {
+        title: 'Ready to get started?',
+        description: 'Create your first poll today',
+        button: 'Start Now'
+      }
+    },
+
     // Common
     common: {
       loading: 'Loading...',
@@ -257,7 +339,9 @@ export const translations = {
       confirm: 'Confirm',
       yes: 'Yes',
       no: 'No',
-      createFirstPoll: 'Create your first poll now!'
+      createFirstPoll: 'Create your first poll now!',
+      backToHome: 'Home',
+      howItWorks: 'How It Works'
     }
   }
 } as const;
