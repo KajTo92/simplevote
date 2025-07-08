@@ -133,10 +133,10 @@ export async function getPoll(id: string): Promise<Poll | null> {
     createdAt: new Date(poll.created_at),
     updatedAt: new Date(poll.updated_at),
     displaySettings: displaySettings || {
-      chartType: 'horizontal',
+      chartType: 'vertical',
       showPercentages: true,
       showVoteCounts: true,
-      hideBars: false
+      hideBars: true
     }
   }
 }
@@ -201,10 +201,10 @@ export async function getAllPolls(): Promise<Poll[]> {
       createdAt: new Date(poll.created_at),
       updatedAt: new Date(poll.updated_at),
       displaySettings: displaySettings || {
-        chartType: 'horizontal',
+        chartType: 'vertical',
         showPercentages: true,
         showVoteCounts: true,
-        hideBars: false
+        hideBars: true
       }
     })
   }

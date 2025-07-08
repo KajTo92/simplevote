@@ -53,4 +53,5 @@ Thumbs.db
 Thumbs.db
 
 # Vercel
-.vercel 
+.vercel public/uploads/
+tsconfig.tsbuildinfo

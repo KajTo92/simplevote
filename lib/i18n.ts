@@ -89,7 +89,20 @@ export const translations = {
       logoUploaded: 'Logo zostało przesłane',
       companyName: 'Nazwa firmy',
       companyNamePlaceholder: 'Wprowadź nazwę firmy',
-      updateCompanyName: 'Zaktualizuj nazwę'
+      updateCompanyName: 'Zaktualizuj nazwę',
+      
+      // Logo Upload Mockup
+      logoActive: 'Logo firmy aktywne',
+      logoReady: 'Gotowe do wyświetlania',
+      logoReadyToUpload: 'Logo gotowe do uploadu',
+      logoUploadHint: 'Kliknij przycisk poniżej aby zapisać logo',
+      logoFilePreview: 'Podgląd wybranego pliku',
+      logoUploadTitle: 'Dodaj logo firmy',
+      logoDropHere: 'Upuść plik tutaj!',
+      logoDragDropHint: 'Przeciągnij i upuść plik PNG lub kliknij aby wybrać',
+      logoSelectFile: 'Wybierz plik',
+      logoFormat: 'PNG format',
+      logoDragDrop: 'Drag & Drop'
     },
     
     // Głosowanie
@@ -213,7 +226,7 @@ export const translations = {
         price: '$19',
         description: 'Dla rozwijających się zespołów i firm',
         features: [
-          'Do 100 głosujących użytkowników',
+          'Do 50 głosujących użytkowników',
           'Nielimitowane głosowania',
           'Wszystkie typy wykresów',
           'Wyniki w czasie rzeczywistym',
@@ -345,7 +358,20 @@ export const translations = {
       logoUploaded: 'Logo uploaded successfully',
       companyName: 'Company Name',
       companyNamePlaceholder: 'Enter company name',
-      updateCompanyName: 'Update Name'
+      updateCompanyName: 'Update Name',
+      
+      // Logo Upload Mockup
+      logoActive: 'Company logo active',
+      logoReady: 'Ready to display',
+      logoReadyToUpload: 'Logo ready to upload',
+      logoUploadHint: 'Click the button below to save logo',
+      logoFilePreview: 'Selected file preview',
+      logoUploadTitle: 'Add company logo',
+      logoDropHere: 'Drop file here!',
+      logoDragDropHint: 'Drag and drop PNG file or click to select',
+      logoSelectFile: 'Select file',
+      logoFormat: 'PNG format',
+      logoDragDrop: 'Drag & Drop'
     },
     
     // Voting
@@ -469,7 +495,7 @@ export const translations = {
         price: '$19',
         description: 'For growing teams and companies',
         features: [
-          'Up to 100 voting users',
+          'Up to 50 voting users',
           'Unlimited polls',
           'All chart types',
           'Real-time results',

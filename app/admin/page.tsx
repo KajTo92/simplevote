@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, Eye, Calendar, Users, LogOut, User, Trash2, Power, PowerOff, Settings, ArrowLeft } from 'lucide-react';
+import { Plus, Eye, Calendar, Users, LogOut, User, Trash2, Power, PowerOff, Settings, ArrowLeft, Upload, Image, Cloud, Info, DollarSign } from 'lucide-react';
 import Link from 'next/link';
 import { Poll, CompanySettings } from '@/types';
 import { useAuth } from '@/components/AuthProvider';
@@ -18,15 +18,17 @@ export default function AdminPage() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
   const [showDisplaySettings, setShowDisplaySettings] = useState<string | null>(null);
   const [displaySettingsLoading, setDisplaySettingsLoading] = useState(false);
-  const [chartType, setChartType] = useState<'horizontal' | 'vertical' | 'pie'>('horizontal');
+  const [chartType, setChartType] = useState<'horizontal' | 'vertical' | 'pie'>('vertical');
   const [showPercentages, setShowPercentages] = useState(true);
   const [showVoteCounts, setShowVoteCounts] = useState(true);
-  const [hideBars, setHideBars] = useState(false);
+  const [hideBars, setHideBars] = useState(true);
   
   // Company Settings
   const [companySettings, setCompanySettings] = useState<CompanySettings | null>(null);
   const [companyLogoUploading, setCompanyLogoUploading] = useState(false);
   const [selectedCompanyLogo, setSelectedCompanyLogo] = useState<File | null>(null);
+  const [isDraggingLogo, setIsDraggingLogo] = useState(false);
+  const [logoPreviewUrl, setLogoPreviewUrl] = useState<string | null>(null);
   
   const { user, signOut } = useAuth();
   const { t } = useLanguage();
@@ -41,10 +43,10 @@ export default function AdminPage() {
     if (showDisplaySettings) {
       const poll = polls.find(p => p.id === showDisplaySettings);
       if (poll) {
-        setChartType(poll.displaySettings?.chartType || 'horizontal');
+        setChartType(poll.displaySettings?.chartType || 'vertical');
         setShowPercentages(poll.displaySettings?.showPercentages ?? true);
         setShowVoteCounts(poll.displaySettings?.showVoteCounts ?? true);
-        setHideBars(poll.displaySettings?.hideBars ?? false);
+        setHideBars(poll.displaySettings?.hideBars ?? true);
       }
     }
   }, [showDisplaySettings, polls]);
@@ -291,6 +293,7 @@ export default function AdminPage() {
         const result = await updateResponse.json();
         setCompanySettings(result.settings);
         setSelectedCompanyLogo(null);
+        setLogoPreviewUrl(null);
         alert(t.admin.logoUploaded);
       } else {
         const error = await updateResponse.json();
@@ -330,6 +333,49 @@ export default function AdminPage() {
     }
   };
 
+  // Handle logo file selection and preview
+  const handleLogoFileSelect = (file: File) => {
+    setSelectedCompanyLogo(file);
+    
+    // Create preview URL
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setLogoPreviewUrl(e.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Drag and drop handlers
+  const handleLogoDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDraggingLogo(true);
+  };
+
+  const handleLogoDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDraggingLogo(false);
+  };
+
+  const handleLogoDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDraggingLogo(false);
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      const file = files[0];
+      if (file.type === 'image/png') {
+        handleLogoFileSelect(file);
+      }
+    }
+  };
+
+  const handleLogoInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      handleLogoFileSelect(file);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-6xl mx-auto">
@@ -352,6 +398,24 @@ export default function AdminPage() {
           </div>
           
           <div className="flex items-center gap-4">
+            {/* Navigation Links */}
+            <div className="hidden md:flex items-center gap-2">
+              <Link 
+                href="/how-it-works"
+                className="flex items-center gap-2 text-gray-600 hover:text-gray-900 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <Info className="w-4 h-4" />
+                <span className="text-sm">{t.common.howItWorks}</span>
+              </Link>
+              <Link 
+                href="/pricing"
+                className="flex items-center gap-2 text-gray-600 hover:text-gray-900 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <DollarSign className="w-4 h-4" />
+                <span className="text-sm">{t.common.pricing}</span>
+              </Link>
+            </div>
+            
             {/* Language Switcher */}
             <LanguageSwitcher />
             
@@ -469,56 +533,195 @@ export default function AdminPage() {
         )}
 
         {/* Company Settings and Polls List */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
           {/* Company Settings Section */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Your Company Logo</h2>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow max-h-96 overflow-hidden">
+            <h2 className="text-lg font-bold text-gray-900 mb-3">Your Company Logo</h2>
             
-            <div className="space-y-6">
+            <div className="space-y-4">
               {/* Company Logo */}
               <div>
                 {companySettings?.companyLogoUrl ? (
-                  <div className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
-                    <img 
-                      src={companySettings.companyLogoUrl} 
-                      alt="Company Logo" 
-                      className="w-16 h-16 object-contain rounded border"
-                    />
-                    <div className="flex-1">
-                      <p className="text-sm text-gray-600">{t.admin.logoDescription}</p>
+                  <div className="relative group">
+                    {/* Current Logo Display - Enhanced */}
+                    <div className="p-4 border-2 border-gray-200 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 hover:shadow-lg transition-all duration-300">
+                      <div className="flex items-center gap-4">
+                        <div className="relative">
+                          <img 
+                            src={companySettings.companyLogoUrl} 
+                            alt="Company Logo" 
+                            className="w-20 h-20 object-contain rounded-lg border-2 border-white shadow-md"
+                          />
+                          <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                            <Upload className="w-3 h-3 text-white" />
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-gray-900 mb-1">{t.admin.logoActive}</h3>
+                          <p className="text-sm text-gray-600">{t.admin.logoDescription}</p>
+                          <div className="flex items-center gap-2 mt-2 text-xs text-green-600">
+                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                            <span>{t.admin.logoReady}</span>
+                          </div>
+                        </div>
+                        <button
+                          onClick={removeCompanyLogo}
+                          className="px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors border border-red-200 hover:border-red-300"
+                        >
+                          {t.admin.removeLogo}
+                        </button>
+                      </div>
                     </div>
-                    <button
-                      onClick={removeCompanyLogo}
-                      className="px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                    >
-                      {t.admin.removeLogo}
-                    </button>
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    <input
-                      type="file"
-                      accept=".png"
-                      onChange={(e) => setSelectedCompanyLogo(e.target.files?.[0] || null)}
-                      className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                    />
-                    <p className="text-xs text-gray-500">{t.admin.logoDescription}</p>
-                    {selectedCompanyLogo && (
-                      <button
-                        onClick={uploadCompanyLogo}
-                        disabled={companyLogoUploading}
-                        className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors"
-                      >
-                        {companyLogoUploading ? (
-                          <div className="flex items-center gap-2">
-                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                            {t.admin.saving}
+                    {/* Modern Upload Area with Mockup */}
+                    <div 
+                      className={`relative border-2 border-dashed rounded-xl p-6 transition-all duration-300 ${
+                        isDraggingLogo 
+                          ? 'border-blue-500 bg-blue-50 scale-105' 
+                          : 'border-gray-300 bg-gray-50 hover:border-blue-400 hover:bg-blue-50'
+                      }`}
+                      onDragOver={handleLogoDragOver}
+                      onDragLeave={handleLogoDragLeave}
+                      onDrop={handleLogoDrop}
+                    >
+                      {/* Background Pattern */}
+                      <div className="absolute inset-0 opacity-5">
+                        <div className="grid grid-cols-8 gap-2 h-full">
+                          {[...Array(32)].map((_, i) => (
+                            <div key={i} className="bg-gray-400 rounded-sm"></div>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div className="relative z-10 text-center">
+                        {selectedCompanyLogo && logoPreviewUrl ? (
+                          /* Preview Selected Logo */
+                          <div className="space-y-3">
+                            <div className="relative inline-block">
+                              <img 
+                                src={logoPreviewUrl} 
+                                alt="Logo Preview" 
+                                className="w-20 h-20 object-contain rounded-lg border-2 border-white shadow-lg"
+                              />
+                              <div className="absolute -top-2 -right-2 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                                <Image className="w-3 h-3 text-white" />
+                              </div>
+                            </div>
+                                                         <div>
+                               <h3 className="text-base font-semibold text-gray-900 mb-1">{t.admin.logoReadyToUpload}</h3>
+                               <p className="text-sm text-gray-600 mb-3">{t.admin.logoUploadHint}</p>
+                               <div className="flex items-center justify-center gap-2 text-sm text-blue-600">
+                                 <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                                 <span>{t.admin.logoFilePreview}</span>
+                               </div>
+                             </div>
                           </div>
                         ) : (
-                          t.admin.uploadLogo
+                          /* Upload Mockup */
+                          <div className="space-y-3">
+                            <div className="relative">
+                              {/* Mockup Logo Placeholder */}
+                              <div className="mx-auto w-20 h-20 bg-gradient-to-br from-gray-200 to-gray-300 rounded-lg border-2 border-dashed border-gray-400 flex items-center justify-center mb-3">
+                                <div className="text-center">
+                                  <Image className="w-8 h-8 text-gray-500 mx-auto mb-1" />
+                                  <div className="text-xs text-gray-500 font-medium">LOGO</div>
+                                </div>
+                              </div>
+                              
+                              {/* Upload Icon with Animation */}
+                              <div className={`absolute -top-2 -right-8 transition-transform duration-300 ${
+                                isDraggingLogo ? 'scale-125 rotate-12' : 'scale-100'
+                              }`}>
+                                <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
+                                  <Upload className="w-5 h-5 text-white" />
+                                </div>
+                              </div>
+                            </div>
+                            
+                                                         <div>
+                               <h3 className="text-base font-semibold text-gray-900 mb-2">
+                                 {isDraggingLogo ? t.admin.logoDropHere : t.admin.logoUploadTitle}
+                               </h3>
+                               <p className="text-sm text-gray-600 mb-3">
+                                 {t.admin.logoDragDropHint}
+                               </p>
+                               
+                               {/* Visual Indicators */}
+                               <div className="flex items-center justify-center gap-4 text-xs text-gray-500">
+                                 <div className="flex items-center gap-1">
+                                   <Cloud className="w-4 h-4" />
+                                   <span>{t.admin.logoDragDrop}</span>
+                                 </div>
+                                 <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                                 <div className="flex items-center gap-1">
+                                   <Image className="w-4 h-4" />
+                                   <span>{t.admin.logoFormat}</span>
+                                 </div>
+                               </div>
+                             </div>
+                          </div>
                         )}
-                      </button>
+                        
+                        {/* Hidden File Input */}
+                        <input
+                          type="file"
+                          accept=".png"
+                          onChange={handleLogoInputChange}
+                          className="hidden"
+                          id="logo-upload-input"
+                        />
+                        
+                        {/* Upload Button */}
+                        {!selectedCompanyLogo && (
+                                                     <label 
+                             htmlFor="logo-upload-input"
+                             className="inline-flex items-center gap-2 mt-3 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer transition-colors"
+                           >
+                             <Plus className="w-4 h-4" />
+                             {t.admin.logoSelectFile}
+                           </label>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* Upload Action Button */}
+                    {selectedCompanyLogo && (
+                      <div className="flex gap-3">
+                        <button
+                          onClick={() => {
+                            setSelectedCompanyLogo(null);
+                            setLogoPreviewUrl(null);
+                          }}
+                                                     className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                         >
+                           {t.common.cancel}
+                         </button>
+                        <button
+                          onClick={uploadCompanyLogo}
+                          disabled={companyLogoUploading}
+                          className="flex-1 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors"
+                        >
+                          {companyLogoUploading ? (
+                            <div className="flex items-center justify-center gap-2">
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                              {t.admin.saving}
+                            </div>
+                          ) : (
+                            <div className="flex items-center justify-center gap-2">
+                              <Upload className="w-4 h-4" />
+                              {t.admin.uploadLogo}
+                            </div>
+                          )}
+                        </button>
+                      </div>
                     )}
+                    
+                    {/* Additional Info */}
+                    <div className="text-center">
+                      <p className="text-xs text-gray-500">{t.admin.logoDescription}</p>
+                    </div>
                   </div>
                 )}
               </div>
