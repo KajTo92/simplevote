@@ -25,20 +25,21 @@ export async function POST(request: NextRequest) {
     const supabase = createClient();
     
     // Check if bucket exists, create if not
-    const { data: buckets } = await supabase.storage.listBuckets();
+    const { data: buckets, error: listError } = await supabase.storage.listBuckets();
+    
+    if (listError) {
+      console.error('Error listing buckets:', listError);
+      return NextResponse.json({ error: 'Failed to access storage' }, { status: 500 });
+    }
+    
     const bucketExists = buckets?.some(bucket => bucket.name === 'company-logos');
     
     if (!bucketExists) {
-      const { error: createBucketError } = await supabase.storage.createBucket('company-logos', {
-        public: true,
-        allowedMimeTypes: ['image/*'],
-        fileSizeLimit: 2097152 // 2MB
-      });
-      
-      if (createBucketError) {
-        console.error('Error creating bucket:', createBucketError);
-        return NextResponse.json({ error: 'Failed to create storage bucket' }, { status: 500 });
-      }
+      console.log('Bucket company-logos does not exist. Please create it manually in Supabase Dashboard.');
+      console.log('Instructions: Go to Storage → Buckets → New bucket → Name: company-logos → Public: true');
+      return NextResponse.json({ 
+        error: 'Storage bucket "company-logos" does not exist. Please create it in Supabase Dashboard (Storage → Buckets → New bucket → Name: company-logos → Public: true)' 
+      }, { status: 500 });
     }
     
     // Generate unique filename
