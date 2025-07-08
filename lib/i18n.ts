@@ -233,7 +233,7 @@ export const translations = {
           'Kod QR do dołączania',
           'Zaawansowane opcje wyświetlania',
           'Wsparcie email'
-        ],
+        ] as readonly string[],
         button: 'Wybierz Pro'
       },
       enterprise: {
@@ -249,7 +249,7 @@ export const translations = {
           'Zaawansowane opcje wyświetlania',
           'Priorytetowe wsparcie',
           'Logo firmy'
-        ],
+        ] as readonly string[],
         button: 'Przejdź Unlimited',
         popular: 'Najpopularniejszy'
       }
@@ -487,7 +487,7 @@ export const translations = {
           'Basic chart types',
           'Real-time results',
           'QR code joining'
-        ],
+        ] as readonly string[],
         button: 'Start for free'
       },
       pro: {
@@ -502,7 +502,7 @@ export const translations = {
           'QR code joining',
           'Advanced display options',
           'Email support'
-        ],
+        ] as readonly string[],
         button: 'Choose Pro'
       },
       enterprise: {
@@ -518,7 +518,7 @@ export const translations = {
           'Advanced display options',
           'Priority support',
           'Custom company logo'
-        ],
+        ] as readonly string[],
         button: 'Go unlimited',
         popular: 'Most Popular'
       }
@@ -548,9 +548,15 @@ type TranslationStructure = {
     ? {
         [SK in keyof typeof translations.pl[K]]: typeof translations.pl[K][SK] extends string
           ? string
+          : typeof translations.pl[K][SK] extends readonly string[]
+          ? readonly string[]
           : typeof translations.pl[K][SK] extends object
           ? {
-              [SSK in keyof typeof translations.pl[K][SK]]: string
+              [SSK in keyof typeof translations.pl[K][SK]]: typeof translations.pl[K][SK][SSK] extends string
+                ? string
+                : typeof translations.pl[K][SK][SSK] extends readonly string[]
+                ? readonly string[]
+                : string
             }
           : string
       }
