@@ -90,6 +90,8 @@ export async function PATCH(
       return NextResponse.json({ success: true, poll: updatedPoll });
     }
     
+
+    
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
   } catch (error) {
     console.error('Error updating poll:', error);

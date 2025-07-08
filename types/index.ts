@@ -15,6 +15,14 @@ export interface DisplaySettings {
   hideBars: boolean;
 }
 
+export interface CompanySettings {
+  id: string;
+  companyName?: string;
+  companyLogoUrl?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface PollOption {
   id: string;
   text: string;

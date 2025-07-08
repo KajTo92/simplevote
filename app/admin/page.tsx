@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Plus, Eye, Calendar, Users, LogOut, User, Trash2, Power, PowerOff, Settings, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import { Poll } from '@/types';
+import { Poll, CompanySettings } from '@/types';
 import { useAuth } from '@/components/AuthProvider';
 import { useLanguage } from '@/components/LanguageProvider';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
@@ -22,11 +22,18 @@ export default function AdminPage() {
   const [showPercentages, setShowPercentages] = useState(true);
   const [showVoteCounts, setShowVoteCounts] = useState(true);
   const [hideBars, setHideBars] = useState(false);
+  
+  // Company Settings
+  const [companySettings, setCompanySettings] = useState<CompanySettings | null>(null);
+  const [companyLogoUploading, setCompanyLogoUploading] = useState(false);
+  const [selectedCompanyLogo, setSelectedCompanyLogo] = useState<File | null>(null);
+  
   const { user, signOut } = useAuth();
   const { t } = useLanguage();
 
   useEffect(() => {
     fetchPolls();
+    fetchCompanySettings();
   }, []);
 
   // Aktualizuj stan formularza gdy otwieramy modal
@@ -62,6 +69,18 @@ export default function AdminPage() {
       console.error('Error fetching polls:', error);
       setPolls([]); // Ustaw pustą tablicę jako fallback
       alert(t.errors.loadingError);
+    }
+  };
+
+  const fetchCompanySettings = async () => {
+    try {
+      const response = await fetch('/api/company-settings');
+      if (response.ok) {
+        const settings = await response.json();
+        setCompanySettings(settings);
+      }
+    } catch (error) {
+      console.error('Error fetching company settings:', error);
     }
   };
 
@@ -233,6 +252,84 @@ export default function AdminPage() {
     }
   };
 
+  const uploadCompanyLogo = async () => {
+    if (!selectedCompanyLogo) return;
+    
+    setCompanyLogoUploading(true);
+    
+    try {
+      // Upload file
+      const formData = new FormData();
+      formData.append('logo', selectedCompanyLogo);
+      
+      const uploadResponse = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      
+      if (!uploadResponse.ok) {
+        const error = await uploadResponse.json();
+        alert(t.errors.error + ': ' + error.error);
+        return;
+      }
+      
+      const uploadResult = await uploadResponse.json();
+      
+      // Update company settings with logo URL
+      const updateResponse = await fetch('/api/company-settings', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          action: 'update-logo', 
+          logoUrl: uploadResult.url
+        }),
+      });
+
+      if (updateResponse.ok) {
+        const result = await updateResponse.json();
+        setCompanySettings(result.settings);
+        setSelectedCompanyLogo(null);
+        alert(t.admin.logoUploaded);
+      } else {
+        const error = await updateResponse.json();
+        alert(t.errors.error + ': ' + error.error);
+      }
+    } catch (error) {
+      console.error('Error uploading company logo:', error);
+      alert(t.errors.error);
+    } finally {
+      setCompanyLogoUploading(false);
+    }
+  };
+
+  const removeCompanyLogo = async () => {
+    try {
+      const response = await fetch('/api/company-settings', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          action: 'update-logo', 
+          logoUrl: null
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setCompanySettings(result.settings);
+      } else {
+        const error = await response.json();
+        alert(t.errors.error + ': ' + error.error);
+      }
+    } catch (error) {
+      console.error('Error removing company logo:', error);
+      alert(t.errors.error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-6xl mx-auto">
@@ -370,6 +467,65 @@ export default function AdminPage() {
             </div>
           </div>
         )}
+
+        {/* Company Settings Section */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+          <h2 className="text-xl font-bold text-gray-900 mb-4">{t.admin.companySettings}</h2>
+          
+          <div className="space-y-6">
+            {/* Company Logo */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                {t.admin.companyLogo}
+              </label>
+              
+              {companySettings?.companyLogoUrl ? (
+                <div className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                  <img 
+                    src={companySettings.companyLogoUrl} 
+                    alt="Company Logo" 
+                    className="w-16 h-16 object-contain rounded border"
+                  />
+                  <div className="flex-1">
+                    <p className="text-sm text-gray-600">{t.admin.logoDescription}</p>
+                  </div>
+                  <button
+                    onClick={removeCompanyLogo}
+                    className="px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                  >
+                    {t.admin.removeLogo}
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <input
+                    type="file"
+                    accept=".png"
+                    onChange={(e) => setSelectedCompanyLogo(e.target.files?.[0] || null)}
+                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                  />
+                  <p className="text-xs text-gray-500">{t.admin.logoDescription}</p>
+                  {selectedCompanyLogo && (
+                    <button
+                      onClick={uploadCompanyLogo}
+                      disabled={companyLogoUploading}
+                      className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors"
+                    >
+                      {companyLogoUploading ? (
+                        <div className="flex items-center gap-2">
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                          {t.admin.saving}
+                        </div>
+                      ) : (
+                        t.admin.uploadLogo
+                      )}
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
 
         {/* Polls List */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -646,6 +802,8 @@ export default function AdminPage() {
                         </label>
                     </div>
                   </div>
+                  
+
                 </div>
                 
                 <div className="flex gap-3 pt-6">

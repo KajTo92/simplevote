@@ -17,15 +17,15 @@ export default function PricingPage() {
     },
     {
       ...t.pricing.pro,
-      highlight: true,
+      highlight: false,
       href: '/auth/register',
-      popular: t.pricing.pro.popular
+      popular: undefined
     },
     {
       ...t.pricing.enterprise,
-      highlight: false,
+      highlight: true,
       href: 'mailto:contact@example.com',
-      popular: undefined
+      popular: t.pricing.enterprise.popular
     }
   ];
 

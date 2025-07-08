@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import { Poll, PollOption, CreatePollRequest, DisplaySettings } from '@/types'
+import { Poll, PollOption, CreatePollRequest, DisplaySettings, CompanySettings } from '@/types'
 import { v4 as uuidv4 } from 'uuid'
 
 const colors = [
@@ -339,6 +339,140 @@ export async function adjustVoteCount(optionId: string, adjustment: number): Pro
     return true // adjustment === 0
   } catch (error) {
     console.error('Error adjusting vote count:', error)
+    return false
+  }
+}
+
+// ============ COMPANY SETTINGS ============
+
+export async function getCompanySettings(): Promise<CompanySettings | null> {
+  const supabase = createClient()
+  
+  try {
+    const { data: settings, error } = await supabase
+      .from('company_settings')
+      .select('*')
+      .limit(1)
+      .single()
+    
+    if (error) {
+      // Jeśli tabela jest pusta, utwórz domyślny rekord
+      if (error.code === 'PGRST116') {
+        const { data: newSettings, error: insertError } = await supabase
+          .from('company_settings')
+          .insert({
+            company_name: 'My Company',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          })
+          .select()
+          .single()
+        
+        if (insertError || !newSettings) return null
+        
+        return {
+          id: newSettings.id,
+          companyName: newSettings.company_name || undefined,
+          companyLogoUrl: newSettings.company_logo_url || undefined,
+          createdAt: new Date(newSettings.created_at),
+          updatedAt: new Date(newSettings.updated_at)
+        }
+      }
+      
+      console.error('Error fetching company settings:', error)
+      return null
+    }
+    
+    return {
+      id: settings.id,
+      companyName: settings.company_name || undefined,
+      companyLogoUrl: settings.company_logo_url || undefined,
+      createdAt: new Date(settings.created_at),
+      updatedAt: new Date(settings.updated_at)
+    }
+  } catch (error) {
+    console.error('Error in getCompanySettings:', error)
+    return null
+  }
+}
+
+export async function updateCompanyLogo(logoUrl: string | null): Promise<boolean> {
+  const supabase = createClient()
+  
+  try {
+    // Sprawdź czy rekord istnieje
+    const { data: existing, error: fetchError } = await supabase
+      .from('company_settings')
+      .select('id')
+      .limit(1)
+      .single()
+    
+    if (fetchError || !existing) {
+      // Utwórz nowy rekord jeśli nie istnieje
+      const { error: insertError } = await supabase
+        .from('company_settings')
+        .insert({
+          company_name: 'My Company',
+          company_logo_url: logoUrl,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+      
+      return !insertError
+    }
+    
+    // Aktualizuj istniejący rekord
+    const { error } = await supabase
+      .from('company_settings')
+      .update({ 
+        company_logo_url: logoUrl,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', existing.id)
+    
+    return !error
+  } catch (error) {
+    console.error('Error updating company logo:', error)
+    return false
+  }
+}
+
+export async function updateCompanyName(companyName: string): Promise<boolean> {
+  const supabase = createClient()
+  
+  try {
+    // Sprawdź czy rekord istnieje
+    const { data: existing, error: fetchError } = await supabase
+      .from('company_settings')
+      .select('id')
+      .limit(1)
+      .single()
+    
+    if (fetchError || !existing) {
+      // Utwórz nowy rekord jeśli nie istnieje
+      const { error: insertError } = await supabase
+        .from('company_settings')
+        .insert({
+          company_name: companyName,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+      
+      return !insertError
+    }
+    
+    // Aktualizuj istniejący rekord
+    const { error } = await supabase
+      .from('company_settings')
+      .update({ 
+        company_name: companyName,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', existing.id)
+    
+    return !error
+  } catch (error) {
+    console.error('Error updating company name:', error)
     return false
   }
 } 

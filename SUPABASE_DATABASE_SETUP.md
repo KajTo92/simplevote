@@ -32,6 +32,7 @@ CREATE TABLE polls (
     title TEXT NOT NULL,
     is_active BOOLEAN DEFAULT true,
     display_settings JSONB,
+    logo_url TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -192,6 +193,85 @@ ORDER BY p.created_at DESC;
 DELETE FROM votes;
 DELETE FROM poll_options;
 DELETE FROM polls;
+
+-- Dodaj kolumnę logo_url (jeśli jeszcze nie istnieje)
+ALTER TABLE polls ADD COLUMN IF NOT EXISTS logo_url TEXT;
+```
+
+## 📄 Aktualizacja dla logo firmy
+
+Jeśli masz już istniejącą bazę danych, dodaj kolumnę logo_url:
+
+```sql
+-- Dodaj kolumnę dla URL logo firmy
+ALTER TABLE polls ADD COLUMN logo_url TEXT;
+```
+
+Po wykonaniu tych kroków, aplikacja będzie używać Supabase PostgreSQL zamiast SQLite! 🎉
+
+## 🏢 Aktualizacja: Globalne logo firmy (Nowa wersja)
+
+**UWAGA:** Ta sekcja zastępuje poprzednie podejście z logo_url w tabeli polls.
+
+### 1. Utwórz tabelę globalnych ustawień firmy
+
+```sql
+-- Tabela globalnych ustawień firmy
+CREATE TABLE IF NOT EXISTS company_settings (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    company_name TEXT,
+    company_logo_url TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Wstaw domyślny rekord (tylko jeden rekord będzie używany)
+INSERT INTO company_settings (company_name) 
+VALUES ('My Company')
+ON CONFLICT DO NOTHING;
+
+-- RLS dla company_settings
+ALTER TABLE company_settings ENABLE ROW LEVEL SECURITY;
+
+-- Wszyscy mogą czytać ustawienia firmy
+CREATE POLICY "Anyone can read company settings" ON company_settings
+FOR SELECT USING (true);
+
+-- Tylko uwierzytelnieni użytkownicy mogą zarządzać ustawieniami
+CREATE POLICY "Authenticated users can manage company settings" ON company_settings
+FOR ALL USING (auth.role() = 'authenticated');
+
+-- Trigger dla automatycznego updated_at
+CREATE TRIGGER update_company_settings_updated_at 
+    BEFORE UPDATE ON company_settings 
+    FOR EACH ROW 
+    EXECUTE FUNCTION update_updated_at_column();
+```
+
+### 2. Usuń kolumnę logo_url z tabeli polls (jeśli istnieje)
+
+```sql
+-- Usuń kolumnę logo_url z tabeli polls (nie jest już potrzebna)
+ALTER TABLE polls DROP COLUMN IF EXISTS logo_url;
+```
+
+### 3. Sprawdź poprawność
+
+```sql
+-- Sprawdź strukturę nowej tabeli
+SELECT column_name, data_type 
+FROM information_schema.columns 
+WHERE table_name = 'company_settings' 
+ORDER BY ordinal_position;
+
+-- Sprawdź czy logo_url została usunięta z polls
+SELECT column_name 
+FROM information_schema.columns 
+WHERE table_name = 'polls' 
+AND column_name = 'logo_url';
+
+-- Sprawdź domyślny rekord ustawień
+SELECT * FROM company_settings;
 ```
 
 Po wykonaniu tych kroków, aplikacja będzie używać Supabase PostgreSQL zamiast SQLite! 🎉 

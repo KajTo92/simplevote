@@ -78,7 +78,18 @@ export const translations = {
       showPercentages: 'Pokaż procenty',
       showVoteCounts: 'Pokaż liczby głosów',
       hideBars: 'Ukryj słupki (animacja)',
-      saving: 'Zapisywanie...'
+      saving: 'Zapisywanie...',
+      
+      // Company Settings
+      companySettings: 'Ustawienia firmy',
+      companyLogo: 'Logo firmy',
+      uploadLogo: 'Wgraj logo',
+      logoDescription: 'Dodaj logo firmy, które będzie wyświetlane przy wszystkich głosowaniach (PNG, max 2MB)',
+      removeLogo: 'Usuń logo',
+      logoUploaded: 'Logo zostało przesłane',
+      companyName: 'Nazwa firmy',
+      companyNamePlaceholder: 'Wprowadź nazwę firmy',
+      updateCompanyName: 'Zaktualizuj nazwę'
     },
     
     // Głosowanie
@@ -210,8 +221,7 @@ export const translations = {
           'Zaawansowane opcje wyświetlania',
           'Wsparcie email'
         ],
-        button: 'Wybierz Pro',
-        popular: 'Najpopularniejszy'
+        button: 'Wybierz Pro'
       },
       enterprise: {
         name: 'Enterprise',
@@ -225,10 +235,10 @@ export const translations = {
           'Kod QR do dołączania',
           'Zaawansowane opcje wyświetlania',
           'Priorytetowe wsparcie',
-          'Dedykowany manager konta',
-          'Custom branding'
+          'Logo firmy'
         ],
-        button: 'Skontaktuj się'
+        button: 'Przejdź Unlimited',
+        popular: 'Najpopularniejszy'
       }
     },
 
@@ -324,7 +334,18 @@ export const translations = {
       showPercentages: 'Show Percentages',
       showVoteCounts: 'Show Vote Counts',
       hideBars: 'Hide Bars (animation)',
-      saving: 'Saving...'
+      saving: 'Saving...',
+      
+      // Company Settings
+      companySettings: 'Company Settings',
+      companyLogo: 'Company Logo',
+      uploadLogo: 'Upload Logo',
+      logoDescription: 'Add company logo that will be displayed on all polls (PNG, max 2MB)',
+      removeLogo: 'Remove Logo',
+      logoUploaded: 'Logo uploaded successfully',
+      companyName: 'Company Name',
+      companyNamePlaceholder: 'Enter company name',
+      updateCompanyName: 'Update Name'
     },
     
     // Voting
@@ -456,8 +477,7 @@ export const translations = {
           'Advanced display options',
           'Email support'
         ],
-        button: 'Choose Pro',
-        popular: 'Most Popular'
+        button: 'Choose Pro'
       },
       enterprise: {
         name: 'Enterprise',
@@ -471,10 +491,10 @@ export const translations = {
           'QR code joining',
           'Advanced display options',
           'Priority support',
-          'Dedicated account manager',
-          'Custom branding'
+          'Custom company logo'
         ],
-        button: 'Contact us'
+        button: 'Go unlimited',
+        popular: 'Most Popular'
       }
     },
 

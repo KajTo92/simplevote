@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import QRCode from 'qrcode';
-import { Poll } from '@/types';
+import { Poll, CompanySettings } from '@/types';
 import { ArrowLeft, QrCode, Users, RotateCcw } from 'lucide-react';
 import { useLanguage } from '@/components/LanguageProvider';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
@@ -15,6 +15,7 @@ export default function PollDisplayPage() {
   const pollId = params.id as string;
   const { t } = useLanguage();
   const [poll, setPoll] = useState<Poll | null>(null);
+  const [companySettings, setCompanySettings] = useState<CompanySettings | null>(null);
   const [qrCodeUrl, setQrCodeUrl] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
@@ -22,6 +23,7 @@ export default function PollDisplayPage() {
   useEffect(() => {
     if (pollId) {
       fetchPoll();
+      fetchCompanySettings();
       generateQRCode();
       
       // Odświeżaj dane co 2 sekundy
@@ -44,6 +46,18 @@ export default function PollDisplayPage() {
       setError(t.errors.loadingError);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchCompanySettings = async () => {
+    try {
+      const response = await fetch('/api/company-settings');
+      if (response.ok) {
+        const settings = await response.json();
+        setCompanySettings(settings);
+      }
+    } catch (error) {
+      console.error('Error fetching company settings:', error);
     }
   };
 
@@ -208,8 +222,8 @@ export default function PollDisplayPage() {
           </div>
 
           {/* QR Code i instrukcje */}
-          <div className="xl:col-span-1">
-            <div className="bg-white rounded-2xl shadow-sm p-6 h-[calc(100vh-200px)] flex flex-col">
+          <div className="xl:col-span-1 space-y-6">
+            <div className="bg-white rounded-2xl shadow-sm p-6 flex flex-col">
               <div className="flex items-center justify-center gap-2 mb-6">
                 <QrCode className="w-5 h-5 text-blue-600" />
                 <h2 className="text-lg font-bold text-gray-900 text-center">{t.display.joinVoting}</h2>
@@ -225,7 +239,7 @@ export default function PollDisplayPage() {
                 </div>
               )}
               
-              <div className="space-y-3 text-left flex-1 overflow-y-auto">
+              <div className="space-y-3 text-left">
                 <div className="flex items-start gap-2">
                   <div className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">
                     1
@@ -257,6 +271,19 @@ export default function PollDisplayPage() {
                 </div>
               </div>
             </div>
+            
+            {/* Company Logo */}
+            {companySettings?.companyLogoUrl && (
+              <div className="bg-white rounded-2xl shadow-sm p-6">
+                <div className="text-center">
+                  <img 
+                    src={companySettings.companyLogoUrl} 
+                    alt="Company Logo" 
+                    className="mx-auto max-w-full max-h-24 object-contain"
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
