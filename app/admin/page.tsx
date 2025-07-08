@@ -380,23 +380,21 @@ export default function AdminPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <Link href="/" className="text-gray-500 hover:text-gray-700">
-                <ArrowLeft className="w-4 h-4" />
-              </Link>
-              <h1 className="text-2xl font-bold text-gray-900">
-                {t.title.split(' ')[0]}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-                  {' '}{t.title.split(' ').slice(1).join(' ')}
-                </span>
-              </h1>
-            </div>
-            <h1 className="text-3xl font-bold text-gray-900">{t.admin.title}</h1>
-            <p className="text-gray-600 mt-2">{t.admin.subtitle}</p>
+        <div className="flex items-center justify-between mb-6">
+          {/* Left side - Back arrow and TeamVote logo */}
+          <div className="flex items-center gap-3">
+            <Link href="/" className="text-gray-500 hover:text-gray-700">
+              <ArrowLeft className="w-4 h-4" />
+            </Link>
+            <h1 className="text-2xl font-bold text-gray-900">
+              {t.title.split(' ')[0]}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+                {' '}{t.title.split(' ').slice(1).join(' ')}
+              </span>
+            </h1>
           </div>
           
+          {/* Right side - Navigation menu */}
           <div className="flex items-center gap-4">
             {/* Navigation Links */}
             <div className="hidden md:flex items-center gap-2">
@@ -443,6 +441,12 @@ export default function AdminPage() {
               {t.admin.newPoll}
             </button>
           </div>
+        </div>
+
+        {/* Title and Subtitle Section */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">{t.admin.title}</h1>
+          <p className="text-gray-600 mt-2">{t.admin.subtitle}</p>
         </div>
 
         {/* Create Poll Form */}
@@ -1032,17 +1036,44 @@ export default function AdminPage() {
         })()}
 
         {polls.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-gray-400 text-6xl mb-4">📊</div>
-            <h3 className="text-xl font-medium text-gray-900 mb-2">{t.display.waitingForVotes}</h3>
-            <p className="text-gray-600 mb-6">{t.admin.subtitle}</p>
-            <button
-              onClick={() => setShowCreateForm(true)}
-              className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              <Plus className="w-5 h-5" />
-              {t.admin.createPoll}
-            </button>
+          <div className="fixed inset-0 bg-black bg-opacity-20 backdrop-blur-sm flex items-center justify-center z-40">
+            <div className="bg-white/80 backdrop-blur-md rounded-3xl p-8 max-w-md mx-4 text-center shadow-2xl border border-white/20 animate-in fade-in duration-700">
+              {/* Animated Icon */}
+              <div className="relative mb-6">
+                <div className="w-20 h-20 mx-auto bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg animate-pulse">
+                  <div className="text-white text-3xl">📊</div>
+                </div>
+                <div className="absolute inset-0 w-20 h-20 mx-auto bg-gradient-to-br from-blue-500 to-purple-600 rounded-full animate-ping opacity-20"></div>
+              </div>
+              
+              {/* Title with gradient */}
+              <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-3">
+                {t.display.waitingForVotes}
+              </h3>
+              
+              {/* Subtitle */}
+              <p className="text-gray-600 mb-8 text-sm leading-relaxed">
+                {t.admin.subtitle}
+              </p>
+              
+              {/* Modern CTA Button */}
+              <button
+                onClick={() => setShowCreateForm(true)}
+                className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-2xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              >
+                <div className="flex items-center gap-3">
+                  <Plus className="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
+                  <span className="font-medium">{t.admin.createPoll}</span>
+                </div>
+                
+                {/* Subtle shine effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </button>
+              
+              {/* Decorative elements */}
+              <div className="absolute -top-4 -right-4 w-8 h-8 bg-blue-500/20 rounded-full blur-xl"></div>
+              <div className="absolute -bottom-4 -left-4 w-8 h-8 bg-purple-500/20 rounded-full blur-xl"></div>
+            </div>
           </div>
         )}
       </div>

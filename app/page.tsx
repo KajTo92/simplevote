@@ -51,26 +51,26 @@ export default function HomePage() {
         {/* Features */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
           <Link href="/how-it-works" className="glass-effect rounded-2xl p-8 text-center transform hover:scale-105 transition-all duration-300 aspect-square flex flex-col justify-center cursor-pointer">
-            <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <span className="text-white text-xl">📱</span>
+            <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+              <span className="text-white text-3xl">📱</span>
             </div>
-            <h3 className="font-bold text-gray-900 mb-2 text-base">{t.features.qr.title}</h3>
+            <h3 className="font-bold text-gray-900 mb-2 text-xl">{t.features.qr.title}</h3>
             <p className="text-gray-600 text-sm">{t.features.qr.description}</p>
           </Link>
 
           <Link href="/how-it-works" className="glass-effect rounded-2xl p-8 text-center transform hover:scale-105 transition-all duration-300 aspect-square flex flex-col justify-center cursor-pointer">
-            <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <span className="text-white text-xl">⚡</span>
+            <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+              <span className="text-white text-3xl">⚡</span>
             </div>
-            <h3 className="font-bold text-gray-900 mb-2 text-base">{t.features.live.title}</h3>
+            <h3 className="font-bold text-gray-900 mb-2 text-xl">{t.features.live.title}</h3>
             <p className="text-gray-600 text-sm">{t.features.live.description}</p>
           </Link>
 
           <Link href="/how-it-works" className="glass-effect rounded-2xl p-8 text-center transform hover:scale-105 transition-all duration-300 aspect-square flex flex-col justify-center cursor-pointer">
-            <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <span className="text-white text-xl">📊</span>
+            <div className="w-20 h-20 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+              <span className="text-white text-3xl">📊</span>
             </div>
-            <h3 className="font-bold text-gray-900 mb-2 text-base">{t.features.clear.title}</h3>
+            <h3 className="font-bold text-gray-900 mb-2 text-xl">{t.features.clear.title}</h3>
             <p className="text-gray-600 text-sm">{t.features.clear.description}</p>
           </Link>
         </div>
