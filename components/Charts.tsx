@@ -20,11 +20,11 @@ export const HorizontalChart: React.FC<ChartProps> = ({
   
   // Agresywne skalowanie w zależności od liczby opcji - wszystko musi się zmieścić
   const optionCount = options.length;
-  const spacing = optionCount <= 4 ? 'space-y-6' : optionCount <= 8 ? 'space-y-3' : optionCount <= 12 ? 'space-y-2' : optionCount <= 16 ? 'space-y-1' : 'space-y-0.5';
-  const barHeight = optionCount <= 4 ? 'h-12' : optionCount <= 8 ? 'h-8' : optionCount <= 12 ? 'h-6' : optionCount <= 16 ? 'h-5' : 'h-4';
-  const titleSize = optionCount <= 4 ? 'text-xl' : optionCount <= 8 ? 'text-lg' : optionCount <= 12 ? 'text-base' : optionCount <= 16 ? 'text-sm' : 'text-xs';
-  const voteSize = optionCount <= 4 ? 'text-2xl' : optionCount <= 8 ? 'text-xl' : optionCount <= 12 ? 'text-lg' : optionCount <= 16 ? 'text-base' : 'text-sm';
-  const marginBottom = optionCount <= 8 ? 'mb-2' : optionCount <= 12 ? 'mb-1' : 'mb-0.5';
+  const spacing = optionCount <= 3 ? 'space-y-6' : optionCount <= 6 ? 'space-y-2' : optionCount <= 10 ? 'space-y-1' : optionCount <= 14 ? 'space-y-0.5' : 'space-y-0';
+  const barHeight = optionCount <= 3 ? 'h-12' : optionCount <= 6 ? 'h-8' : optionCount <= 10 ? 'h-6' : optionCount <= 14 ? 'h-5' : 'h-4';
+  const titleSize = optionCount <= 3 ? 'text-xl' : optionCount <= 6 ? 'text-lg' : optionCount <= 10 ? 'text-base' : optionCount <= 14 ? 'text-sm' : 'text-xs';
+  const voteSize = optionCount <= 3 ? 'text-2xl' : optionCount <= 6 ? 'text-xl' : optionCount <= 10 ? 'text-lg' : optionCount <= 14 ? 'text-base' : 'text-sm';
+  const marginBottom = optionCount <= 3 ? 'mb-2' : optionCount <= 6 ? 'mb-1' : optionCount <= 10 ? 'mb-0.5' : 'mb-0';
 
   return (
     <div className={`${spacing} h-full flex flex-col justify-center`}>
@@ -104,14 +104,14 @@ export const VerticalChart: React.FC<ChartProps> = ({
   
   // Agresywne skalowanie w zależności od liczby opcji - wszystko musi się zmieścić
   const optionCount = options.length;
-  const gap = optionCount <= 4 ? 'gap-6' : optionCount <= 8 ? 'gap-3' : optionCount <= 12 ? 'gap-2' : optionCount <= 16 ? 'gap-1' : 'gap-0.5';
-  const maxWidth = optionCount <= 4 ? 'max-w-32' : optionCount <= 8 ? 'max-w-20' : optionCount <= 12 ? 'max-w-14' : optionCount <= 16 ? 'max-w-10' : 'max-w-8';
-  const minWidth = optionCount <= 12 ? 'min-w-8' : optionCount <= 16 ? 'min-w-6' : 'min-w-4';
+  const gap = optionCount <= 3 ? 'gap-6' : optionCount <= 6 ? 'gap-8' : optionCount <= 10 ? 'gap-5' : optionCount <= 14 ? 'gap-3' : 'gap-2';
+  const maxWidth = optionCount <= 3 ? 'max-w-32' : optionCount <= 6 ? 'max-w-40' : optionCount <= 10 ? 'max-w-28' : optionCount <= 14 ? 'max-w-20' : 'max-w-16';
+  const minWidth = optionCount <= 6 ? 'min-w-12' : optionCount <= 10 ? 'min-w-10' : optionCount <= 14 ? 'min-w-8' : 'min-w-6';
   const textSize = optionCount <= 6 ? 'text-lg' : optionCount <= 10 ? 'text-base' : optionCount <= 16 ? 'text-sm' : 'text-xs';
-  const labelSize = optionCount <= 6 ? 'text-sm' : optionCount <= 10 ? 'text-xs' : optionCount <= 16 ? 'text-xs' : 'text-xs';
+  const labelSize = optionCount <= 6 ? 'text-base' : optionCount <= 10 ? 'text-sm' : optionCount <= 16 ? 'text-sm' : 'text-xs';
 
   return (
-    <div className={`flex items-end justify-center ${gap} h-full px-1`}>
+    <div className={`flex items-stretch justify-center ${gap} h-full px-1`}>
       {options.map((option) => {
         const percentage = totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
         const height = maxVotes > 0 ? (option.votes / maxVotes) * 100 : 0;
@@ -120,7 +120,7 @@ export const VerticalChart: React.FC<ChartProps> = ({
         return (
           <div key={option.id} className={`flex flex-col items-center flex-1 ${maxWidth} ${minWidth} h-full`}>
             {/* Wartości nad słupkiem - stała wysokość */}
-            <div className="text-center mb-2 flex-shrink-0">
+            <div className="text-center mb-2 flex-shrink-0 h-12 flex flex-col justify-end">
               {showVoteCounts && !hideBars && (
                 <div className={`${textSize} font-bold ${isWinning && !hideBars ? 'text-yellow-700' : 'text-gray-900'}`}>
                   {isWinning && !hideBars && '👑'} {option.votes}
@@ -169,9 +169,9 @@ export const VerticalChart: React.FC<ChartProps> = ({
               )}
             </div>
             
-            {/* Etykieta opcji - stała wysokość */}
-            <div className="text-center mt-2 flex-shrink-0 max-h-12 overflow-hidden">
-              <div className={`${labelSize} font-medium leading-tight ${isWinning && !hideBars ? 'text-yellow-700' : 'text-gray-900'} line-clamp-2`}>
+            {/* Etykieta opcji - stała wysokość dla wszystkich */}
+            <div className="text-center mt-2 flex-shrink-0 h-20 flex items-start justify-center">
+              <div className={`${labelSize} font-medium leading-tight ${isWinning && !hideBars ? 'text-yellow-700' : 'text-gray-900'} line-clamp-3`}>
                 {option.text}
               </div>
             </div>

@@ -99,7 +99,9 @@ export default function AdminPage() {
   };
 
   const addOption = () => {
-    setOptions([...options, '']);
+    if (options.length < 6) {
+      setOptions([...options, '']);
+    }
   };
 
   const removeOption = (index: number) => {
@@ -331,7 +333,7 @@ export default function AdminPage() {
                     ))}
                   </div>
                   
-                  {options.length < 8 && (
+                  {options.length < 6 && (
                     <button
                       type="button"
                       onClick={addOption}
@@ -339,6 +341,12 @@ export default function AdminPage() {
                     >
                       + {t.admin.addOption}
                     </button>
+                  )}
+                  
+                  {options.length >= 6 && (
+                    <p className="mt-2 text-sm text-amber-600 bg-amber-50 p-2 rounded-lg">
+                      ⚠️ {t.admin.maxOptionsReached}
+                    </p>
                   )}
                 </div>
 
