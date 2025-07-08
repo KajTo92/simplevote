@@ -156,6 +156,21 @@ export const translations = {
         title: 'Gotowy, aby zacząć?',
         description: 'Stwórz swoje pierwsze głosowanie już dziś',
         button: 'Rozpocznij teraz'
+      },
+      mockups: {
+        adminPanel: 'Panel Administratora',
+        pollTitle: 'Tytuł głosowania',
+        exampleQuestion: 'Która opcja jest najlepsza?',
+        optionA: 'Opcja A',
+        optionB: 'Opcja B', 
+        optionC: 'Opcja C',
+        scanWithPhone: 'Skanuj telefonem',
+        horizontal: 'Poziomy',
+        vertical: 'Pionowy',
+        pie: 'Kołowy',
+        showPercentages: 'Pokaż procenty',
+        showVoteCounts: 'Pokaż liczby głosów',
+        live: 'Na żywo'
       }
     },
 
@@ -328,6 +343,21 @@ export const translations = {
         title: 'Ready to get started?',
         description: 'Create your first poll today',
         button: 'Start Now'
+      },
+      mockups: {
+        adminPanel: 'Admin Panel',
+        pollTitle: 'Poll title',
+        exampleQuestion: 'Which option is the best?',
+        optionA: 'Option A',
+        optionB: 'Option B', 
+        optionC: 'Option C',
+        scanWithPhone: 'Scan with phone',
+        horizontal: 'Horizontal',
+        vertical: 'Vertical',
+        pie: 'Pie',
+        showPercentages: 'Show percentages',
+        showVoteCounts: 'Show vote counts',
+        live: 'Live'
       }
     },
 

@@ -64,16 +64,16 @@ export default function HowItWorksPage() {
                 <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl p-6 text-white">
                   <div className="flex items-center gap-3 mb-4">
                     <Settings className="w-6 h-6" />
-                    <span className="font-semibold">Panel Administratora</span>
+                    <span className="font-semibold">{t.howItWorks.mockups.adminPanel}</span>
                   </div>
                   <div className="bg-white/20 rounded-lg p-4 mb-4">
-                    <div className="text-sm mb-2">Tytuł głosowania</div>
-                    <div className="bg-white/30 rounded px-3 py-2 text-sm">Która opcja jest najlepsza?</div>
+                    <div className="text-sm mb-2">{t.howItWorks.mockups.pollTitle}</div>
+                    <div className="bg-white/30 rounded px-3 py-2 text-sm">{t.howItWorks.mockups.exampleQuestion}</div>
                   </div>
                   <div className="space-y-2">
-                    <div className="bg-white/20 rounded px-3 py-2 text-sm">Opcja A</div>
-                    <div className="bg-white/20 rounded px-3 py-2 text-sm">Opcja B</div>
-                    <div className="bg-white/20 rounded px-3 py-2 text-sm">Opcja C</div>
+                    <div className="bg-white/20 rounded px-3 py-2 text-sm">{t.howItWorks.mockups.optionA}</div>
+                    <div className="bg-white/20 rounded px-3 py-2 text-sm">{t.howItWorks.mockups.optionB}</div>
+                    <div className="bg-white/20 rounded px-3 py-2 text-sm">{t.howItWorks.mockups.optionC}</div>
                   </div>
                 </div>
               </div>
@@ -87,7 +87,7 @@ export default function HowItWorksPage() {
                 <div className="bg-gray-900 rounded-xl p-6 inline-block mb-4">
                   <QrCode className="w-24 h-24 text-white" />
                 </div>
-                <div className="text-gray-600 text-sm">Skanuj telefonem</div>
+                <div className="text-gray-600 text-sm">{t.howItWorks.mockups.scanWithPhone}</div>
                 <div className="mt-4 flex items-center justify-center gap-2">
                   <Smartphone className="w-5 h-5 text-blue-500" />
                   <span className="text-sm text-gray-500">vote.example.com/v/abc123</span>
@@ -119,25 +119,25 @@ export default function HowItWorksPage() {
                 <div className="grid grid-cols-3 gap-4 mb-4">
                   <div className="text-center p-3 bg-blue-50 rounded-lg border-2 border-blue-500">
                     <BarChart3 className="w-6 h-6 text-blue-500 mx-auto mb-2" />
-                    <div className="text-xs text-blue-700">Poziomy</div>
+                    <div className="text-xs text-blue-700">{t.howItWorks.mockups.horizontal}</div>
                   </div>
                   <div className="text-center p-3 bg-gray-50 rounded-lg border-2 border-gray-200">
                     <BarChart3 className="w-6 h-6 text-gray-400 mx-auto mb-2 rotate-90" />
-                    <div className="text-xs text-gray-500">Pionowy</div>
+                    <div className="text-xs text-gray-500">{t.howItWorks.mockups.vertical}</div>
                   </div>
                   <div className="text-center p-3 bg-gray-50 rounded-lg border-2 border-gray-200">
                     <div className="w-6 h-6 bg-gray-400 rounded-full mx-auto mb-2"></div>
-                    <div className="text-xs text-gray-500">Kołowy</div>
+                    <div className="text-xs text-gray-500">{t.howItWorks.mockups.pie}</div>
                   </div>
                 </div>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 text-green-500" />
-                    <span>Pokaż procenty</span>
+                    <span>{t.howItWorks.mockups.showPercentages}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 text-green-500" />
-                    <span>Pokaż liczby głosów</span>
+                    <span>{t.howItWorks.mockups.showVoteCounts}</span>
                   </div>
                 </div>
               </div>
@@ -151,12 +151,12 @@ export default function HowItWorksPage() {
                 <div className="bg-gradient-to-r from-green-500 to-blue-500 rounded-xl p-6 text-white">
                   <div className="flex items-center gap-2 mb-4">
                     <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-                    <span className="font-semibold">Na żywo</span>
+                    <span className="font-semibold">{t.howItWorks.mockups.live}</span>
                   </div>
                   <div className="space-y-3">
                     <div>
                       <div className="flex justify-between text-sm mb-1">
-                        <span>👑 Opcja A</span>
+                        <span>👑 {t.howItWorks.mockups.optionA}</span>
                         <span>45%</span>
                       </div>
                       <div className="w-full bg-white/20 rounded-full h-3">
@@ -165,7 +165,7 @@ export default function HowItWorksPage() {
                     </div>
                     <div>
                       <div className="flex justify-between text-sm mb-1">
-                        <span>Opcja B</span>
+                        <span>{t.howItWorks.mockups.optionB}</span>
                         <span>35%</span>
                       </div>
                       <div className="w-full bg-white/20 rounded-full h-3">
@@ -174,7 +174,7 @@ export default function HowItWorksPage() {
                     </div>
                     <div>
                       <div className="flex justify-between text-sm mb-1">
-                        <span>Opcja C</span>
+                        <span>{t.howItWorks.mockups.optionC}</span>
                         <span>20%</span>
                       </div>
                       <div className="w-full bg-white/20 rounded-full h-3">
