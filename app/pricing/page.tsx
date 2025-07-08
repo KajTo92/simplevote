@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { ArrowLeft, Settings, Check, Star } from 'lucide-react';
 import { useLanguage } from '@/components/LanguageProvider';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import StripeCheckout from '@/components/StripeCheckout';
+import { STRIPE_PRICES } from '@/lib/stripe';
 
 export default function PricingPage() {
   const { t, language } = useLanguage();
@@ -13,19 +15,25 @@ export default function PricingPage() {
       ...t.pricing.free,
       highlight: false,
       href: '/auth/register',
-      popular: undefined
+      popular: undefined,
+      priceId: null,
+      planType: 'free'
     },
     {
       ...t.pricing.pro,
       highlight: false,
       href: '/auth/register',
-      popular: undefined
+      popular: undefined,
+      priceId: STRIPE_PRICES.pro,
+      planType: 'pro'
     },
     {
       ...t.pricing.enterprise,
       highlight: true,
       href: 'mailto:contact@example.com',
-      popular: t.pricing.enterprise.popular
+      popular: t.pricing.enterprise.popular,
+      priceId: STRIPE_PRICES.enterprise,
+      planType: 'enterprise'
     }
   ];
 
@@ -120,16 +128,30 @@ export default function PricingPage() {
 
                 {/* CTA Button */}
                 <div>
-                  <Link
-                    href={plan.href}
-                    className={`w-full inline-flex items-center justify-center px-6 py-3 rounded-full font-semibold transition-all duration-300 ${
-                      plan.highlight
-                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl transform hover:scale-105'
-                        : 'bg-white/50 text-gray-700 border border-gray-300 hover:bg-white/70 hover:text-gray-900'
-                    }`}
-                  >
-                    {plan.button}
-                  </Link>
+                  {plan.priceId ? (
+                    <StripeCheckout
+                      priceId={plan.priceId}
+                      plan={plan.planType}
+                      className={`w-full inline-flex items-center justify-center px-6 py-3 rounded-full font-semibold transition-all duration-300 ${
+                        plan.highlight
+                          ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl transform hover:scale-105'
+                          : 'bg-white/50 text-gray-700 border border-gray-300 hover:bg-white/70 hover:text-gray-900'
+                      }`}
+                    >
+                      {plan.button}
+                    </StripeCheckout>
+                  ) : (
+                    <Link
+                      href={plan.href}
+                      className={`w-full inline-flex items-center justify-center px-6 py-3 rounded-full font-semibold transition-all duration-300 ${
+                        plan.highlight
+                          ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl transform hover:scale-105'
+                          : 'bg-white/50 text-gray-700 border border-gray-300 hover:bg-white/70 hover:text-gray-900'
+                      }`}
+                    >
+                      {plan.button}
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>
