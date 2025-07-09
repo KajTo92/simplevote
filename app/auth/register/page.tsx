@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/components/AuthProvider'
+import { useLanguage } from '@/components/LanguageProvider'
 import { Eye, EyeOff, Mail, Lock, ArrowLeft, CheckCircle } from 'lucide-react'
 
 export default function RegisterPage() {
@@ -17,6 +18,7 @@ export default function RegisterPage() {
   const [success, setSuccess] = useState(false)
   
   const { signUp, user, loading } = useAuth()
+  const { t } = useLanguage()
   const router = useRouter()
 
   useEffect(() => {
@@ -98,6 +100,18 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      {/* TeamVote Logo - Left Top */}
+      <div className="absolute top-6 left-6">
+        <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <h1 className="text-xl font-bold text-gray-900">
+            {t.title.split(' ')[0]}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+              {' '}{t.title.split(' ').slice(1).join(' ')}
+            </span>
+          </h1>
+        </Link>
+      </div>
+
       <div className="max-w-md w-full">
         {/* Header */}
         <div className="text-center mb-8">

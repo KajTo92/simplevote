@@ -51,6 +51,18 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      {/* TeamVote Logo - Left Top */}
+      <div className="absolute top-6 left-6">
+        <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <h1 className="text-xl font-bold text-gray-900">
+            {t.title.split(' ')[0]}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+              {' '}{t.title.split(' ').slice(1).join(' ')}
+            </span>
+          </h1>
+        </Link>
+      </div>
+
       {/* Przełącznik języków */}
       <div className="absolute top-6 right-6">
         <LanguageSwitcher />
