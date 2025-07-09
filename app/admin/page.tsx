@@ -795,7 +795,7 @@ export default function AdminPage() {
                     >
                       {/* Blur Background Layer (tylko dla non-enterprise) */}
                       {voteLimits?.plan !== 'enterprise' && (
-                        <div className="absolute inset-0 bg-gray-50 rounded-xl blur-lg z-0"></div>
+                        <div className="absolute inset-0 bg-gray-50 rounded-xl blur-2xl z-0"></div>
                       )}
                       {/* Background Pattern */}
                       <div className="absolute inset-0 opacity-5">
