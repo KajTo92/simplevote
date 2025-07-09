@@ -295,18 +295,91 @@ ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
 -- Użytkownicy mogą tylko oglądać swoje subskrypcje
 CREATE POLICY "Users can view their own subscriptions"
 ON subscriptions FOR SELECT
-TO authenticated
 USING (auth.uid() = user_id);
 
--- Service role może zarządzać wszystkimi subskrypcjami (webhooks)
-CREATE POLICY "Service role can manage subscriptions"
+-- Tylko authenticated users mogą zarządzać subskrypcjami
+CREATE POLICY "Authenticated users can manage subscriptions"
 ON subscriptions FOR ALL
-TO service_role
-USING (true);
-
--- Indeksy dla wydajności
-CREATE INDEX idx_subscriptions_user_id ON subscriptions(user_id);
-CREATE INDEX idx_subscriptions_status ON subscriptions(status);
+USING (auth.role() = 'authenticated');
 ```
 
-Po wykonaniu tych kroków, aplikacja będzie używać Supabase PostgreSQL zamiast SQLite! 🎉 
+## 🔢 Migracja: Dodanie user_id do polls (dla limitów użytkowników)
+
+Jeśli chcesz dodać limity głosów dla różnych planów, wykonaj tę migrację:
+
+```sql
+-- Dodaj kolumnę user_id do tabeli polls
+ALTER TABLE polls ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE;
+
+-- Utworz indeks dla wydajności
+CREATE INDEX IF NOT EXISTS idx_polls_user_id ON polls(user_id);
+
+-- Zaktualizuj zasady RLS dla polls
+DROP POLICY IF EXISTS "Anyone can read active polls" ON polls;
+DROP POLICY IF EXISTS "Authenticated users can manage polls" ON polls;
+
+-- Nowe zasady RLS
+CREATE POLICY "Anyone can read active polls" ON polls
+FOR SELECT USING (is_active = true);
+
+CREATE POLICY "Users can manage their own polls" ON polls
+FOR ALL USING (auth.uid() = user_id);
+
+-- Funkcja do sprawdzania limitów głosów użytkownika
+CREATE OR REPLACE FUNCTION get_user_total_votes(user_uuid UUID)
+RETURNS INTEGER AS $$
+DECLARE
+    total_votes INTEGER;
+BEGIN
+    SELECT COUNT(v.id) INTO total_votes
+    FROM votes v
+    JOIN poll_options po ON v.option_id = po.id
+    JOIN polls p ON po.poll_id = p.id
+    WHERE p.user_id = user_uuid;
+    
+    RETURN COALESCE(total_votes, 0);
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Funkcja do sprawdzania planu użytkownika
+CREATE OR REPLACE FUNCTION get_user_plan(user_uuid UUID)
+RETURNS TEXT AS $$
+DECLARE
+    user_plan TEXT;
+BEGIN
+    SELECT plan INTO user_plan
+    FROM subscriptions
+    WHERE user_id = user_uuid AND status = 'active'
+    ORDER BY created_at DESC
+    LIMIT 1;
+    
+    RETURN COALESCE(user_plan, 'free');
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Funkcja do sprawdzania limitu głosów
+CREATE OR REPLACE FUNCTION check_vote_limit(user_uuid UUID)
+RETURNS BOOLEAN AS $$
+DECLARE
+    current_votes INTEGER;
+    user_plan TEXT;
+    vote_limit INTEGER;
+BEGIN
+    -- Pobierz aktualną liczbę głosów
+    current_votes := get_user_total_votes(user_uuid);
+    
+    -- Pobierz plan użytkownika
+    user_plan := get_user_plan(user_uuid);
+    
+    -- Ustaw limit na podstawie planu
+    CASE user_plan
+        WHEN 'free' THEN vote_limit := 5;
+        WHEN 'pro' THEN vote_limit := 25;
+        WHEN 'enterprise' THEN vote_limit := 999999; -- unlimited
+        ELSE vote_limit := 5; -- default to free
+    END CASE;
+    
+    RETURN current_votes < vote_limit;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+``` 

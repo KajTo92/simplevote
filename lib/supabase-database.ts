@@ -27,12 +27,19 @@ export async function createPoll(data: CreatePollRequest): Promise<Poll> {
   const supabase = createClient()
   const pollId = uuidv4()
   
+  // Get current user
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) {
+    throw new Error('User not authenticated')
+  }
+  
   // Utwórz główne głosowanie
   const { error: pollError } = await supabase
     .from('polls')
     .insert({
       id: pollId,
       title: data.title,
+      user_id: user.id,
       is_active: true,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
@@ -288,6 +295,17 @@ export async function adjustVoteCount(optionId: string, adjustment: number): Pro
   
   try {
     if (adjustment > 0) {
+      // Check vote limits before adding votes
+      const { data: { user }, error: authError } = await supabase.auth.getUser()
+      if (authError || !user) {
+        return false
+      }
+      
+      const voteLimitInfo = await getUserVoteLimitInfo(user.id)
+      if (!voteLimitInfo.canVote || (voteLimitInfo.currentVotes + adjustment) > voteLimitInfo.voteLimit) {
+        console.log('Vote limit would be exceeded')
+        return false
+      }
       // Dodaj głosy
       const votesToAdd = []
       for (let i = 0; i < adjustment; i++) {
@@ -474,5 +492,87 @@ export async function updateCompanyName(companyName: string): Promise<boolean> {
   } catch (error) {
     console.error('Error updating company name:', error)
     return false
+  }
+}
+
+// ============ VOTING LIMITS FUNCTIONS ============
+
+export interface VoteLimitInfo {
+  currentVotes: number
+  voteLimit: number
+  plan: string
+  canVote: boolean
+}
+
+export async function getUserVoteLimitInfo(userId: string): Promise<VoteLimitInfo> {
+  const supabase = createClient()
+  
+  try {
+    // Call PostgreSQL function to get user votes count
+    const { data: votesData, error: votesError } = await supabase
+      .rpc('get_user_total_votes', { user_uuid: userId })
+    
+    if (votesError) {
+      console.error('Error getting user votes:', votesError)
+      return { currentVotes: 0, voteLimit: 5, plan: 'free', canVote: true }
+    }
+    
+    // Call PostgreSQL function to get user plan
+    const { data: planData, error: planError } = await supabase
+      .rpc('get_user_plan', { user_uuid: userId })
+    
+    if (planError) {
+      console.error('Error getting user plan:', planError)
+      return { currentVotes: votesData || 0, voteLimit: 5, plan: 'free', canVote: (votesData || 0) < 5 }
+    }
+    
+    const currentVotes = votesData || 0
+    const plan = planData || 'free'
+    
+    // Set vote limits based on plan
+    let voteLimit: number
+    switch (plan) {
+      case 'free':
+        voteLimit = 5
+        break
+      case 'pro':
+        voteLimit = 25
+        break
+      case 'enterprise':
+        voteLimit = 999999 // unlimited
+        break
+      default:
+        voteLimit = 5 // default to free
+    }
+    
+    return {
+      currentVotes,
+      voteLimit,
+      plan,
+      canVote: currentVotes < voteLimit
+    }
+  } catch (error) {
+    console.error('Error checking vote limits:', error)
+    return { currentVotes: 0, voteLimit: 5, plan: 'free', canVote: true }
+  }
+}
+
+export async function checkUserCanVote(userId: string): Promise<boolean> {
+  const supabase = createClient()
+  
+  try {
+    // Call PostgreSQL function to check if user can vote
+    const { data, error } = await supabase
+      .rpc('check_vote_limit', { user_uuid: userId })
+    
+    if (error) {
+      console.error('Error checking vote limit:', error)
+      return true // Allow voting on error (fail open)
+    }
+    
+    return data === true
+  } catch (error) {
+    console.error('Error checking vote limit:', error)
+    return true // Allow voting on error (fail open)
   }
 } 

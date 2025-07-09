@@ -29,6 +29,15 @@ export default function AdminPage() {
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
   const [successPlan, setSuccessPlan] = useState<string>('');
   
+  // Vote limits
+  const [voteLimits, setVoteLimits] = useState<{
+    currentVotes: number;
+    voteLimit: number;
+    plan: string;
+    canVote: boolean;
+  } | null>(null);
+  const [showVoteLimitWarning, setShowVoteLimitWarning] = useState(false);
+  
   // Company Settings
   const [companySettings, setCompanySettings] = useState<CompanySettings | null>(null);
   const [companyLogoUploading, setCompanyLogoUploading] = useState(false);
@@ -42,6 +51,7 @@ export default function AdminPage() {
   useEffect(() => {
     fetchPolls();
     fetchCompanySettings();
+    fetchVoteLimits();
   }, []);
 
   // Handle payment success notification
@@ -107,6 +117,18 @@ export default function AdminPage() {
       }
     } catch (error) {
       console.error('Error fetching company settings:', error);
+    }
+  };
+
+  const fetchVoteLimits = async () => {
+    try {
+      const response = await fetch('/api/vote-limits');
+      if (response.ok) {
+        const limits = await response.json();
+        setVoteLimits(limits);
+      }
+    } catch (error) {
+      console.error('Error fetching vote limits:', error);
     }
   };
 
@@ -250,6 +272,18 @@ export default function AdminPage() {
   };
 
   const adjustVotes = async (pollId: string, optionId: string, adjustment: number) => {
+    // Check vote limits before adding votes
+    if (adjustment > 0 && voteLimits) {
+      if (!voteLimits.canVote || (voteLimits.currentVotes + adjustment) > voteLimits.voteLimit) {
+        const message = language === 'pl'
+          ? `Nie można dodać ${adjustment} głosów. Limit głosów: ${voteLimits.currentVotes}/${voteLimits.voteLimit} dla planu ${voteLimits.plan.toUpperCase()}.`
+          : `Cannot add ${adjustment} votes. Vote limit: ${voteLimits.currentVotes}/${voteLimits.voteLimit} for ${voteLimits.plan.toUpperCase()} plan.`;
+        alert(message);
+        setShowVoteLimitWarning(true);
+        return;
+      }
+    }
+    
     try {
       const response = await fetch(`/api/polls/${pollId}`, {
         method: 'PATCH',
@@ -268,9 +302,19 @@ export default function AdminPage() {
         setPolls(polls.map(poll => 
           poll.id === pollId ? result.poll : poll
         ));
+        // Refresh vote limits after successful vote adjustment
+        fetchVoteLimits();
       } else {
         const error = await response.json();
-        alert(t.errors.error + ': ' + error.error);
+        if (error.error && error.error.includes('Vote limit')) {
+          const message = language === 'pl'
+            ? 'Osiągnięto limit głosów dla twojego planu. Przejdź na wyższy plan aby kontynuować.'
+            : 'Vote limit reached for your plan. Upgrade to continue voting.';
+          alert(message);
+          setShowVoteLimitWarning(true);
+        } else {
+          alert(t.errors.error + ': ' + error.error);
+        }
       }
     } catch (error) {
       console.error('Error adjusting votes:', error);
@@ -495,6 +539,65 @@ export default function AdminPage() {
               >
                 <X className="w-5 h-5" />
               </button>
+            </div>
+          </div>
+        )}
+
+        {/* Vote Limits Information */}
+        {voteLimits && (
+          <div className={`mb-6 p-4 border rounded-lg ${
+            voteLimits.canVote 
+              ? 'bg-blue-50 border-blue-200' 
+              : 'bg-red-50 border-red-200'
+          }`}>
+            <div className="flex items-center gap-3">
+              <Users className={`w-6 h-6 ${
+                voteLimits.canVote ? 'text-blue-600' : 'text-red-600'
+              }`} />
+              <div className="flex-1">
+                <h3 className={`font-semibold ${
+                  voteLimits.canVote ? 'text-blue-900' : 'text-red-900'
+                }`}>
+                  {language === 'pl' ? 'Limit głosów' : 'Vote Limit'}
+                </h3>
+                <p className={`text-sm ${
+                  voteLimits.canVote ? 'text-blue-700' : 'text-red-700'
+                }`}>
+                  {language === 'pl' 
+                    ? `Wykorzystano ${voteLimits.currentVotes} z ${voteLimits.voteLimit === 999999 ? '∞' : voteLimits.voteLimit} głosów w planie ${voteLimits.plan.toUpperCase()}`
+                    : `Used ${voteLimits.currentVotes} of ${voteLimits.voteLimit === 999999 ? '∞' : voteLimits.voteLimit} votes in ${voteLimits.plan.toUpperCase()} plan`
+                  }
+                </p>
+                {!voteLimits.canVote && (
+                  <p className="text-red-700 text-sm mt-1">
+                    {language === 'pl' 
+                      ? 'Osiągnięto limit głosów. Przejdź na wyższy plan aby kontynuować.'
+                      : 'Vote limit reached. Upgrade to a higher plan to continue.'
+                    }
+                  </p>
+                )}
+              </div>
+              {!voteLimits.canVote && (
+                <Link 
+                  href="/pricing"
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                >
+                  {language === 'pl' ? 'Przejdź na wyższy plan' : 'Upgrade Plan'}
+                </Link>
+              )}
+            </div>
+            {/* Progress bar */}
+            <div className="mt-3">
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div 
+                  className={`h-2 rounded-full transition-all ${
+                    voteLimits.canVote ? 'bg-blue-600' : 'bg-red-600'
+                  }`}
+                  style={{ 
+                    width: `${Math.min((voteLimits.currentVotes / (voteLimits.voteLimit === 999999 ? voteLimits.currentVotes + 100 : voteLimits.voteLimit)) * 100, 100)}%` 
+                  }}
+                ></div>
+              </div>
             </div>
           </div>
         )}

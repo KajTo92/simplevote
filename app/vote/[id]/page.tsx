@@ -10,7 +10,7 @@ import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 export default function VotePage() {
   const params = useParams();
   const pollId = params.id as string;
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [poll, setPoll] = useState<Poll | null>(null);
   const [selectedOption, setSelectedOption] = useState<string>('');
   const [loading, setLoading] = useState(true);
@@ -157,6 +157,13 @@ export default function VotePage() {
         if (response.status === 409) {
           setError(t.voting.alreadyVoted);
           setVoted(true);
+        } else if (response.status === 403 && result.error === 'Vote limit reached') {
+          // Special handling for vote limit reached
+          const { currentVotes, voteLimit, plan } = result;
+          const limitMessage = language === 'pl' 
+            ? `Osiągnięto maksymalną liczbę głosów (${currentVotes}/${voteLimit}) dla planu ${plan.toUpperCase()}. Aby kontynuować głosowanie, przejdź na wyższy plan.`
+            : `Maximum vote limit reached (${currentVotes}/${voteLimit}) for ${plan.toUpperCase()} plan. To continue voting, upgrade to a higher plan.`;
+          setError(limitMessage);
         } else {
           setError(result.error || t.errors.votingError);
         }
