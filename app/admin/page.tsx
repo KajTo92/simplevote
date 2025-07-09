@@ -788,11 +788,15 @@ export default function AdminPage() {
                         isDraggingLogo 
                           ? 'border-blue-500 bg-blue-50 scale-105' 
                           : 'border-gray-300 bg-gray-50 hover:border-blue-400 hover:bg-blue-50'
-                      } ${voteLimits?.plan !== 'enterprise' ? 'blur-sm' : ''}`}
+                      }`}
                       onDragOver={voteLimits?.plan === 'enterprise' ? handleLogoDragOver : undefined}
                       onDragLeave={voteLimits?.plan === 'enterprise' ? handleLogoDragLeave : undefined}
                       onDrop={voteLimits?.plan === 'enterprise' ? handleLogoDrop : undefined}
                     >
+                      {/* Blur Background Layer (tylko dla non-enterprise) */}
+                      {voteLimits?.plan !== 'enterprise' && (
+                        <div className="absolute inset-0 bg-gray-50 rounded-xl blur-sm z-0"></div>
+                      )}
                       {/* Background Pattern */}
                       <div className="absolute inset-0 opacity-5">
                         <div className="grid grid-cols-8 gap-2 h-full">
