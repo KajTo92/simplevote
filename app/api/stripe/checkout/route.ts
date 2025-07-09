@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { stripe, STRIPE_PRICES } from '@/lib/stripe';
+import { stripe, STRIPE_PRICES } from '@/lib/stripe-server';
 import { createClient } from '@/lib/supabase/server';
 
 export async function POST(request: NextRequest) {

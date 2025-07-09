@@ -1,10 +1,4 @@
-import Stripe from 'stripe';
 import { loadStripe } from '@stripe/stripe-js';
-
-// Server-side Stripe instance
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-06-30.basil',
-});
 
 // Client-side Stripe instance
 export const getStripe = () => {
@@ -13,8 +7,8 @@ export const getStripe = () => {
 
 // Stripe price IDs for each plan
 export const STRIPE_PRICES = {
-  pro: process.env.STRIPE_PRO_PRICE_ID!,
-  enterprise: process.env.STRIPE_ENTERPRISE_PRICE_ID!,
+  pro: process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID!,
+  enterprise: process.env.NEXT_PUBLIC_STRIPE_ENTERPRISE_PRICE_ID!,
 };
 
 // Plan details
