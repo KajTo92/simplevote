@@ -38,6 +38,9 @@ export default function AdminPage() {
   } | null>(null);
   const [showVoteLimitWarning, setShowVoteLimitWarning] = useState(false);
   
+  // Logout notification
+  const [showLogoutNotification, setShowLogoutNotification] = useState(false);
+  
   // Company Settings
   const [companySettings, setCompanySettings] = useState<CompanySettings | null>(null);
   const [companyLogoUploading, setCompanyLogoUploading] = useState(false);
@@ -444,6 +447,27 @@ export default function AdminPage() {
     }
   };
 
+  const handleSignOut = async () => {
+    try {
+      // Show logout notification
+      setShowLogoutNotification(true);
+      
+      // Wait a moment to show the notification
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Sign out
+      await signOut();
+      
+      // Redirect to login page after a short delay
+      setTimeout(() => {
+        window.location.href = '/auth/login';
+      }, 1000);
+    } catch (error) {
+      console.error('Error during logout:', error);
+      setShowLogoutNotification(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-6xl mx-auto">
@@ -493,8 +517,9 @@ export default function AdminPage() {
             
             {/* Logout Button */}
             <button
-              onClick={signOut}
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-900 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+              onClick={handleSignOut}
+              disabled={showLogoutNotification}
+              className="flex items-center gap-2 text-gray-600 hover:text-gray-900 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50"
             >
               <LogOut className="w-4 h-4" />
               <span className="text-sm">{t.auth.logout}</span>
@@ -597,6 +622,31 @@ export default function AdminPage() {
                     width: `${Math.min((voteLimits.currentVotes / (voteLimits.voteLimit === 999999 ? voteLimits.currentVotes + 100 : voteLimits.voteLimit)) * 100, 100)}%` 
                   }}
                 ></div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Logout Notification */}
+        {showLogoutNotification && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-2xl p-8 w-full max-w-md text-center">
+              <div className="mb-4">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <LogOut className="w-8 h-8 text-blue-600" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  {language === 'pl' ? 'Wylogowywanie...' : 'Logging out...'}
+                </h3>
+                <p className="text-gray-600">
+                  {language === 'pl' 
+                    ? 'Zostałeś pomyślnie wylogowany. Przekierowanie do strony logowania...'
+                    : 'You have been successfully logged out. Redirecting to login page...'
+                  }
+                </p>
+              </div>
+              <div className="flex items-center justify-center">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
               </div>
             </div>
           </div>
