@@ -226,7 +226,7 @@ export const translations = {
         price: '$19',
         description: 'Dla rozwijających się zespołów i firm',
         features: [
-          'Do 50 głosujących użytkowników',
+          'Do 25 głosujących użytkowników',
           'Nielimitowane głosowania',
           'Wszystkie typy wykresów',
           'Wyniki w czasie rzeczywistym',
@@ -495,7 +495,7 @@ export const translations = {
         price: '$19',
         description: 'For growing teams and companies',
         features: [
-          'Up to 50 voting users',
+          'Up to 25 voting users',
           'Unlimited polls',
           'All chart types',
           'Real-time results',
