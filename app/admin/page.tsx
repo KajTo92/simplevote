@@ -784,7 +784,7 @@ export default function AdminPage() {
                   <div className="space-y-3">
                     {/* Modern Upload Area with Mockup */}
                     <div 
-                      className={`relative border-2 border-dashed rounded-xl p-6 transition-all duration-300 ${
+                      className={`relative border-2 border-dashed rounded-xl p-6 min-h-64 transition-all duration-300 ${
                         isDraggingLogo 
                           ? 'border-blue-500 bg-blue-50 scale-105' 
                           : 'border-gray-300 bg-gray-50 hover:border-blue-400 hover:bg-blue-50'
