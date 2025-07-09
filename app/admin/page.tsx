@@ -1,14 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, Eye, Calendar, Users, LogOut, User, Trash2, Power, PowerOff, Settings, ArrowLeft, Upload, Image, Cloud, Info, DollarSign } from 'lucide-react';
+import { Plus, Eye, Calendar, Users, LogOut, User, Trash2, Power, PowerOff, Settings, ArrowLeft, Upload, Image, Cloud, Info, DollarSign, CheckCircle, X } from 'lucide-react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { Poll, CompanySettings } from '@/types';
 import { useAuth } from '@/components/AuthProvider';
 import { useLanguage } from '@/components/LanguageProvider';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 export default function AdminPage() {
+  const searchParams = useSearchParams();
   const [polls, setPolls] = useState<Poll[]>([]);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [title, setTitle] = useState('');
@@ -23,6 +25,10 @@ export default function AdminPage() {
   const [showVoteCounts, setShowVoteCounts] = useState(true);
   const [hideBars, setHideBars] = useState(true);
   
+  // Payment success notification
+  const [showSuccessNotification, setShowSuccessNotification] = useState(false);
+  const [successPlan, setSuccessPlan] = useState<string>('');
+  
   // Company Settings
   const [companySettings, setCompanySettings] = useState<CompanySettings | null>(null);
   const [companyLogoUploading, setCompanyLogoUploading] = useState(false);
@@ -31,12 +37,30 @@ export default function AdminPage() {
   const [logoPreviewUrl, setLogoPreviewUrl] = useState<string | null>(null);
   
   const { user, signOut } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   useEffect(() => {
     fetchPolls();
     fetchCompanySettings();
   }, []);
+
+  // Handle payment success notification
+  useEffect(() => {
+    const success = searchParams.get('success');
+    const plan = searchParams.get('plan');
+    
+    if (success === 'true' && plan) {
+      setShowSuccessNotification(true);
+      setSuccessPlan(plan);
+      
+      // Auto-hide notification after 5 seconds
+      const timer = setTimeout(() => {
+        setShowSuccessNotification(false);
+      }, 5000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [searchParams]);
 
   // Aktualizuj stan formularza gdy otwieramy modal
   useEffect(() => {
@@ -448,6 +472,32 @@ export default function AdminPage() {
           <h1 className="text-3xl font-bold text-gray-900">{t.admin.title}</h1>
           <p className="text-gray-600 mt-2">{t.admin.subtitle}</p>
         </div>
+
+        {/* Payment Success Notification */}
+        {showSuccessNotification && (
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+            <div className="flex items-center gap-3">
+              <CheckCircle className="w-6 h-6 text-green-600" />
+              <div>
+                <h3 className="font-semibold text-green-900">
+                  {language === 'pl' ? 'Płatność zakończona sukcesem!' : 'Payment successful!'}
+                </h3>
+                <p className="text-green-700 text-sm">
+                  {language === 'pl' 
+                    ? `Gratulacje! Wykupiłeś plan ${successPlan.toUpperCase()}. Teraz możesz korzystać ze wszystkich funkcji.`
+                    : `Congratulations! You've purchased the ${successPlan.toUpperCase()} plan. You can now enjoy all features.`
+                  }
+                </p>
+              </div>
+              <button
+                onClick={() => setShowSuccessNotification(false)}
+                className="ml-auto text-green-600 hover:text-green-800"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Create Poll Form */}
         {showCreateForm && (

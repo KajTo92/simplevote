@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
         },
       ],
       mode: 'subscription',
-      success_url: `${baseUrl}/dashboard?success=true&plan=${plan}`,
+      success_url: `${baseUrl}/admin?success=true&plan=${plan}`,
       cancel_url: `${baseUrl}/pricing?canceled=true`,
       customer_email: user.email,
       metadata: {
