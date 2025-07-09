@@ -11,8 +11,8 @@ export const translations = {
         description: 'Uczestnicy łatwo dołączają skanując kod QR'
       },
       live: {
-        title: 'Na Żywo', 
-        description: 'Wyniki aktualizują się w czasie rzeczywistym'
+        title: 'Screen Vote', 
+        description: 'Głosowanie widoczne na ekranie TV'
       },
       clear: {
         title: 'Czytelne',
@@ -271,7 +271,8 @@ export const translations = {
       createFirstPoll: 'Utwórz swoje pierwsze głosowanie!',
       backToHome: 'Strona główna',
       howItWorks: 'Jak to działa?',
-      pricing: 'Cennik'
+      pricing: 'Cennik',
+      scrollDown: 'Jak to działa?'
     }
   },
   
@@ -285,8 +286,8 @@ export const translations = {
         description: 'Participants easily join by scanning a QR code'
       },
       live: {
-        title: 'Live',
-        description: 'Results update in real-time'
+        title: 'Screen Vote',
+        description: 'Poll visible on TV screen'
       },
       clear: {
         title: 'Clear',
@@ -545,7 +546,8 @@ export const translations = {
       createFirstPoll: 'Create your first poll now!',
       backToHome: 'Home',
       howItWorks: 'How It Works',
-      pricing: 'Pricing'
+      pricing: 'Pricing',
+      scrollDown: 'How It Works?'
     }
   }
 } as const;
