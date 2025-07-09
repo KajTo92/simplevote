@@ -63,8 +63,8 @@ export default function PollDisplayPage() {
 
   const generateQRCode = async () => {
     try {
-      // Użyj zmiennej środowiskowej jeśli jest ustawiona, w przeciwnym razie użyj window.location.origin
-      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+      // Get base URL and ensure it doesn't end with slash
+      const baseUrl = (process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') || window.location.origin);
       const voteUrl = `${baseUrl}/vote/${pollId}`;
       const qrUrl = await QRCode.toDataURL(voteUrl, {
         width: 256,

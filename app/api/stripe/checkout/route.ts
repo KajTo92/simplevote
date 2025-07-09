@@ -19,6 +19,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'User not authenticated' }, { status: 401 });
     }
     
+    // Get base URL and ensure it doesn't end with slash
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') || 'http://localhost:3000';
+    
     // Create Stripe Checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -29,8 +32,8 @@ export async function POST(request: NextRequest) {
         },
       ],
       mode: 'subscription',
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?success=true&plan=${plan}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/pricing?canceled=true`,
+      success_url: `${baseUrl}/dashboard?success=true&plan=${plan}`,
+      cancel_url: `${baseUrl}/pricing?canceled=true`,
       customer_email: user.email,
       metadata: {
         userId: user.id,
