@@ -895,6 +895,30 @@ export default function AdminPage() {
                            </label>
                         )}
                       </div>
+                      
+                      {/* Enterprise Only Overlay */}
+                      {voteLimits?.plan !== 'enterprise' && (
+                        <div className="absolute inset-0 bg-white bg-opacity-80 rounded-xl flex items-center justify-center z-20">
+                          <div className="text-center p-6">
+                            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4">
+                              <Image className="w-8 h-8 text-white" />
+                            </div>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                              {t.admin.enterpriseOnly}
+                            </h3>
+                            <p className="text-sm text-gray-600 mb-4 max-w-xs">
+                              {t.admin.enterpriseUploadText}
+                            </p>
+                            <Link 
+                              href="/pricing"
+                              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all"
+                            >
+                              <span>{t.admin.upgradeToEnterprise}</span>
+                              <ArrowRight className="w-4 h-4" />
+                            </Link>
+                          </div>
+                        </div>
+                      )}
                     </div>
                     
                     {/* Upload Action Button */}
@@ -933,30 +957,6 @@ export default function AdminPage() {
                     <div className="text-center">
                       <p className="text-xs text-gray-500">{t.admin.logoDescription}</p>
                     </div>
-                    
-                    {/* Enterprise Only Overlay */}
-                    {voteLimits?.plan !== 'enterprise' && (
-                      <div className="absolute inset-0 bg-white bg-opacity-80 rounded-xl flex items-center justify-center z-20">
-                        <div className="text-center p-6">
-                          <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4">
-                            <Image className="w-8 h-8 text-white" />
-                          </div>
-                          <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                            {t.admin.enterpriseOnly}
-                          </h3>
-                          <p className="text-sm text-gray-600 mb-4 max-w-xs">
-                            {t.admin.enterpriseUploadText}
-                          </p>
-                          <Link 
-                            href="/pricing"
-                            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all"
-                          >
-                            <span>{t.admin.upgradeToEnterprise}</span>
-                            <ArrowRight className="w-4 h-4" />
-                          </Link>
-                        </div>
-                      </div>
-                    )}
                   </div>
                 )}
               </div>
