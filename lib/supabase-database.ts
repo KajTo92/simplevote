@@ -151,10 +151,18 @@ export async function getPoll(id: string): Promise<Poll | null> {
 export async function getAllPolls(): Promise<Poll[]> {
   const supabase = createClient()
   
-  // Pobierz wszystkie głosowania
+  // Get current user
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) {
+    throw new Error('User not authenticated')
+  }
+  
+  // Pobierz głosowania dla aktualnie zalogowanego użytkownika 
+  // PLUS głosowania bez przypisanego user_id (dla kompatybilności wstecznej)
   const { data: polls, error: pollsError } = await supabase
     .from('polls')
     .select('*')
+    .or(`user_id.eq.${user.id},user_id.is.null`)
     .order('created_at', { ascending: false })
   
   if (pollsError) throw pollsError
