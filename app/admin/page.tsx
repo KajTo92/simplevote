@@ -793,10 +793,6 @@ export default function AdminPage() {
                       onDragLeave={voteLimits?.plan === 'enterprise' ? handleLogoDragLeave : undefined}
                       onDrop={voteLimits?.plan === 'enterprise' ? handleLogoDrop : undefined}
                     >
-                      {/* Blur Background Layer (tylko dla non-enterprise) */}
-                      {voteLimits?.plan !== 'enterprise' && (
-                        <div className="absolute inset-0 bg-gray-50 rounded-xl blur-2xl z-0"></div>
-                      )}
                       {/* Background Pattern */}
                       <div className="absolute inset-0 opacity-5">
                         <div className="grid grid-cols-8 gap-2 h-full">
@@ -806,7 +802,9 @@ export default function AdminPage() {
                         </div>
                       </div>
                       
-                      <div className="relative z-10 text-center">
+                      {/* Content only visible for Enterprise users */}
+                      {voteLimits?.plan === 'enterprise' && (
+                        <div className="relative z-10 text-center">
                         {selectedCompanyLogo && logoPreviewUrl ? (
                           /* Preview Selected Logo */
                           <div className="space-y-3">
@@ -899,6 +897,7 @@ export default function AdminPage() {
                            </label>
                         )}
                       </div>
+                      )}
                       
                       {/* Enterprise Only Overlay */}
                       {voteLimits?.plan !== 'enterprise' && (
@@ -926,7 +925,7 @@ export default function AdminPage() {
                     </div>
                     
                     {/* Upload Action Button */}
-                    {selectedCompanyLogo && (
+                    {selectedCompanyLogo && voteLimits?.plan === 'enterprise' && (
                       <div className="flex gap-3">
                         <button
                           onClick={() => {
@@ -958,9 +957,11 @@ export default function AdminPage() {
                     )}
                     
                     {/* Additional Info */}
-                    <div className="text-center">
-                      <p className="text-xs text-gray-500">{t.admin.logoDescription}</p>
-                    </div>
+                    {voteLimits?.plan === 'enterprise' && (
+                      <div className="text-center">
+                        <p className="text-xs text-gray-500">{t.admin.logoDescription}</p>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
