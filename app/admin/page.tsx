@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, Eye, Calendar, Users, LogOut, User, Trash2, Power, PowerOff, Settings, ArrowLeft, Upload, Image, Cloud, Info, DollarSign, CheckCircle, X } from 'lucide-react';
+import { Plus, Eye, Calendar, Users, LogOut, User, Trash2, Power, PowerOff, Settings, ArrowLeft, Upload, Image, Cloud, Info, DollarSign, CheckCircle, X, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Poll, CompanySettings } from '@/types';
@@ -788,10 +788,10 @@ export default function AdminPage() {
                         isDraggingLogo 
                           ? 'border-blue-500 bg-blue-50 scale-105' 
                           : 'border-gray-300 bg-gray-50 hover:border-blue-400 hover:bg-blue-50'
-                      }`}
-                      onDragOver={handleLogoDragOver}
-                      onDragLeave={handleLogoDragLeave}
-                      onDrop={handleLogoDrop}
+                      } ${voteLimits?.plan !== 'enterprise' ? 'blur-sm' : ''}`}
+                      onDragOver={voteLimits?.plan === 'enterprise' ? handleLogoDragOver : undefined}
+                      onDragLeave={voteLimits?.plan === 'enterprise' ? handleLogoDragLeave : undefined}
+                      onDrop={voteLimits?.plan === 'enterprise' ? handleLogoDrop : undefined}
                     >
                       {/* Background Pattern */}
                       <div className="absolute inset-0 opacity-5">
@@ -875,22 +875,50 @@ export default function AdminPage() {
                         <input
                           type="file"
                           accept=".png"
-                          onChange={handleLogoInputChange}
+                          onChange={voteLimits?.plan === 'enterprise' ? handleLogoInputChange : undefined}
                           className="hidden"
                           id="logo-upload-input"
+                          disabled={voteLimits?.plan !== 'enterprise'}
                         />
                         
                         {/* Upload Button */}
                         {!selectedCompanyLogo && (
                                                      <label 
                              htmlFor="logo-upload-input"
-                             className="inline-flex items-center gap-2 mt-3 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer transition-colors"
+                             className={`inline-flex items-center gap-2 mt-3 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors ${
+                               voteLimits?.plan === 'enterprise' ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'
+                             }`}
+                             onClick={voteLimits?.plan !== 'enterprise' ? (e) => e.preventDefault() : undefined}
                            >
                              <Plus className="w-4 h-4" />
                              {t.admin.logoSelectFile}
                            </label>
                         )}
                       </div>
+                      
+                      {/* Enterprise Only Overlay */}
+                      {voteLimits?.plan !== 'enterprise' && (
+                        <div className="absolute inset-0 bg-white bg-opacity-90 rounded-xl flex items-center justify-center z-10">
+                          <div className="text-center p-6">
+                            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4">
+                              <Image className="w-8 h-8 text-white" />
+                            </div>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                              {t.admin.enterpriseOnly}
+                            </h3>
+                            <p className="text-sm text-gray-600 mb-4 max-w-xs">
+                              {t.admin.enterpriseUploadText}
+                            </p>
+                            <Link 
+                              href="/pricing"
+                              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all"
+                            >
+                              <span>{t.admin.upgradeToEnterprise}</span>
+                              <ArrowRight className="w-4 h-4" />
+                            </Link>
+                          </div>
+                        </div>
+                      )}
                     </div>
                     
                     {/* Upload Action Button */}

@@ -102,7 +102,12 @@ export const translations = {
       logoDragDropHint: 'Przeciągnij i upuść plik PNG lub kliknij aby wybrać',
       logoSelectFile: 'Wybierz plik',
       logoFormat: 'PNG format',
-      logoDragDrop: 'Drag & Drop'
+      logoDragDrop: 'Drag & Drop',
+      
+      // Enterprise Only Features
+      enterpriseOnly: 'Tylko dla Enterprise',
+      enterpriseUploadText: 'Upload logo firmy dostępny tylko dla użytkowników z planem Enterprise',
+      upgradeToEnterprise: 'Przejdź na Enterprise'
     },
     
     // Głosowanie
@@ -371,7 +376,12 @@ export const translations = {
       logoDragDropHint: 'Drag and drop PNG file or click to select',
       logoSelectFile: 'Select file',
       logoFormat: 'PNG format',
-      logoDragDrop: 'Drag & Drop'
+      logoDragDrop: 'Drag & Drop',
+      
+      // Enterprise Only Features  
+      enterpriseOnly: 'Enterprise Only',
+      enterpriseUploadText: 'Company logo upload is available only for Enterprise plan users',
+      upgradeToEnterprise: 'Upgrade to Enterprise'
     },
     
     // Voting
