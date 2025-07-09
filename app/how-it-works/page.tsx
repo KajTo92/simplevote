@@ -1,42 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Settings, QrCode, BarChart3, Eye, CheckCircle, Smartphone, Monitor, Palette, Zap, Globe, Shield } from 'lucide-react';
+import { Settings, QrCode, BarChart3, Eye, CheckCircle, Smartphone, Monitor, Palette, Zap, Globe, Shield } from 'lucide-react';
 import { useLanguage } from '@/components/LanguageProvider';
-import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 export default function HowItWorksPage() {
   const { t } = useLanguage();
 
   return (
     <div className="min-h-screen relative">
-      {/* Navigation */}
-      <div className="absolute top-6 left-6 right-6 flex items-center justify-between z-10">
-        <Link 
-          href="/" 
-          className="flex items-center gap-2 p-3 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-200 group"
-        >
-          <ArrowLeft className="w-5 h-5 text-gray-700 group-hover:text-gray-900 group-hover:-translate-x-1 transition-all duration-200" />
-          <span className="text-gray-700 group-hover:text-gray-900 font-medium">{t.common.backToHome}</span>
-        </Link>
 
-        <div className="flex items-center gap-3">
-          <Link 
-            href="/pricing" 
-            className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-200 group"
-          >
-            <span className="text-gray-700 group-hover:text-gray-900 font-medium">{t.common.pricing}</span>
-          </Link>
-          <LanguageSwitcher />
-          <Link 
-            href="/auth/login" 
-            className="p-3 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-200 group"
-            title={t.auth.adminPanel}
-          >
-            <Settings className="w-6 h-6 text-gray-700 group-hover:text-gray-900 group-hover:rotate-90 transition-all duration-200" />
-          </Link>
-        </div>
-      </div>
 
       {/* Main Content */}
       <div className="max-w-6xl mx-auto px-6 py-24">

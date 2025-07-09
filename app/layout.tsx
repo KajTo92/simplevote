@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import { AuthProvider } from '@/components/AuthProvider'
 import { LanguageProvider } from '@/components/LanguageProvider'
+import { Navbar } from '@/components/Navbar'
 
 export const metadata: Metadata = {
   title: 'TeamVote – Live Office Polling App for Teams | QR Voting, Bar Charts, Employee Engagement',
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
         <LanguageProvider>
           <AuthProvider>
+            <Navbar />
             {children}
           </AuthProvider>
         </LanguageProvider>

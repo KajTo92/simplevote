@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { Settings, QrCode, BarChart3, Eye, CheckCircle, Smartphone, Monitor, Palette, Zap, Globe, Shield, ChevronDown } from 'lucide-react';
 import { useLanguage } from '@/components/LanguageProvider';
-import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 export default function HomePage() {
   const { t } = useLanguage();
@@ -12,52 +11,34 @@ export default function HomePage() {
     <div className="min-h-screen">
       {/* Hero Section */}
       <div className="min-h-screen flex flex-col items-center justify-center relative">
-        {/* Ikona administratora i przełącznik języków w prawym górnym rogu */}
-        <div className="absolute top-6 right-6 flex items-center gap-3">
-          <Link 
-            href="/pricing" 
-            className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-200 group"
-          >
-            <span className="text-gray-700 group-hover:text-gray-900 font-medium">{t.common.pricing}</span>
-          </Link>
-          <LanguageSwitcher />
-          <Link 
-            href="/auth/login" 
-            className="p-3 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-200 group"
-            title={t.auth.adminPanel}
-          >
-            <Settings className="w-6 h-6 text-gray-700 group-hover:text-gray-900 group-hover:rotate-90 transition-all duration-200" />
-          </Link>
-        </div>
-
         {/* Główny content */}
         <div className="text-center space-y-8 max-w-5xl mx-auto px-6">
-          <div className="space-y-4">
-            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-8">
+          <div className="space-y-4 mt-8 md:mt-0">
+            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-4 md:mb-8">
               {t.title.split(' ')[0]}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
                 {' '}{t.title.split(' ').slice(1).join(' ')}
               </span>
             </h1>
-            <p className="text-xl text-gray-600 max-w-lg mx-auto leading-relaxed">
+            <p className="text-lg md:text-xl text-gray-600 max-w-lg mx-auto leading-relaxed">
               {t.subtitle}
             </p>
           </div>
 
           {/* Features */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 mt-8 md:mt-12">
             <div 
               onClick={() => {
                 const howItWorksSection = document.querySelector('#how-it-works-section');
                 howItWorksSection?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="glass-effect rounded-2xl p-8 text-center transform hover:scale-105 transition-all duration-300 aspect-square flex flex-col justify-center cursor-pointer"
+              className="glass-effect rounded-2xl p-3 md:p-8 text-center transform hover:scale-105 transition-all duration-300 md:aspect-square flex flex-col justify-center cursor-pointer"
             >
-              <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <span className="text-white text-3xl">📺</span>
+              <div className="w-16 md:w-20 h-16 md:h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-6 shadow-lg">
+                <span className="text-white text-2xl md:text-3xl">📺</span>
               </div>
-              <h3 className="font-bold text-gray-900 mb-2 text-xl">{t.features.live.title}</h3>
-              <p className="text-gray-600 text-sm">{t.features.live.description}</p>
+              <h3 className="font-bold text-gray-900 mb-1 md:mb-2 text-lg md:text-xl">{t.features.live.title}</h3>
+              <p className="text-gray-600 text-xs md:text-sm">{t.features.live.description}</p>
             </div>
 
             <div 
@@ -65,13 +46,13 @@ export default function HomePage() {
                 const howItWorksSection = document.querySelector('#how-it-works-section');
                 howItWorksSection?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="glass-effect rounded-2xl p-8 text-center transform hover:scale-105 transition-all duration-300 aspect-square flex flex-col justify-center cursor-pointer"
+              className="glass-effect rounded-2xl p-3 md:p-8 text-center transform hover:scale-105 transition-all duration-300 md:aspect-square flex flex-col justify-center cursor-pointer"
             >
-              <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <span className="text-white text-3xl">📱</span>
+              <div className="w-16 md:w-20 h-16 md:h-20 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-6 shadow-lg">
+                <span className="text-white text-2xl md:text-3xl">📱</span>
               </div>
-              <h3 className="font-bold text-gray-900 mb-2 text-xl">{t.features.qr.title}</h3>
-              <p className="text-gray-600 text-sm">{t.features.qr.description}</p>
+              <h3 className="font-bold text-gray-900 mb-1 md:mb-2 text-lg md:text-xl">{t.features.qr.title}</h3>
+              <p className="text-gray-600 text-xs md:text-sm">{t.features.qr.description}</p>
             </div>
 
             <div 
@@ -79,52 +60,52 @@ export default function HomePage() {
                 const howItWorksSection = document.querySelector('#how-it-works-section');
                 howItWorksSection?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="glass-effect rounded-2xl p-8 text-center transform hover:scale-105 transition-all duration-300 aspect-square flex flex-col justify-center cursor-pointer"
+              className="glass-effect rounded-2xl p-3 md:p-8 text-center transform hover:scale-105 transition-all duration-300 md:aspect-square flex flex-col justify-center cursor-pointer"
             >
-              <div className="w-20 h-20 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <span className="text-white text-3xl">📊</span>
+              <div className="w-16 md:w-20 h-16 md:h-20 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-6 shadow-lg">
+                <span className="text-white text-2xl md:text-3xl">📊</span>
               </div>
-              <h3 className="font-bold text-gray-900 mb-2 text-xl">{t.features.clear.title}</h3>
-              <p className="text-gray-600 text-sm">{t.features.clear.description}</p>
+              <h3 className="font-bold text-gray-900 mb-1 md:mb-2 text-lg md:text-xl">{t.features.clear.title}</h3>
+              <p className="text-gray-600 text-xs md:text-sm">{t.features.clear.description}</p>
             </div>
           </div>
 
-                     {/* Call to Action Buttons */}
-           <div className="mt-16 space-y-4">
-             <div>
-               <Link 
-                 href="/auth/login"
-                 className="inline-flex items-center px-12 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold text-lg rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 group"
-               >
-                 <span className="mr-3">{t.common.createFirstPoll}</span>
-                 <span className="text-xl group-hover:translate-x-1 transition-transform duration-300">🚀</span>
-               </Link>
-             </div>
-           </div>
-         </div>
+          {/* Call to Action Buttons */}
+          <div className="mt-8 md:mt-16 space-y-4">
+            <div>
+              <Link 
+                href="/auth/login"
+                className="inline-flex items-center px-8 md:px-12 py-3 md:py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold text-base md:text-lg rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 group"
+              >
+                <span className="mr-2 md:mr-3">{t.common.createFirstPoll}</span>
+                <span className="text-lg md:text-xl group-hover:translate-x-1 transition-transform duration-300">🚀</span>
+              </Link>
+            </div>
+          </div>
 
-         {/* Scroll Down Indicator */}
-         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-           <button 
-             onClick={() => {
-               const howItWorksSection = document.querySelector('#how-it-works-section');
-               howItWorksSection?.scrollIntoView({ behavior: 'smooth' });
-             }}
-             className="flex flex-col items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors duration-300 group cursor-pointer"
-             aria-label="Learn how it works"
-           >
-             <span className="text-base font-medium group-hover:text-gray-900 transition-colors duration-300">
-               {t.common.scrollDown || 'How It Works?'}
-             </span>
-             <div className="animate-bounce">
-               <ChevronDown className="w-7 h-7 group-hover:scale-110 transition-transform duration-300" />
-             </div>
-           </button>
-         </div>
-       </div>
+          {/* How It Works Link */}
+          <div className="mt-8 text-center">
+            <button 
+              onClick={() => {
+                const howItWorksSection = document.querySelector('#how-it-works-section');
+                howItWorksSection?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="flex flex-col items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors duration-300 group cursor-pointer mx-auto"
+              aria-label="Learn how it works"
+            >
+              <span className="text-base font-medium group-hover:text-gray-900 transition-colors duration-300">
+                {t.common.scrollDown || 'How It Works?'}
+              </span>
+              <div className="animate-bounce">
+                <ChevronDown className="w-7 h-7 group-hover:scale-110 transition-transform duration-300" />
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
 
-             {/* How It Works Section */}
-       <div id="how-it-works-section" className="max-w-6xl mx-auto px-6 py-24">
+      {/* How It Works Section */}
+      <div id="how-it-works-section" className="max-w-6xl mx-auto px-6 py-24">
         {/* Header */}
         <div className="text-center mb-20">
           <h2 className="text-5xl font-bold text-gray-900 mb-6">

@@ -469,77 +469,30 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 pt-20">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          {/* Left side - Back arrow and TeamVote logo */}
           <div className="flex items-center gap-3">
-            <Link href="/" className="text-gray-500 hover:text-gray-700">
-              <ArrowLeft className="w-4 h-4" />
-            </Link>
-            <h1 className="text-2xl font-bold text-gray-900">
-              {t.title.split(' ')[0]}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-                {' '}{t.title.split(' ').slice(1).join(' ')}
-              </span>
-            </h1>
-          </div>
-          
-          {/* Right side - Navigation menu */}
-          <div className="flex items-center gap-4">
-            {/* Navigation Links */}
-            <div className="hidden md:flex items-center gap-2">
-              <Link 
-                href="/how-it-works"
-                className="flex items-center gap-2 text-gray-600 hover:text-gray-900 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
-              >
-                <Info className="w-4 h-4" />
-                <span className="text-sm">{t.common.howItWorks}</span>
-              </Link>
-              <Link 
-                href="/pricing"
-                className="flex items-center gap-2 text-gray-600 hover:text-gray-900 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
-              >
-                <DollarSign className="w-4 h-4" />
-                <span className="text-sm">{t.common.pricing}</span>
-              </Link>
-            </div>
-            
-            {/* Language Switcher */}
-            <LanguageSwitcher />
-            
-            {/* User Info */}
-            <div className="flex items-center gap-2 text-gray-600">
-              <User className="w-4 h-4" />
-              <span className="text-sm">{user?.email}</span>
-            </div>
-            
-            {/* Logout Button */}
-            <button
-              onClick={handleSignOut}
-              disabled={showLogoutNotification}
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-900 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50"
-            >
-              <LogOut className="w-4 h-4" />
-              <span className="text-sm">{t.auth.logout}</span>
-            </button>
-            
-            {/* Create Poll Button */}
-            <button
-              onClick={() => setShowCreateForm(true)}
-              className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              <Plus className="w-5 h-5" />
-              {t.admin.newPoll}
-            </button>
+            {/* Placeholder for Navbar content */}
           </div>
         </div>
 
         {/* Title and Subtitle Section */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">{t.admin.title}</h1>
-          <p className="text-gray-600 mt-2">{t.admin.subtitle}</p>
+        <div className="mb-8 flex items-start justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">{t.admin.title}</h1>
+            <p className="text-gray-600 mt-2">{t.admin.subtitle}</p>
+          </div>
+          
+          {/* Create Poll Button */}
+          <button
+            onClick={() => setShowCreateForm(true)}
+            className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            <Plus className="w-5 h-5" />
+            {t.admin.newPoll}
+          </button>
         </div>
 
         {/* Payment Success Notification */}
