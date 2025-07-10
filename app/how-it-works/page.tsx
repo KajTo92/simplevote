@@ -13,6 +13,20 @@ export default function HowItWorksPage() {
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
+      // Zapobieganie przełączeniu na pełny ekran
+      const handleFullscreenChange = () => {
+        if (document.fullscreenElement) {
+          document.exitFullscreen();
+        }
+      };
+
+      const handleWebkitFullscreenChange = () => {
+        const webkitDoc = document as any;
+        if (webkitDoc.webkitFullscreenElement) {
+          webkitDoc.webkitExitFullscreen();
+        }
+      };
+
       // Spróbuj odtworzyć film z małym opóźnieniem
       const playVideo = async () => {
         try {
@@ -22,8 +36,18 @@ export default function HowItWorksPage() {
         }
       };
       
+      // Dodaj event listenery do zapobiegania pełnemu ekranowi
+      document.addEventListener('fullscreenchange', handleFullscreenChange);
+      document.addEventListener('webkitfullscreenchange', handleWebkitFullscreenChange);
+      
       // Opóźnienie pozwala na pełne załadowanie elementu
       setTimeout(playVideo, 500);
+
+      // Cleanup
+      return () => {
+        document.removeEventListener('fullscreenchange', handleFullscreenChange);
+        document.removeEventListener('webkitfullscreenchange', handleWebkitFullscreenChange);
+      };
     }
   }, []);
 
@@ -66,9 +90,22 @@ export default function HowItWorksPage() {
                 muted
                 playsInline
                 webkit-playsinline="true"
-                className="w-full h-auto"
+                x-webkit-airplay="deny"
+                disablePictureInPicture
+                controlsList="nodownload nofullscreen noremoteplayback"
+                className="w-full h-auto [&::-webkit-media-controls-fullscreen-button]:hidden"
                 preload="metadata"
                 controls={false}
+                style={{
+                  objectFit: 'contain',
+                  maxWidth: '100%',
+                  height: 'auto',
+                }}
+                onLoadedMetadata={(e) => {
+                  const video = e.currentTarget;
+                  video.setAttribute('webkit-playsinline', 'true');
+                  video.setAttribute('playsinline', 'true');
+                }}
               >
                 <source src="/media/Pokaz.mp4" type="video/mp4" />
                 Twoja przeglądarka nie obsługuje odtwarzania wideo.
