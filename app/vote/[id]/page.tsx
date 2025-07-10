@@ -5,7 +5,6 @@ import { useParams } from 'next/navigation';
 import { Poll } from '@/types';
 import { CheckCircle, AlertCircle, Vote } from 'lucide-react';
 import { useLanguage } from '@/components/LanguageProvider';
-import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 export default function VotePage() {
   const params = useParams();
@@ -179,11 +178,6 @@ export default function VotePage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-        {/* Przełącznik języków */}
-        <div className="absolute top-6 right-6">
-          <LanguageSwitcher />
-        </div>
-        
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
           <p className="text-gray-600">{t.errors.loading}</p>
@@ -195,11 +189,6 @@ export default function VotePage() {
   if (error || !poll) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-        {/* Przełącznik języków */}
-        <div className="absolute top-6 right-6">
-          <LanguageSwitcher />
-        </div>
-        
         <div className="text-center max-w-md">
           <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-900 mb-2">{t.errors.error}</h2>
@@ -215,11 +204,6 @@ export default function VotePage() {
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-100 flex items-center justify-center p-4">
-        {/* Przełącznik języków */}
-        <div className="absolute top-6 right-6">
-          <LanguageSwitcher />
-        </div>
-        
         <div className="max-w-md w-full">
           <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
             <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
@@ -300,11 +284,6 @@ export default function VotePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      {/* Przełącznik języków */}
-      <div className="absolute top-6 right-6">
-        <LanguageSwitcher />
-      </div>
-      
       <div className="max-w-md w-full">
         <div className="bg-white rounded-2xl shadow-lg p-8">
           <div className="text-center mb-8">

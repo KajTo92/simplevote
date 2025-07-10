@@ -83,11 +83,6 @@ export default function PollDisplayPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        {/* Przełącznik języków */}
-        <div className="absolute top-6 right-6">
-          <LanguageSwitcher />
-        </div>
-        
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
           <p className="text-gray-600">{t.errors.loading}</p>
@@ -99,11 +94,6 @@ export default function PollDisplayPage() {
   if (error || !poll) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        {/* Przełącznik języków */}
-        <div className="absolute top-6 right-6">
-          <LanguageSwitcher />
-        </div>
-        
         <div className="text-center">
           <div className="text-red-500 text-6xl mb-4">❌</div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">{t.errors.error}</h2>

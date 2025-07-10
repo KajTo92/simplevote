@@ -9,10 +9,11 @@ import { LanguageSwitcher } from './LanguageSwitcher';
 import { useAuth } from './AuthProvider';
 
 export function Navbar() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { user, signOut } = useAuth();
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showLogoutNotification, setShowLogoutNotification] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Zamknij menu przy kliknięciu poza nim
@@ -32,8 +33,21 @@ export function Navbar() {
   }, [pathname]);
 
   const handleSignOut = async () => {
-    await signOut();
-    setIsMenuOpen(false);
+    try {
+      // Show logout notification
+      setShowLogoutNotification(true);
+      setIsMenuOpen(false);
+      
+      // Wait a moment before signing out to show notification
+      setTimeout(async () => {
+        await signOut();
+        // Redirect to login page after logout
+        window.location.href = '/auth/login';
+      }, 1500);
+    } catch (error) {
+      console.error('Error during logout:', error);
+      setShowLogoutNotification(false);
+    }
   };
 
   // Różne warianty navbar zależnie od strony
@@ -41,9 +55,15 @@ export function Navbar() {
   const isAuthPage = pathname.startsWith('/auth');
   const isAdminPage = pathname === '/admin';
   const isPollDisplayPage = pathname.startsWith('/poll/');
+  const isVotePage = pathname.startsWith('/vote/');
 
-  // Jeśli to strona logowania/rejestracji, pokazuj tylko Language Switcher
-  if (isAuthPage || isPollDisplayPage) {
+  // Jeśli to strona wyświetlania wyników, nie pokazuj navbara (ma swój własny header)
+  if (isPollDisplayPage) {
+    return null;
+  }
+
+  // Jeśli to strona logowania/rejestracji/głosowania, pokazuj tylko Language Switcher
+  if (isAuthPage || isVotePage) {
     return (
       <div className="absolute top-6 right-6 z-50">
         <LanguageSwitcher />
@@ -241,6 +261,31 @@ export function Navbar() {
           </div>
         )}
       </div>
+
+      {/* Logout Notification */}
+      {showLogoutNotification && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl p-8 w-full max-w-md text-center">
+            <div className="mb-4">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <LogOut className="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                {language === 'pl' ? 'Wylogowywanie...' : 'Logging out...'}
+              </h3>
+              <p className="text-gray-600">
+                {language === 'pl' 
+                  ? 'Zostałeś pomyślnie wylogowany. Przekierowanie do strony logowania...'
+                  : 'You have been successfully logged out. Redirecting to login page...'
+                }
+              </p>
+            </div>
+            <div className="flex items-center justify-center">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 } 
