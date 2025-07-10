@@ -1,11 +1,31 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Settings, QrCode, BarChart3, Eye, CheckCircle, Smartphone, Monitor, Palette, Zap, Globe, Shield } from 'lucide-react';
 import { useLanguage } from '@/components/LanguageProvider';
 
 export default function HowItWorksPage() {
   const { t } = useLanguage();
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Fallback dla urządzeń mobilnych - próba wymuszenia autoodtwarzania
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video) {
+      // Spróbuj odtworzyć film z małym opóźnieniem
+      const playVideo = async () => {
+        try {
+          await video.play();
+        } catch (error) {
+          console.log('Autoplay blocked on this device:', error);
+        }
+      };
+      
+      // Opóźnienie pozwala na pełne załadowanie elementu
+      setTimeout(playVideo, 500);
+    }
+  }, []);
 
   return (
     <div className="min-h-screen relative">
@@ -40,11 +60,15 @@ export default function HowItWorksPage() {
           <div className="glass-effect rounded-2xl p-8 max-w-4xl mx-auto">
             <div className="relative overflow-hidden rounded-xl shadow-2xl">
               <video 
+                ref={videoRef}
                 autoPlay
                 loop
                 muted
+                playsInline
+                webkit-playsinline="true"
                 className="w-full h-auto"
                 preload="metadata"
+                controls={false}
               >
                 <source src="/media/Pokaz.mp4" type="video/mp4" />
                 Twoja przeglądarka nie obsługuje odtwarzania wideo.
