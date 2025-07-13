@@ -165,6 +165,7 @@ export default function PollDisplayPage() {
                   const showPercentages = poll.displaySettings?.showPercentages ?? true;
                   const showVoteCounts = poll.displaySettings?.showVoteCounts ?? true;
                   const hideBars = poll.displaySettings?.hideBars ?? false;
+                  const hideBarsNoAnimation = poll.displaySettings?.hideBarsNoAnimation ?? false;
                   
                   if (totalVotes === 0) {
                     return (
@@ -185,6 +186,7 @@ export default function PollDisplayPage() {
                           showPercentages={showPercentages}
                           showVoteCounts={showVoteCounts}
                           hideBars={hideBars}
+                          hideBarsNoAnimation={hideBarsNoAnimation}
                         />
                       );
                     case 'pie':
@@ -194,6 +196,7 @@ export default function PollDisplayPage() {
                           showPercentages={showPercentages}
                           showVoteCounts={showVoteCounts}
                           hideBars={hideBars}
+                          hideBarsNoAnimation={hideBarsNoAnimation}
                         />
                       );
                     default:
@@ -203,6 +206,7 @@ export default function PollDisplayPage() {
                           showPercentages={showPercentages}
                           showVoteCounts={showVoteCounts}
                           hideBars={hideBars}
+                          hideBarsNoAnimation={hideBarsNoAnimation}
                         />
                       );
                   }

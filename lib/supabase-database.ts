@@ -143,7 +143,8 @@ export async function getPoll(id: string): Promise<Poll | null> {
       chartType: 'vertical',
       showPercentages: true,
       showVoteCounts: true,
-      hideBars: true
+      hideBars: true,
+      hideBarsNoAnimation: false
     }
   }
 }
@@ -219,7 +220,8 @@ export async function getAllPolls(): Promise<Poll[]> {
         chartType: 'vertical',
         showPercentages: true,
         showVoteCounts: true,
-        hideBars: true
+        hideBars: true,
+        hideBarsNoAnimation: false
       }
     })
   }

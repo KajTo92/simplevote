@@ -13,6 +13,7 @@ export interface DisplaySettings {
   showPercentages: boolean;
   showVoteCounts: boolean;
   hideBars: boolean;
+  hideBarsNoAnimation: boolean;
 }
 
 export interface CompanySettings {

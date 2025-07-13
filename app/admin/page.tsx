@@ -24,6 +24,7 @@ export default function AdminPage() {
   const [showPercentages, setShowPercentages] = useState(true);
   const [showVoteCounts, setShowVoteCounts] = useState(true);
   const [hideBars, setHideBars] = useState(true);
+  const [hideBarsNoAnimation, setHideBarsNoAnimation] = useState(false);
   
   // Payment success notification
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
@@ -82,7 +83,18 @@ export default function AdminPage() {
         setChartType(poll.displaySettings?.chartType || 'vertical');
         setShowPercentages(poll.displaySettings?.showPercentages ?? true);
         setShowVoteCounts(poll.displaySettings?.showVoteCounts ?? true);
-        setHideBars(poll.displaySettings?.hideBars ?? true);
+        
+        const hideBarsValue = poll.displaySettings?.hideBars ?? true;
+        const hideBarsNoAnimationValue = poll.displaySettings?.hideBarsNoAnimation ?? false;
+        
+        // Zapobiegaj konfliktom - jeśli obie opcje są zaznaczone, uprzywilejuj hideBarsNoAnimation
+        if (hideBarsValue && hideBarsNoAnimationValue) {
+          setHideBars(false);
+          setHideBarsNoAnimation(true);
+        } else {
+          setHideBars(hideBarsValue);
+          setHideBarsNoAnimation(hideBarsNoAnimationValue);
+        }
       }
     }
   }, [showDisplaySettings, polls]);
@@ -250,7 +262,8 @@ export default function AdminPage() {
             chartType,
             showPercentages,
             showVoteCounts,
-            hideBars
+            hideBars,
+            hideBarsNoAnimation
           }
         }),
       });
@@ -1144,10 +1157,29 @@ export default function AdminPage() {
                           <input
                             type="checkbox"
                             checked={hideBars}
-                            onChange={(e) => setHideBars(e.target.checked)}
+                            onChange={(e) => {
+                              setHideBars(e.target.checked);
+                              if (e.target.checked) {
+                                setHideBarsNoAnimation(false);
+                              }
+                            }}
                             className="mr-2"
                           />
                           <span className="text-sm">{t.admin.hideBars}</span>
+                        </label>
+                        <label className="flex items-center">
+                          <input
+                            type="checkbox"
+                            checked={hideBarsNoAnimation}
+                            onChange={(e) => {
+                              setHideBarsNoAnimation(e.target.checked);
+                              if (e.target.checked) {
+                                setHideBars(false);
+                              }
+                            }}
+                            className="mr-2"
+                          />
+                          <span className="text-sm">{t.admin.hideBarsNoAnimation}</span>
                         </label>
                     </div>
                   </div>

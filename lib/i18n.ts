@@ -78,6 +78,7 @@ export const translations = {
       showPercentages: 'Pokaż procenty',
       showVoteCounts: 'Pokaż liczby głosów',
       hideBars: 'Ukryj słupki (animacja)',
+    hideBarsNoAnimation: 'Ukryj słupki (bez animacji)',
       saving: 'Zapisywanie...',
       
       // Company Settings
@@ -353,6 +354,7 @@ export const translations = {
       showPercentages: 'Show Percentages',
       showVoteCounts: 'Show Vote Counts',
       hideBars: 'Hide Bars (animation)',
+    hideBarsNoAnimation: 'Hide Bars (no animation)',
       saving: 'Saving...',
       
       // Company Settings

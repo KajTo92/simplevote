@@ -7,13 +7,15 @@ interface ChartProps {
   showPercentages?: boolean;
   showVoteCounts?: boolean;
   hideBars?: boolean;
+  hideBarsNoAnimation?: boolean;
 }
 
 export const HorizontalChart: React.FC<ChartProps> = ({ 
   options, 
   showPercentages = true, 
   showVoteCounts = true,
-  hideBars = false
+  hideBars = false,
+  hideBarsNoAnimation = false
 }) => {
   const totalVotes = options.reduce((sum, option) => sum + option.votes, 0);
   const maxVotes = Math.max(...options.map(option => option.votes));
@@ -39,12 +41,12 @@ export const HorizontalChart: React.FC<ChartProps> = ({
                 {isWinning && !hideBars && '👑 '}{option.text}
               </h3>
               <div className="text-right flex-shrink-0">
-                {showVoteCounts && !hideBars && (
+                {showVoteCounts && !hideBars && !hideBarsNoAnimation && (
                   <div className={`${voteSize} font-bold ${isWinning && !hideBars ? 'text-yellow-700' : 'text-gray-900'}`}>
                     {option.votes}
                   </div>
                 )}
-                {showPercentages && !hideBars && (
+                {showPercentages && !hideBars && !hideBarsNoAnimation && (
                   <div className={`${optionCount > 12 ? 'text-xs' : 'text-sm'} text-gray-500`}>
                     {percentage.toFixed(optionCount > 16 ? 0 : 1)}%
                   </div>
@@ -55,20 +57,21 @@ export const HorizontalChart: React.FC<ChartProps> = ({
             <div className={`relative ${barHeight} bg-gray-100 rounded-full overflow-hidden`}>
               <div
                 className={`h-full rounded-full transition-all duration-1000 ease-out ${
-                  isWinning && !hideBars ? 'shadow-lg scale-y-110' : ''
+                  isWinning && !hideBars && !hideBarsNoAnimation ? 'shadow-lg scale-y-110' : ''
                 }`}
                 style={{ 
-                  width: hideBars ? '45%' : `${percentage}%`,
+                  width: hideBars ? '45%' : hideBarsNoAnimation ? '50%' : `${percentage}%`,
                   backgroundColor: option.color,
-                  boxShadow: isWinning && !hideBars ? `0 0 20px ${option.color}40` : 'none',
+                  boxShadow: isWinning && !hideBars && !hideBarsNoAnimation ? `0 0 20px ${option.color}40` : 'none',
                   animation: hideBars ? `irregularBounce ${10 + (parseInt(option.id, 10) || 0) % 5}s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite` : undefined,
                   animationFillMode: hideBars ? 'both' : undefined,
-                  transformOrigin: hideBars ? 'left center' : undefined
+                  transformOrigin: hideBars ? 'left center' : undefined,
+                  background: hideBarsNoAnimation ? `linear-gradient(to right, ${option.color}, ${option.color}80, ${option.color}40, ${option.color}00)` : option.color
                 }}
               />
               
               {/* Animated particles for winning option */}
-              {isWinning && option.votes > 0 && !hideBars && (
+              {isWinning && option.votes > 0 && !hideBars && !hideBarsNoAnimation && (
                 <div className="absolute inset-0 overflow-hidden">
                   {[...Array(Math.min(3, Math.floor(percentage / 20)))].map((_, i) => (
                     <div
@@ -97,7 +100,8 @@ export const VerticalChart: React.FC<ChartProps> = ({
   options, 
   showPercentages = true, 
   showVoteCounts = true,
-  hideBars = false
+  hideBars = false,
+  hideBarsNoAnimation = false
 }) => {
   const totalVotes = options.reduce((sum, option) => sum + option.votes, 0);
   const maxVotes = Math.max(...options.map(option => option.votes));
@@ -121,12 +125,12 @@ export const VerticalChart: React.FC<ChartProps> = ({
           <div key={option.id} className={`flex flex-col items-center flex-1 ${maxWidth} ${minWidth} h-full`}>
             {/* Wartości nad słupkiem - stała wysokość */}
             <div className="text-center mb-2 flex-shrink-0 h-12 flex flex-col justify-end">
-              {showVoteCounts && !hideBars && (
+              {showVoteCounts && !hideBars && !hideBarsNoAnimation && (
                 <div className={`${textSize} font-bold ${isWinning && !hideBars ? 'text-yellow-700' : 'text-gray-900'}`}>
                   {isWinning && !hideBars && '👑'} {option.votes}
                 </div>
               )}
-              {showPercentages && !hideBars && (
+              {showPercentages && !hideBars && !hideBarsNoAnimation && (
                 <div className={`${optionCount > 12 ? 'text-xs' : 'text-xs'} text-gray-500`}>
                   {percentage.toFixed(optionCount > 16 ? 0 : 1)}%
                 </div>
@@ -137,20 +141,21 @@ export const VerticalChart: React.FC<ChartProps> = ({
             <div className="relative w-full bg-gray-100 rounded-t-lg overflow-hidden flex-grow">
               <div
                 className={`absolute bottom-0 w-full rounded-t-lg transition-all duration-1000 ease-out ${
-                  isWinning && !hideBars ? 'shadow-lg' : ''
+                  isWinning && !hideBars && !hideBarsNoAnimation ? 'shadow-lg' : ''
                 }`}
                 style={{ 
-                  height: hideBars ? '50%' : `${height}%`,
+                  height: hideBars ? '50%' : hideBarsNoAnimation ? '50%' : `${height}%`,
                   backgroundColor: option.color,
-                  boxShadow: isWinning && !hideBars ? `0 0 20px ${option.color}40` : 'none',
+                  boxShadow: isWinning && !hideBars && !hideBarsNoAnimation ? `0 0 20px ${option.color}40` : 'none',
                   animation: hideBars ? `irregularVerticalBounce ${12 + (parseInt(option.id, 10) || 0) % 6}s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite` : undefined,
                   animationFillMode: hideBars ? 'both' : undefined,
-                  transformOrigin: hideBars ? 'center bottom' : undefined
+                  transformOrigin: hideBars ? 'center bottom' : undefined,
+                  background: hideBarsNoAnimation ? `linear-gradient(to top, ${option.color}, ${option.color}80, ${option.color}40, ${option.color}00)` : option.color
                 }}
               />
               
               {/* Animated particles for winning option */}
-              {isWinning && option.votes > 0 && optionCount <= 8 && !hideBars && (
+              {isWinning && option.votes > 0 && optionCount <= 8 && !hideBars && !hideBarsNoAnimation && (
                 <div className="absolute inset-0 overflow-hidden">
                   {[...Array(2)].map((_, i) => (
                     <div
@@ -186,7 +191,8 @@ export const PieChart: React.FC<ChartProps> = ({
   options, 
   showPercentages = true, 
   showVoteCounts = true,
-  hideBars = false
+  hideBars = false,
+  hideBarsNoAnimation = false
 }) => {
   const { t } = useLanguage();
   const totalVotes = options.reduce((sum, option) => sum + option.votes, 0);
@@ -289,14 +295,14 @@ export const PieChart: React.FC<ChartProps> = ({
                 style={{ backgroundColor: option.color }}
               />
               <div className="flex-1 min-w-0">
-                <div className={`${legendTextSize} leading-tight ${isWinning && !hideBars ? 'text-yellow-700' : 'text-gray-900'} line-clamp-1`}>
-                  {isWinning && !hideBars && '👑 '}{option.text}
+                <div className={`${legendTextSize} leading-tight ${isWinning && !hideBars && !hideBarsNoAnimation ? 'text-yellow-700' : 'text-gray-900'} line-clamp-1`}>
+                  {isWinning && !hideBars && !hideBarsNoAnimation && '👑 '}{option.text}
                 </div>
                 <div className={`${legendSubTextSize} text-gray-500`}>
-                  {showVoteCounts && showPercentages && !hideBars && `${option.votes} ${t.admin.votes} • `}
-                  {showVoteCounts && !showPercentages && !hideBars && `${option.votes} ${t.admin.votes}`}
-                  {!showVoteCounts && showPercentages && !hideBars && `${percentage.toFixed(optionCount > 16 ? 0 : 1)}%`}
-                  {showVoteCounts && showPercentages && !hideBars && `${percentage.toFixed(optionCount > 16 ? 0 : 1)}%`}
+                  {showVoteCounts && showPercentages && !hideBars && !hideBarsNoAnimation && `${option.votes} ${t.admin.votes} • `}
+                  {showVoteCounts && !showPercentages && !hideBars && !hideBarsNoAnimation && `${option.votes} ${t.admin.votes}`}
+                  {!showVoteCounts && showPercentages && !hideBars && !hideBarsNoAnimation && `${percentage.toFixed(optionCount > 16 ? 0 : 1)}%`}
+                  {showVoteCounts && showPercentages && !hideBars && !hideBarsNoAnimation && `${percentage.toFixed(optionCount > 16 ? 0 : 1)}%`}
                 </div>
               </div>
             </div>
