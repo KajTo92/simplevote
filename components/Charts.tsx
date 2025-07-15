@@ -29,7 +29,7 @@ export const HorizontalChart: React.FC<ChartProps> = ({
   const marginBottom = optionCount <= 3 ? 'mb-2' : optionCount <= 6 ? 'mb-1' : optionCount <= 10 ? 'mb-0.5' : 'mb-0';
 
   return (
-    <div className={`${spacing} h-full flex flex-col justify-center`}>
+    <div className={`${spacing} h-full flex flex-col justify-center transform scale-50 md:scale-75 lg:scale-100 origin-center`}>
       {options.map((option) => {
         const percentage = totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
         const isWinning = option.votes === maxVotes && maxVotes > 0;
@@ -108,14 +108,16 @@ export const VerticalChart: React.FC<ChartProps> = ({
   
   // Agresywne skalowanie w zależności od liczby opcji - wszystko musi się zmieścić
   const optionCount = options.length;
-  const gap = optionCount <= 3 ? 'gap-6' : optionCount <= 6 ? 'gap-8' : optionCount <= 10 ? 'gap-5' : optionCount <= 14 ? 'gap-3' : 'gap-2';
+  const gap = optionCount <= 3 ? 'gap-4 md:gap-6' : optionCount <= 6 ? 'gap-4 md:gap-8' : optionCount <= 10 ? 'gap-3 md:gap-5' : optionCount <= 14 ? 'gap-2 md:gap-3' : 'gap-1 md:gap-2';
   const maxWidth = optionCount <= 3 ? 'max-w-32' : optionCount <= 6 ? 'max-w-40' : optionCount <= 10 ? 'max-w-28' : optionCount <= 14 ? 'max-w-20' : 'max-w-16';
   const minWidth = optionCount <= 6 ? 'min-w-12' : optionCount <= 10 ? 'min-w-10' : optionCount <= 14 ? 'min-w-8' : 'min-w-6';
   const textSize = optionCount <= 6 ? 'text-lg' : optionCount <= 10 ? 'text-base' : optionCount <= 16 ? 'text-sm' : 'text-xs';
+  const mobileTextSize = optionCount <= 6 ? 'text-sm md:text-lg' : optionCount <= 10 ? 'text-xs md:text-base' : optionCount <= 16 ? 'text-xs md:text-sm' : 'text-xs';
   const labelSize = optionCount <= 6 ? 'text-base' : optionCount <= 10 ? 'text-sm' : optionCount <= 16 ? 'text-sm' : 'text-xs';
+  const mobileLabelSize = optionCount <= 6 ? 'text-xs md:text-base' : optionCount <= 10 ? 'text-xs md:text-sm' : optionCount <= 16 ? 'text-xs md:text-sm' : 'text-xs';
 
   return (
-    <div className={`flex items-stretch justify-center ${gap} h-full px-1`}>
+    <div className={`flex items-stretch justify-center ${gap} h-full px-0 md:px-1 transform scale-50 md:scale-75 lg:scale-100 origin-center`}>
       {options.map((option) => {
         const percentage = totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
         const height = maxVotes > 0 ? (option.votes / maxVotes) * 100 : 0;
@@ -124,14 +126,14 @@ export const VerticalChart: React.FC<ChartProps> = ({
         return (
           <div key={option.id} className={`flex flex-col items-center flex-1 ${maxWidth} ${minWidth} h-full`}>
             {/* Wartości nad słupkiem - stała wysokość */}
-            <div className="text-center mb-2 flex-shrink-0 h-12 flex flex-col justify-end">
+            <div className="text-center mb-1 md:mb-2 flex-shrink-0 h-8 md:h-12 flex flex-col justify-end">
               {showVoteCounts && !hideBars && !hideBarsNoAnimation && (
-                <div className={`${textSize} font-bold ${isWinning && !hideBars ? 'text-yellow-700' : 'text-gray-900'}`}>
+                <div className={`${mobileTextSize} font-bold ${isWinning && !hideBars ? 'text-yellow-700' : 'text-gray-900'}`}>
                   {isWinning && !hideBars && '👑'} {option.votes}
                 </div>
               )}
               {showPercentages && !hideBars && !hideBarsNoAnimation && (
-                <div className={`${optionCount > 12 ? 'text-xs' : 'text-xs'} text-gray-500`}>
+                <div className="text-xs text-gray-500">
                   {percentage.toFixed(optionCount > 16 ? 0 : 1)}%
                 </div>
               )}
@@ -175,8 +177,8 @@ export const VerticalChart: React.FC<ChartProps> = ({
             </div>
             
             {/* Etykieta opcji - stała wysokość dla wszystkich */}
-            <div className="text-center mt-2 flex-shrink-0 h-20 flex items-start justify-center">
-              <div className={`${labelSize} font-medium leading-tight ${isWinning && !hideBars ? 'text-yellow-700' : 'text-gray-900'} line-clamp-3`}>
+            <div className="text-center mt-1 md:mt-2 flex-shrink-0 h-12 md:h-20 flex items-start justify-center">
+              <div className={`${mobileLabelSize} font-medium leading-tight ${isWinning && !hideBars ? 'text-yellow-700' : 'text-gray-900'} line-clamp-3`}>
                 {option.text}
               </div>
             </div>
@@ -225,7 +227,7 @@ export const PieChart: React.FC<ChartProps> = ({
   let currentAngle = 0;
 
   return (
-    <div className={`flex ${layout} items-center ${gap} h-full`}>
+    <div className={`flex ${layout} items-center ${gap} h-full transform scale-50 md:scale-75 lg:scale-100 origin-center`}>
       {/* Wykres kołowy */}
       <div className="relative flex-shrink-0">
         <svg width={chartSize} height={chartSize} className="transform -rotate-90">

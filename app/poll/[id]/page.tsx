@@ -153,8 +153,8 @@ export default function PollDisplayPage() {
           
           {/* Wyniki głosowania */}
           <div className="xl:col-span-3">
-            <div className="bg-white rounded-2xl shadow-sm p-6 h-[calc(100vh-200px)] flex flex-col">
-              <h1 className="text-3xl xl:text-4xl font-bold text-gray-900 mb-6 text-center flex-shrink-0">
+            <div className="bg-white rounded-2xl shadow-sm p-4 md:p-6 h-[calc(100vh-250px)] md:h-[calc(100vh-200px)] flex flex-col">
+              <h1 className="text-2xl md:text-3xl xl:text-4xl font-bold text-gray-900 mb-4 md:mb-6 text-center flex-shrink-0">
                 {poll.title}
               </h1>
 
@@ -211,6 +211,16 @@ export default function PollDisplayPage() {
                       );
                   }
                 })()}
+              </div>
+            </div>
+            
+            {/* Komunikat o pełnoekranowym trybie - widoczny tylko na urządzeniach mobilnych do 720p */}
+            <div className="block lg:hidden mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="flex items-center gap-2 text-blue-800 text-sm">
+                <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+                <span>{t.display.fullscreenRecommendation}</span>
               </div>
             </div>
           </div>

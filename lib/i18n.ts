@@ -130,6 +130,7 @@ export const translations = {
       backToAdmin: 'Panel Administratora',
       live: 'Na żywo',
       waitingForVotes: 'Czekamy na pierwsze głosy...',
+      fullscreenRecommendation: 'Zalecamy tryb pełnoekranowy w rozdzielczości 720p lub wyższej dla najlepszego doświadczenia oglądania',
       scanQR: 'Zeskanuj QR kodem',
       joinVoting: 'Dołącz do głosowania',
       instructions: {
@@ -406,6 +407,7 @@ export const translations = {
       backToAdmin: 'Admin Panel',
       live: 'Live',
       waitingForVotes: 'Waiting for first votes...',
+      fullscreenRecommendation: 'We recommend full screen mode on 720p or higher for best viewing experience',
       scanQR: 'Scan QR code',
       joinVoting: 'Join the voting',
       instructions: {
