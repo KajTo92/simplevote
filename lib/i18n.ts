@@ -163,7 +163,7 @@ export const translations = {
         details: 'Wystarczy podać tytuł i dodać opcje (maksymalnie 6). System automatycznie przydzieli kolory.'
       },
       step2: {
-        title: 'Udostępnij kod QR',
+        title: 'Udostępnij kod QR na ekranie TV',
         description: 'Uczestnicy skanują kod QR, aby dołączyć do głosowania ze swoich telefonów',
         details: 'Kod QR pojawia się automatycznie na ekranie wyników. Każdy może zagłosować raz.'
       },
@@ -439,7 +439,7 @@ export const translations = {
         details: 'Just provide a title and add options (maximum 6). The system automatically assigns colors.'
       },
       step2: {
-        title: 'Share QR Code',
+        title: 'Share QR code on company TV screen',
         description: 'Participants scan the QR code to join voting from their phones',
         details: 'QR code appears automatically on the results screen. Everyone can vote once.'
       },

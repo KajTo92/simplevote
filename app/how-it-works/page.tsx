@@ -4,7 +4,6 @@ import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Settings, QrCode, BarChart3, Eye, CheckCircle, Smartphone, Monitor, Palette, Zap, Globe, Shield } from 'lucide-react';
 import { useLanguage } from '@/components/LanguageProvider';
-
 export default function HowItWorksPage() {
   const { t } = useLanguage();
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -49,7 +48,7 @@ export default function HowItWorksPage() {
         document.removeEventListener('webkitfullscreenchange', handleWebkitFullscreenChange);
       };
     }
-  }, []);
+      }, []);
 
   return (
     <div className="min-h-screen relative">
@@ -159,8 +158,33 @@ export default function HowItWorksPage() {
                         <h3 className="text-lg font-semibold mb-2">{t.howItWorks.mockups.exampleQuestion}</h3>
                         <div className="text-sm text-gray-300">{t.howItWorks.mockups.scanWithPhone}</div>
                       </div>
-                      <div className="bg-white rounded-lg p-4 flex items-center justify-center">
-                        <QrCode className="w-16 h-16 text-gray-900" />
+                      <div className="bg-white rounded-lg p-4 flex items-center justify-between space-x-4 h-24">
+                        <div className="flex-1 space-y-2">
+                          <div className="flex items-center space-x-2">
+                            <span className="text-xs font-medium">👑 A</span>
+                            <div className="flex-1 bg-gray-200 rounded-full h-3">
+                              <div className="bg-blue-500 h-3 rounded-full" style={{width: '60%'}}></div>
+                            </div>
+                            <span className="text-xs">45%</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <span className="text-xs font-medium">B</span>
+                            <div className="flex-1 bg-gray-200 rounded-full h-3">
+                              <div className="bg-green-500 h-3 rounded-full" style={{width: '40%'}}></div>
+                            </div>
+                            <span className="text-xs">35%</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <span className="text-xs font-medium">C</span>
+                            <div className="flex-1 bg-gray-200 rounded-full h-3">
+                              <div className="bg-purple-500 h-3 rounded-full" style={{width: '25%'}}></div>
+                            </div>
+                            <span className="text-xs">20%</span>
+                          </div>
+                        </div>
+                        <div className="flex-shrink-0 flex justify-center items-center border-l-2 border-gray-300 pl-4">
+                          <QrCode className="w-16 h-16 text-gray-900" />
+                        </div>
                       </div>
                     </div>
                     {/* TV Stand */}

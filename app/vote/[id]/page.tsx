@@ -203,32 +203,32 @@ export default function VotePage() {
     const maxVotes = Math.max(...poll.options.map(option => option.votes));
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-100 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-100 flex items-center justify-center p-2">
         <div className="max-w-md w-full">
-          <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
-            <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">{t.voting.thankYou}</h2>
-            <p className="text-gray-600 mb-6">{t.voting.voteRecorded}</p>
+          <div className="bg-white rounded-xl shadow-lg p-6 text-center">
+            <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-3" />
+            <h2 className="text-xl font-bold text-gray-900 mb-1">{t.voting.thankYou}</h2>
+            <p className="text-gray-600 mb-4 text-sm">{t.voting.voteRecorded}</p>
             
-            <div className="text-left space-y-4">
-              <h3 className="font-semibold text-gray-900 text-center mb-4">{t.voting.currentResults}</h3>
+            <div className="text-left space-y-3">
+              <h3 className="font-semibold text-gray-900 text-center mb-3 text-lg">{t.voting.currentResults}</h3>
               {poll.options.map((option) => {
                 const percentage = totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
                 const isWinning = option.votes === maxVotes && maxVotes > 0;
                 
                 return (
-                  <div key={option.id} className="space-y-2">
+                  <div key={option.id} className="space-y-1">
                     <div className="flex justify-between items-center">
-                      <span className={`font-medium ${isWinning ? 'text-yellow-700' : 'text-gray-900'}`}>
+                      <span className={`font-medium ${isWinning ? 'text-yellow-700' : 'text-gray-900'} text-sm`}>
                         {isWinning && '👑 '}{option.text}
                       </span>
-                      <span className="text-sm text-gray-600">
+                      <span className="text-xs text-gray-600">
                         {option.votes} ({percentage.toFixed(1)}%)
                       </span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="w-full bg-gray-200 rounded-full h-1.5">
                       <div
-                        className="h-2 rounded-full transition-all duration-300"
+                        className="h-1.5 rounded-full transition-all duration-300"
                         style={{ 
                           width: `${percentage}%`,
                           backgroundColor: option.color 
@@ -240,12 +240,12 @@ export default function VotePage() {
               })}
             </div>
             
-            <p className="text-sm text-gray-500 mt-6">
+            <p className="text-xs text-gray-500 mt-4">
               {t.voting.totalVotes} {totalVotes}
             </p>
             
             {/* Opcja resetu (ukryta domyślnie) */}
-            <div className="mt-4 pt-4 border-t border-gray-200">
+            <div className="mt-3 pt-3 border-t border-gray-200">
               {!showResetOption ? (
                 <button
                   onClick={() => setShowResetOption(true)}
@@ -255,13 +255,13 @@ export default function VotePage() {
                 </button>
               ) : (
                 <div className="text-center">
-                  <p className="text-xs text-gray-500 mb-2">
+                  <p className="text-xs text-gray-500 mb-1">
                     {t.voting.testingOnly}
                   </p>
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     <button
                       onClick={resetVotingAbility}
-                      className="text-xs bg-gray-100 text-gray-700 px-3 py-1 rounded hover:bg-gray-200"
+                      className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded hover:bg-gray-200"
                     >
                       {t.voting.resetVoting}
                     </button>
@@ -283,16 +283,16 @@ export default function VotePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-2">
       <div className="max-w-md w-full">
-        <div className="bg-white rounded-2xl shadow-lg p-8">
-          <div className="text-center mb-8">
-            <Vote className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">{poll.title}</h1>
-            <p className="text-gray-600">{t.voting.chooseOption}</p>
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="text-center mb-6">
+            <Vote className="w-10 h-10 text-blue-600 mx-auto mb-3" />
+            <h1 className="text-xl font-bold text-gray-900 mb-1">{poll.title}</h1>
+            <p className="text-gray-600 text-sm">{t.voting.chooseOption}</p>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2">
             {poll.options.map((option) => (
               <button
                 key={option.id}
@@ -301,7 +301,7 @@ export default function VotePage() {
                   submitVote(option.id);
                 }}
                 disabled={voting}
-                className={`w-full p-4 rounded-xl border-2 text-left transition-all duration-200 ${
+                className={`w-full p-3 rounded-xl border-2 text-left transition-all duration-200 text-sm ${
                   selectedOption === option.id
                     ? 'border-blue-500 bg-blue-50 shadow-md'
                     : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
@@ -312,9 +312,9 @@ export default function VotePage() {
                 }}
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-medium text-gray-900">{option.text}</span>
+                  <span className="font-medium text-gray-900 text-sm">{option.text}</span>
                   <div
-                    className="w-4 h-4 rounded-full border-2"
+                    className="w-3 h-3 rounded-full border-2"
                     style={{
                       backgroundColor: selectedOption === option.id ? option.color : 'transparent',
                       borderColor: option.color
@@ -326,10 +326,10 @@ export default function VotePage() {
           </div>
 
           {voting && (
-            <div className="text-center mt-6">
+            <div className="text-center mt-4">
               <div className="inline-flex items-center gap-2 text-blue-600">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-                <span>{t.common.loading}</span>
+                <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600"></div>
+                <span className="text-sm">{t.common.loading}</span>
               </div>
             </div>
           )}
