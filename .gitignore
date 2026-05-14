@@ -1,11 +1,14 @@
 # Dependencies
 node_modules/
+.local-node/
+.npm-cache/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
 # Next.js
 .next/
+.next-stale-cache/
 out/
 
 # Production
@@ -53,5 +56,6 @@ Thumbs.db
 Thumbs.db
 
 # Vercel
-.vercel public/uploads/
+.vercel
+public/uploads/
 tsconfig.tsbuildinfo

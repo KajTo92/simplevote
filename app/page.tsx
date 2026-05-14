@@ -9,9 +9,24 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <div className="min-h-screen flex flex-col items-center justify-center relative">
+      <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden bg-gray-100">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 h-full w-full object-cover"
+          preload="metadata"
+          aria-hidden="true"
+        >
+          <source src="/media/votemovie.mp4" type="video/mp4" />
+        </video>
+        <div className="hero-video-loop-fade absolute inset-0 bg-gray-100" aria-hidden="true" />
+        <div className="absolute inset-0 bg-white/55 backdrop-blur-[1px]" aria-hidden="true" />
+        <div className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-gray-100 to-transparent md:h-48" aria-hidden="true" />
+        <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-gray-100 to-transparent md:h-48" aria-hidden="true" />
         {/* Główny content */}
-        <div className="text-center space-y-8 max-w-5xl mx-auto px-6">
+        <div className="relative z-10 text-center space-y-8 max-w-5xl mx-auto px-6">
           <div className="space-y-4 mt-8 md:mt-0">
             <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-4 md:mb-8">
               {t.title.split(' ')[0]}

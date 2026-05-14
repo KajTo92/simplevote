@@ -4,6 +4,10 @@ import { createClient } from '@/lib/supabase/server';
 
 export async function POST(request: NextRequest) {
   try {
+    if (!stripe) {
+      return NextResponse.json({ error: 'Stripe is not configured' }, { status: 503 });
+    }
+
     const { priceId, plan } = await request.json();
     
     // Validate price ID

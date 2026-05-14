@@ -18,6 +18,27 @@
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.18);
   }
+
+  .hero-video-loop-fade {
+    animation: heroVideoLoopFade 7.24s ease-in-out infinite;
+  }
+}
+
+@keyframes heroVideoLoopFade {
+  0%,
+  6% {
+    opacity: 1;
+  }
+
+  22%,
+  78% {
+    opacity: 0;
+  }
+
+  94%,
+  100% {
+    opacity: 1;
+  }
 }
 
 @layer utilities {

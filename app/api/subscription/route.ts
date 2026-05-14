@@ -41,6 +41,10 @@ export async function GET() {
 // DELETE - anuluj subskrypcję
 export async function DELETE() {
   try {
+    if (!stripe) {
+      return NextResponse.json({ error: 'Stripe is not configured' }, { status: 503 });
+    }
+
     const supabase = createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     

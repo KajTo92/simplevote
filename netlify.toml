@@ -3,8 +3,8 @@
   publish = ".next"
 
 [build.environment]
-  NEXT_PUBLIC_SUPABASE_URL = "https://rcuwkchwbvdgaahzqbnr.supabase.co"
-  NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJjdXdrY2h3YnZkZ2FhaHpxYm5yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE0MjgxOTMsImV4cCI6MjA2NzAwNDE5M30.lwLpGnIWYhuPF2xYc-1ZVzVCYLLL7q4m0_kB_hjVwl0"
+  NEXT_PUBLIC_SUPABASE_URL = "https://dcnbeuumnulkipukmcqu.supabase.co"
+  NEXT_PUBLIC_SUPABASE_ANON_KEY = "sb_publishable_yzcQ8pKotbSi4RzMsIUD3w_pN3syiUu"
   NODE_VERSION = "18"
 
 [[plugins]]
