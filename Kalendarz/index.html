@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kalendarz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar" aria-label="Nagłówek kalendarza">
+        <section class="brand" aria-label="Kalendarz">
+          <div class="pair-icons" aria-hidden="true">
+            <span class="icon-badge janek-badge">
+              <img src="mis.png" alt="" />
+            </span>
+            <span class="icon-badge monika-badge">
+              <img src="myszka.png" alt="" />
+            </span>
+          </div>
+          <div>
+            <p class="eyebrow">dla Was dwojga</p>
+            <h1>Kalendarz</h1>
+          </div>
+        </section>
+
+        <section class="month-controls" aria-label="Nawigacja miesiąca">
+          <button class="icon-button" id="prevMonth" aria-label="Poprzedni miesiąc">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m15 18-6-6 6-6" />
+            </svg>
+          </button>
+          <div class="month-title" aria-live="polite">
+            <span id="monthName"></span>
+            <strong id="yearName"></strong>
+          </div>
+          <button class="icon-button" id="nextMonth" aria-label="Następny miesiąc">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+          </button>
+          <button class="icon-button theme-button" id="themeToggle" aria-label="Przełącz tryb dzień noc">
+            <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20 14.5A7.5 7.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z" />
+            </svg>
+            <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 2v2" />
+              <path d="M12 20v2" />
+              <path d="m4.93 4.93 1.41 1.41" />
+              <path d="m17.66 17.66 1.41 1.41" />
+              <path d="M2 12h2" />
+              <path d="M20 12h2" />
+              <path d="m6.34 17.66-1.41 1.41" />
+              <path d="m19.07 4.93-1.41 1.41" />
+            </svg>
+          </button>
+        </section>
+      </header>
+
+      <details class="summary-panel" id="summaryPanel" open>
+        <summary class="summary-toggle">
+          <span>Podsumowanie</span>
+          <strong><span id="summaryToggleCount">0</span> wspólnych wolnych</strong>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </summary>
+        <section class="summary-strip" aria-label="Podsumowanie miesiąca">
+          <article class="summary-card together-card">
+            <span class="summary-value" id="togetherFreeCount">0</span>
+            <span class="summary-label">wspólnych wolnych dni</span>
+          </article>
+          <article class="summary-card">
+            <span class="summary-dot his-dot"></span>
+            <span>Janek praca</span>
+          </article>
+          <article class="summary-card">
+            <span class="summary-dot her-day-dot"></span>
+            <span>Monika</span>
+          </article>
+          <article class="summary-card">
+            <span class="summary-dot her-day-dot"></span>
+            <span>Monika <span class="summary-moon" aria-hidden="true">☾</span></span>
+          </article>
+        </section>
+      </details>
+
+      <section class="calendar-wrap" aria-label="Kalendarz miesieczny">
+        <div class="weekday-row" aria-hidden="true">
+          <span>Pon</span>
+          <span>Wt</span>
+          <span>Śr</span>
+          <span>Czw</span>
+          <span>Pt</span>
+          <span>Sob</span>
+          <span>Nd</span>
+        </div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+      </section>
+
+      <section class="action-panel" id="actionPanel" hidden aria-live="polite">
+        <div>
+          <p class="action-kicker" id="actionDate">2026</p>
+          <h2 id="actionTitle">Wydarzenie</h2>
+        </div>
+        <div class="action-buttons" id="eventActions" hidden>
+          <button type="button" class="action-button danger-button" id="deleteEventButton">Usuń</button>
+          <button type="button" class="action-button" id="moveEventButton">Przenieś</button>
+        </div>
+        <div class="action-buttons" id="addActions" hidden>
+          <button type="button" class="action-button" data-add-event="janek-work">Janek</button>
+          <button type="button" class="action-button" data-add-event="monika-day">Monika</button>
+          <button type="button" class="action-button" data-add-event="monika-night">Monika ☾</button>
+        </div>
+        <button type="button" class="panel-close" id="closeActionPanel" aria-label="Zamknij">×</button>
+      </section>
+
+      <div class="move-banner" id="moveBanner" hidden>
+        <span>Wybierz dzień docelowy</span>
+        <button type="button" id="cancelMoveButton">Anuluj</button>
+      </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
